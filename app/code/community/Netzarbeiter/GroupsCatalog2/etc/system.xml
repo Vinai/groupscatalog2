@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Netzarbeiter_GroupsCatalog2
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * package    Netzarbeiter_GroupsCatalog2
+ * copyright  Copyright (c) 2011 Vinai Kopp http://netzarbeiter.com/
+ * license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+-->
+<config>
+	<tabs>
+		<netzarbeiter translate="label" module="netzarbeiter_groupscatalog2">
+			<label>Netzarbeiter Extensions</label>
+			<sort_order>505</sort_order>
+		</netzarbeiter>
+	</tabs>
+	<sections>
+		<netzarbeiter_groupscatalog2 translate="label" module="netzarbeiter_groupscatalog2">
+			<label>Groups Catalog 2</label>
+			<tab>netzarbeiter</tab>
+			<sort_order>120</sort_order>
+			<show_in_default>1</show_in_default>
+			<show_in_website>1</show_in_website>
+			<show_in_store>1</show_in_store>
+			<groups>
+				<general translate="label" module="netzarbeiter_groupscatalog2">
+					<label>General</label>
+					<sort_order>10</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<fields>
+						<is_active translate="label" module="netzarbeiter_groupscatalog2">
+							<label>Enable Module</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_enabledisable</source_model>
+							<sort_order>10</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+						</is_active>
+						<product_mode translate="label comment" module="netzarbeiter_groupscatalog2">
+							<label>Product Mode</label>
+							<frontend_type>select</frontend_type>
+							<source_model>netzarbeiter_groupscatalog2/system_config_source_mode_product</source_model>
+							<sort_order>20</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+							<depends>
+								<is_active>1</is_active>
+							</depends>
+						</product_mode>
+						<product_default_hide translate="label" module="netzarbeiter_groupscatalog2">
+							<label>Hide Products from</label>
+							<frontend_type>multiselect</frontend_type>
+							<source_model>netzarbeiter_groupscatalog2/system_config_source_customergroup</source_model>
+							<sort_order>30</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+							<comment><![CDATA[Hide products from these selected groups by default and show them to all others.]]></comment>
+							<depends>
+								<is_active>1</is_active>
+								<product_mode>show</product_mode>
+							</depends>
+						</product_default_hide>
+						<product_default_show translate="label" module="netzarbeiter_groupscatalog2">
+							<label>Show Products to</label>
+							<frontend_type>multiselect</frontend_type>
+							<source_model>netzarbeiter_groupscatalog2/system_config_source_customergroup</source_model>
+							<backend_model>netzarbeiter_groupscatalog2/system_config_backend_customergroup</backend_model>
+							<sort_order>30</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+							<comment><![CDATA[Show products to these selected groups by default and hide them from all others.]]></comment>
+							<depends>
+								<is_active>1</is_active>
+								<product_mode>hide</product_mode>
+							</depends>
+						</product_default_show>
+						<category_mode translate="label comment" module="netzarbeiter_groupscatalog2">
+							<label>Category Mode</label>
+							<frontend_type>select</frontend_type>
+							<source_model>netzarbeiter_groupscatalog2/system_config_source_mode_category</source_model>
+							<sort_order>40</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+							<depends>
+								<is_active>1</is_active>
+							</depends>
+						</category_mode>
+						<category_default_hide translate="label" module="netzarbeiter_groupscatalog2">
+							<label>Hide Categories from</label>
+							<frontend_type>multiselect</frontend_type>
+							<source_model>netzarbeiter_groupscatalog2/system_config_source_customergroup</source_model>
+							<sort_order>50</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+							<comment><![CDATA[Hide categories from these selected groups by default and show them to all others.]]></comment>
+							<depends>
+								<is_active>1</is_active>
+								<category_mode>show</category_mode>
+							</depends>
+						</category_default_hide>
+						<category_default_show translate="label" module="netzarbeiter_groupscatalog2">
+							<label>Show Categories to</label>
+							<frontend_type>multiselect</frontend_type>
+							<source_model>netzarbeiter_groupscatalog2/system_config_source_customergroup</source_model>
+							<backend_model>netzarbeiter_groupscatalog2/system_config_backend_customergroup</backend_model>
+							<sort_order>50</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+							<comment><![CDATA[Show products to these selected groups by default and hide them from all others.]]></comment>
+							<depends>
+								<is_active>1</is_active>
+								<category_mode>hide</category_mode>
+							</depends>
+						</category_default_show>
+					</fields>
+				</general>
+			</groups>
+		</netzarbeiter_groupscatalog2>
+	</sections>
+</config>

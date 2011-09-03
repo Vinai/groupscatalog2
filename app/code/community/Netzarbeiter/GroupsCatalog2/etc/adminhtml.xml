@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<acl>
+		<resources>
+			<admin>
+				<children>
+					<system>
+						<children>
+							<config>
+								<children>
+									<netzarbeiter_groupscatalog2 translate="title" module="netzarbeiter_groupscatalog2">
+										<title>Groups Catalog 2</title>
+										<sort_order>130</sort_order>
+									</netzarbeiter_groupscatalog2>
+								</children>
+							</config>
+						</children>
+					</system>
+				</children>
+			</admin>
+		</resources>
+	</acl>
+</config>

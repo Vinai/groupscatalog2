@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<modules>
+		<Netzarbeiter_GroupsCatalog2>
+			<active>true</active>
+			<codePool>community</codePool>
+			<depends>
+				<Mage_Core />
+				<Mage_Catalog />
+				<Mage_Index />
+				<Mage_CatalogSearch/>
+			</depends>
+		</Netzarbeiter_GroupsCatalog2>
+	</modules>
+</config>

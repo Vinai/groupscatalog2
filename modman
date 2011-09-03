@@ -1,0 +1,8 @@
+
+#
+# modman file for Netzarbeiter_GroupsCatalog2
+#
+
+app/code/community/Netzarbeiter/GroupsCatalog2 app/code/community/Netzarbeiter/GroupsCatalog2
+app/etc/modules/Netzarbeiter_GroupsCatalog2.xml app/etc/modules/Netzarbeiter_GroupsCatalog2.xml
+
