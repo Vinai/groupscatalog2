@@ -17,7 +17,7 @@
 				<resourceModel>netzarbeiter_groupscatalog2_resource</resourceModel>
 			</netzarbeiter_groupscatalog2>
 			<netzarbeiter_groupscatalog2_resource>
-				<!--<class>Netzarbeiter_GroupsCatalog2_Model_Resource</class>-->
+				<class>Netzarbeiter_GroupsCatalog2_Model_Resource</class>
 				<entities>
 					<product_index><table>groupscatalog_product_idx</table></product_index>
 					<category_index><table>groupscatalog_category_idx</table></category_index>
@@ -37,6 +37,17 @@
 				</setup>
 			</netzarbeiter_groupscatalog2_setup>
 		</resources>
+		<index>
+			<indexer>
+				<!-- The code is limited to 30 characters, that is why I leave out the namespace prefix here -->
+				<groupscatalog2_product>
+					<model>netzarbeiter_groupscatalog2/indexer_product</model>
+				</groupscatalog2_product>
+				<groupscatalog2_category>
+					<model>netzarbeiter_groupscatalog2/indexer_category</model>
+				</groupscatalog2_category>
+			</indexer>
+		</index>
 	</global>
 	<default>
 		<netzarbeiter_groupscatalog2>

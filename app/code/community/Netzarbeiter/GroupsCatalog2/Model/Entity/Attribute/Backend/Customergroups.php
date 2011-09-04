@@ -1,7 +1,7 @@
 <?php
 
 class Netzarbeiter_GroupsCatalog2_Model_Entity_Attribute_Backend_Customergroups
-	extends Mage_Eav_Model_Entity_Attribute_Backend_Array
+	extends Mage_Eav_Model_Entity_Attribute_Backend_Abstract
 {
 	/**
 	 * Process the attribute value before saving
@@ -38,7 +38,6 @@ class Netzarbeiter_GroupsCatalog2_Model_Entity_Attribute_Backend_Customergroups
 			{
 				unset($data[$key]);
 			}
-			Mage::log(array($data, $key));
 
 			// if USE_NONE is selected remove all other groups
 			if (in_array(Netzarbeiter_GroupsCatalog2_Helper_Data::USE_NONE, $data))
@@ -59,8 +58,26 @@ class Netzarbeiter_GroupsCatalog2_Model_Entity_Attribute_Backend_Customergroups
 		// I like it nice and tidy, this gives us sequential index numbers again as a side effect :)
 		sort($data);
 		
-		$object->setData($attributeCode, $data);
+		$object->setData($attributeCode, implode(',', $data));
 		return parent::beforeSave($object);
+	}
+
+	/**
+	 * Explode the saved array again, because otherwise the indexer will think the value changed,
+	 * even if it is the same (array(1,2,3) !== "1,2,3").
+	 *
+	 * @param Mage_Core_Model_Abstract $object
+	 * @return Mage_Eav_Model_Entity_Attribute_Backend_Abstract
+	 */
+	public function afterSave($object)
+	{
+		$attributeCode = $this->getAttribute()->getAttributeCode();
+		$data = $object->getData($attributeCode);
+		if (is_string($data))
+		{
+			$object->setData($attributeCode, explode(',', $data));
+		}
+		return parent::afterSave($object);
 	}
 
 	/**

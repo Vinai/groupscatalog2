@@ -10,6 +10,8 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	const XML_CONFIG_PRODUCT_MODE = 'netzarbeiter_groupscatalog2/general/product_mode';
 	const XML_CONFIG_CATEGORY_MODE = 'netzarbeiter_groupscatalog2/general/category_mode';
 
+	const HIDE_GROUPS_ATTRIBUTE = 'groupscatalog2_groups';
+
 	/* @var $_groups Mage_Customer_Model_Resource_Group_Collection */
 	protected $_groups;
 
