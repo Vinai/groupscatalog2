@@ -2,9 +2,6 @@
  
 abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract extends Mage_Index_Model_Resource_Abstract
 {
-
-	const PROFILER_NAME = 'Netzarbeiter_GroupsCatalog2';
-
 	/**
 	 * Initialize an array with store and group default visibility settings for this indexers entity
 	 *
@@ -46,6 +43,15 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	abstract protected function _getEntityTypeCode();
 
 	/**
+	 * Initialize indexer
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+		$this->_initStores();
+	}
+
+	/**
 	 * Return the module data helper
 	 *
 	 * @return Netzarbeiter_GroupsCatalog2_Helper_Data
@@ -53,15 +59,6 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	protected function _helper()
 	{
 		return Mage::helper('netzarbeiter_groupscatalog2');
-	}
-
-	/**
-	 * Initialize indexer
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->_initStores();
 	}
 
 	/**
@@ -76,6 +73,11 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 			$this->_storeDefaults[$store->getId()] = array();
 		}
 		$this->_frontendStoreIds = array_keys($this->_storeDefaults);
+	}
+
+	protected function _getProfilerName()
+	{
+		return 'Netzarbeiter_GroupsCatalog2::' . $this->_getEntityTypeCode();
 	}
 
 	/**
@@ -112,7 +114,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	 */
 	protected function _reindexEntity($event = null)
 	{
-		Varien_Profiler::start(self::PROFILER_NAME . '::reindexEntity');
+		Varien_Profiler::start($this->_getProfilerName() . '::reindexEntity');
 		$entityType = Mage::getSingleton('eav/config')->getEntityType($this->_getEntityTypeCode());
 		$attribute = Mage::getSingleton('eav/config')->getAttribute(
 			$this->_getEntityTypeCode(), Netzarbeiter_GroupsCatalog2_Helper_Data::HIDE_GROUPS_ATTRIBUTE
@@ -140,7 +142,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 		}
 		$result = $this->_getReadAdapter()->fetchAll($select);
 		$this->_insertIndexRecords($result);
-		Varien_Profiler::stop(self::PROFILER_NAME . '::reindexEntity');
+		Varien_Profiler::stop($this->_getProfilerName() . '::reindexEntity');
 	}
 
 	/**
@@ -151,7 +153,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	 */
 	protected function _insertIndexRecords(array &$result)
 	{
-		Varien_Profiler::start(self::PROFILER_NAME . '::reindexEntity::insert');
+		Varien_Profiler::start($this->_getProfilerName() . '::reindexEntity::insert');
 		$entityId = null;
 		$data = $storesHandled = $entityDefaultGroups = array();
 		foreach ($result as $row)
@@ -207,7 +209,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 		{
 			$this->_getWriteAdapter()->insertMultiple($this->_getIndexTable(), $data);
 		}
-		Varien_Profiler::stop(self::PROFILER_NAME . '::reindexEntity::insert');
+		Varien_Profiler::stop($this->_getProfilerName() . '::reindexEntity::insert');
 	}
 
 	/**
