@@ -48,4 +48,14 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Category
 	{
 		return $this->getTable('netzarbeiter_groupscatalog2/category_index');
 	}
+
+	/**
+	 * Return this indexers entity type code
+	 * 
+	 * @return string
+	 */
+	protected function _getEntityTypeCode()
+	{
+		return Mage_Catalog_Model_Category::ENTITY;
+	}
 }

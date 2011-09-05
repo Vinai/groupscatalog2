@@ -47,12 +47,12 @@ class Netzarbeiter_GroupsCatalog2_Model_Indexer_Product extends Netzarbeiter_Gro
 	/**
 	 * Return the product ids from a category mass action event
 	 *
-	 * @param Varien_Object $container
+	 * @param Varien_Object $entity
 	 * @return array|null
 	 * @see Netzarbeiter_GroupsCatalog2_Model_Indexer_Abstract::_registerEvent()
 	 */
-	protected function _getEntityIdsFromContainer(Varien_Object $container)
+	protected function _getEntityIdsFromEntity(Varien_Object $entity)
 	{
-		return $container->getProductIds();
+		return $entity->getProductIds();
 	}
 }

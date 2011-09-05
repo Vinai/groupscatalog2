@@ -7,10 +7,10 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Indexer_Abstract extends Mage_I
 	 * E.g. for products return $entity->getProductIds()
 	 *
 	 * @abstract
-	 * @param Varien_Object $container
+	 * @param Varien_Object $entity
 	 * @return array
 	 */
-	abstract protected function _getEntityIdsFromContainer(Varien_Object $container);
+	abstract protected function _getEntityIdsFromEntity(Varien_Object $entity);
 
 	/**
 	 * @param Mage_Index_Model_Event $event
@@ -18,25 +18,24 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Indexer_Abstract extends Mage_I
 	 */
 	protected function _registerEvent(Mage_Index_Model_Event $event)
 	{
-		/* @var $container Varien_Object */
-		$container = $event->getDataObject(); // could be a catalog/product or catalog/category entity, too
+		/* @var $entity Varien_Object */
+		$entity = $event->getDataObject(); // could be a catalog/product or catalog/category entity, too
 		$eventType = $event->getType();
 		$attrCode = Netzarbeiter_GroupsCatalog2_Helper_Data::HIDE_GROUPS_ATTRIBUTE;
 		
 		if ($eventType == Mage_Index_Model_Event::TYPE_SAVE)
 		{
-			if ($container->dataHasChangedFor($attrCode))
+			if ($entity->dataHasChangedFor($attrCode))
 			{
-				$event->setData('entity_ids', array($container->getId()));
+				$event->setData('entity_ids', array($entity->getId()));
 			}
 		}
 		elseif ($eventType == Mage_Index_Model_Event::TYPE_MASS_ACTION)
 		{
-			$attributeData = $container->getAttributesData();
-			if (isset($attributeData[$attrCode]) ||
-				(isset($attributeData['force_reindex_required']) && $attributeData['force_reindex_required']))
+			$attributeData = $entity->getAttributesData();
+			if (isset($attributeData[$attrCode]))
 			{
-				$event->setData('entity_ids', $this->_getEntityIdsFromContainer($container));
+				$event->setData('entity_ids', $this->_getEntityIdsFromEntity($entity));
 			}
 		}
 	}

@@ -7,7 +7,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Entity_Attribute_Frontend_Customergroups
 	{
 		$storeId = (int)Mage::app()->getRequest()->getParam('store', 0);
 		$helper = Mage::helper('netzarbeiter_groupscatalog2');
-		$setting = $helper->getModeSettingForEntityType($this->getAttribute()->getEntityTypeId(), $storeId);
+		$setting = $helper->getModeSettingByEntityType($this->getAttribute()->getEntityTypeId(), $storeId);
 		$label = '';
 		switch ($setting)
 		{
