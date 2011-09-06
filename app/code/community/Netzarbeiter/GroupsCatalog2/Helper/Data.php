@@ -14,9 +14,18 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 
 	const HIDE_GROUPS_ATTRIBUTE = 'groupscatalog2_groups';
 
-	/* @var $_groups Mage_Customer_Model_Resource_Group_Collection */
+	/**
+	 * Customer group collection instance
+	 *
+	 * @var $_groups Mage_Customer_Model_Resource_Group_Collection
+	 */
 	protected $_groups;
 
+	/**
+	 * Cache the groups that may see an entity type by store
+	 *
+	 * @var $_visibilityByStore array
+	 */
 	protected $_visibilityByStore = array();
 
 	/**
@@ -34,6 +43,42 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	}
 
 	/**
+	 * Return if the module is active for the current store view
+	 *
+	 * @param int|string|Mage_Core_Model_Store $store
+	 * @return bool
+	 */
+	public function isModuleActive($store = null)
+	{
+		$setting = Mage::getStoreConfig('netzarbeiter_groupscatalog2/general/is_active', $store);
+		return (bool) $setting;
+	}
+
+	/**
+	 * Get the index table-id for the specified entity type
+	 *
+	 * @param string|int|Mage_Eav_Model_Entity_Type $entityType
+	 * @return string
+	 */
+	public function getIndexTableByEntityType($entityType)
+	{
+		$entityType = Mage::getSingleton('eav/config')->getEntityType($entityType);
+		$table = '';
+		switch ($entityType->getEntityTypeCode())
+		{
+			default:
+			case Mage_Catalog_Model_Product::ENTITY:
+				$table = 'netzarbeiter_groupscatalog2/product_index';
+			break;
+
+			case Mage_Catalog_Model_Category::ENTITY:
+				$table = 'netzarbeiter_groupscatalog2/category_index';
+			break;
+		}
+		return $table;
+	}
+
+	/**
 	 * Return true if the entity should be visible for the specified customer group id.
 	 * If no customer group id is specified, use the customer group id from the current customer session.
 	 *
@@ -45,10 +90,20 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	{
 		if (is_null($customerGroupId))
 		{
-			$customerGroupId = Mage::getSingleton('customer/session')->getCustomerGroupId();
+			$customerGroupId = $this->getCustomerGroupId();
 		}
 		$visibleGroups = $this->getEntityVisibleGroups($entity);
 		return in_array($customerGroupId, $visibleGroups);
+	}
+
+	/**
+	 * Return the customer id of the current customer
+	 *
+	 * @return int
+	 */
+	public function getCustomerGroupId()
+	{
+		return Mage::getSingleton('customer/session')->getCustomerGroupId();
 	}
 
 	/**
@@ -69,7 +124,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 		}
 		
 		$mode = $this->getModeSettingByEntityType($entityType, $store);
-		return $this->_applyExtensionModeSetting($entitySettings, $mode);
+		return $this->_applyConfigModeSetting($entitySettings, $mode);
 	}
 
 	/**
@@ -81,7 +136,19 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	public function getModeSettingByEntityType($entityType, $store = null)
 	{
-		$path = $this->_getModeSettingPathByEntityType($entityType);
+		$entityType = Mage::getSingleton('eav/config')->getEntityType($entityType);
+		switch ($entityType->getEntityTypeCode())
+		{
+			default:
+			case Mage_Catalog_Model_Product::ENTITY:
+				$path = self::XML_CONFIG_PRODUCT_MODE;
+			break;
+
+			case Mage_Catalog_Model_Category::ENTITY:
+				$path = self::XML_CONFIG_PRODUCT_MODE;
+			break;
+		}
+
 		return (string) Mage::getStoreConfig($path, $store);
 	}
 
@@ -115,30 +182,6 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	}
 
 	/**
-	 * Return the xml path to the mode setting for the specified entity type.
-	 * 
-	 * @param string|int|Mage_Eav_Model_Entity_Type $entityType
-	 * @return string
-	 */
-	protected function _getModeSettingPathByEntityType($entityType)
-	{
-		$entityType = Mage::getSingleton('eav/config')->getEntityType($entityType);
-		$path = '';
-		switch ($entityType->getEntityTypeCode())
-		{
-			default:
-			case Mage_Catalog_Model_Product::ENTITY:
-				$path = self::XML_CONFIG_PRODUCT_MODE;
-			break;
-
-			case Mage_Catalog_Model_Category::ENTITY:
-				$path = self::XML_CONFIG_PRODUCT_MODE;
-			break;
-		}
-		return $path;
-	}
-
-	/**
 	 * See self::getEntityVisibleDefaultGroupIds() for a detailed description.
 	 * 
 	 * @param string|int|Mage_Eav_Model_Entity_Type $entityType
@@ -147,8 +190,10 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	protected function _getEntityVisibleDefaultGroupIds($entityType, $store = null)
 	{
-		$path = $this->_getEntityVisibilityDefaultsPathByEntityType($entityType, $store);
-		$groupIds = Mage::getStoreConfig($path, $store);
+		$prefix = $this->_getEntityVisibilityDefaultsPathPrefixByEntityType($entityType);
+		$mode = $this->getModeSettingByEntityType($entityType, $store);
+		$groupIds = Mage::getStoreConfig($prefix . $mode, $store);
+
 		if (null === $groupIds)
 		{
 			$groupIds = array();
@@ -163,8 +208,8 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 				$groupIds = array();
 			}
 		}
-		$mode = $this->getModeSettingByEntityType($entityType, $store);
-		return $this->_applyExtensionModeSetting($groupIds, $mode);
+		
+		return $this->_applyConfigModeSetting($groupIds, $mode);
 	}
 
 	/**
@@ -175,7 +220,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	 * @param string $mode hide|show
 	 * @return array
 	 */
-	protected function _applyExtensionModeSetting(array $groupIds, $mode)
+	protected function _applyConfigModeSetting(array $groupIds, $mode)
 	{
 		if (self::MODE_SHOW_BY_DEFAULT === $mode)
 		{
@@ -186,21 +231,6 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 			return $groupIds;
 		}
 		return $groupIds;
-	}
-
-	/**
-	 * Return the xpath to the config setting for the customer groups selected as
-	 * default in the system config for the specified entity type.
-	 *
-	 * @param string|int|Mage_Eav_Model_Entity_Type $entityType
-	 * @param null|int|string|Mage_Core_Model_Store $store
-	 * @return string
-	 */
-	protected function _getEntityVisibilityDefaultsPathByEntityType($entityType, $store = null)
-	{
-		$prefix = $this->_getEntityVisibilityDefaultsPathPrefixByEntityType($entityType);
-		$mode = $this->getModeSettingByEntityType($entityType, $store);
-		return $prefix . $mode;
 	}
 
 	/**
