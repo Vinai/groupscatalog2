@@ -27,6 +27,13 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	protected $_frontendStoreIds = array();
 
 	/**
+	 * Module helper instance
+	 *
+	 * @var Netzarbeiter_GroupsCatalog2_Helper_Data
+	 */
+	protected $_helper;
+
+	/**
 	 * Return the entity type code for this indexers entity
 	 *
 	 * @abstract
@@ -41,6 +48,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	{
 		parent::__construct();
 		$this->_initStores();
+		$this->_helper = Mage::helper('netzarbeiter_groupscatalog2');
 	}
 
 	/**
@@ -50,11 +58,11 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	 */
 	protected function _helper()
 	{
-		return Mage::helper('netzarbeiter_groupscatalog2');
+		return $this->_helper;
 	}
 
 	/**
-	 * Initialize $_storeDefaults and $_frontendStoreIds arrayy
+	 * Initialize $_storeDefaults and $_frontendStoreIds array
 	 * 
 	 * @return void
 	 */
@@ -223,6 +231,13 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 		{
 			// We need the list of group ids as an array
 			$row['group_ids'] = explode(',', $row['group_ids']);
+
+			// Apply the hide/show configuration settings
+			$row['group_ids'] = $this->_helper()->applyConfigModeSettingByStore(
+				$row['group_ids'],
+				$this->_getEntityTypeCode(),
+				$row['store_id']
+			);
 		}
 	}
 

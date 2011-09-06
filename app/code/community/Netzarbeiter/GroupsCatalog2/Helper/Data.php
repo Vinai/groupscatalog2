@@ -22,6 +22,13 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	protected $_groups;
 
 	/**
+	 * Array of all customer groups
+	 *
+	 * @var $_groupIds array
+	 */
+	protected $_groupIds;
+
+	/**
 	 * Cache the groups that may see an entity type by store
 	 *
 	 * @var $_visibilityByStore array
@@ -40,6 +47,20 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 			$this->_groups = Mage::getResourceModel('customer/group_collection')->load();
 		}
 		return $this->_groups;
+	}
+
+	/**
+	 * Return the ids of all customer groups
+	 *
+	 * @return array
+	 */
+	public function getCustomerGroupIds()
+	{
+		if (is_null($this->_groupIds))
+		{
+			$this->_groupIds = array_keys($this->getGroups()->getItems());
+		}
+		return $this->_groupIds;
 	}
 
 	/**
@@ -124,7 +145,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 		}
 		
 		$mode = $this->getModeSettingByEntityType($entityType, $store);
-		return $this->_applyConfigModeSetting($entitySettings, $mode);
+		return $this->applyConfigModeSetting($entitySettings, $mode);
 	}
 
 	/**
@@ -209,28 +230,42 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 			}
 		}
 		
-		return $this->_applyConfigModeSetting($groupIds, $mode);
+		return $this->applyConfigModeSetting($groupIds, $mode);
 	}
 
 	/**
 	 * Diff the group id array against an array with all group ids if the
-	 * extension mode is 'show' by default.
+	 * specified store configuration mode is 'show by default'.
 	 *
 	 * @param array $groupIds
 	 * @param string $mode hide|show
 	 * @return array
 	 */
-	protected function _applyConfigModeSetting(array $groupIds, $mode)
+	public function applyConfigModeSetting(array $groupIds, $mode)
 	{
 		if (self::MODE_SHOW_BY_DEFAULT === $mode)
 		{
 			// Because by default the specified entity is visible, the configured groups should NOT
 			// see the entities. Because of this the array needs to be "inverted".
-			$allGroupIds = array_keys($this->getGroups()->getItems());
-			$groupIds = array_diff($allGroupIds, $groupIds);
+			$groupIds = array_diff($this->getCustomerGroupIds(), $groupIds);
 			return $groupIds;
 		}
 		return $groupIds;
+	}
+
+	/**
+	 * Fetch the mode setting for the specified store and apply the mode setting if applicable
+	 *
+	 * @param array $groupIds group ids
+	 * @param string|int|Mage_Eav_Model_Entity_Type $entityType
+	 * @param null|int|string|Mage_Core_Model_Store $store
+	 * @return array
+	 * @see self::applyConfigModeSetting()
+	 */
+	public function applyConfigModeSettingByStore(array $groupIds, $entityType, $store = null)
+	{
+		$mode = $this->getModeSettingByEntityType($entityType, $store);
+		return $this->applyConfigModeSetting($groupIds, $mode);
 	}
 
 	/**
