@@ -40,16 +40,6 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Product
 	}
 
 	/**
-	 * Return the groupscatalog index table name for this indexers entity
-	 * 
-	 * @return string
-	 */
-	protected function _getIndexTable()
-	{
-		return $this->getTable('netzarbeiter_groupscatalog2/product_index');
-	}
-
-	/**
 	 * Return this indexers entity type code
 	 *
 	 * @return string

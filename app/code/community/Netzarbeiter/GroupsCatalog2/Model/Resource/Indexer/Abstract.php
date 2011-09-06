@@ -27,14 +27,6 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	protected $_frontendStoreIds = array();
 
 	/**
-	 * Return the groupscatalog index table id for this indexers entity
-	 * 
-	 * @abstract
-	 * @return string
-	 */
-	abstract protected function _getIndexTable();
-
-	/**
 	 * Return the entity type code for this indexers entity
 	 *
 	 * @abstract
@@ -94,6 +86,17 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 			$this->_storeDefaults[$store->getId()] = $this->_helper()->getEntityVisibleDefaultGroupIds($this->_getEntityTypeCode(), $store);
 		}
 		return $this->_storeDefaults[$store->getId()];
+	}
+
+	/**
+	 * Return the groupscatalog index table name for this indexers entity
+	 *
+	 * @return string
+	 */
+	protected function _getIndexTable()
+	{
+		$table = $this->_helper()->getIndexTableByEntityType($this->_getEntityTypeCode());
+		return $this->getTable($table);
 	}
 
 	/**
