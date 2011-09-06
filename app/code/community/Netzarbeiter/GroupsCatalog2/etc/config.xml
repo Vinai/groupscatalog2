@@ -49,6 +49,28 @@
 			</indexer>
 		</index>
 	</global>
+	<frontend>
+		<events>
+			<catalog_product_collection_load_before>
+				<observers>
+					<netzarbeiter_groupscatalog2>
+						<type>singleton</type>
+						<model>netzarbeiter_groupscatalog2/observer</model>
+						<method>catalogProductCollectionLoadBefore</method>
+					</netzarbeiter_groupscatalog2>
+				</observers>
+			</catalog_product_collection_load_before>
+			<catalog_category_collection_load_before>
+				<observers>
+					<netzarbeiter_groupscatalog2>
+						<type>singleton</type>
+						<model>netzarbeiter_groupscatalog2/observer</model>
+						<method>catalogCategoryCollectionLoadBefore</method>
+					</netzarbeiter_groupscatalog2>
+				</observers>
+			</catalog_category_collection_load_before>
+		</events>
+	</frontend>
 	<default>
 		<netzarbeiter_groupscatalog2>
 			<general>
