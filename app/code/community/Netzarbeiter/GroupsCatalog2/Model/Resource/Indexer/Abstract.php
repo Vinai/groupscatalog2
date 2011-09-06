@@ -158,16 +158,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 		$data = $storesHandled = $entityDefaultGroups = array();
 		foreach ($result as $row)
 		{
-			if (Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT == $row['group_ids'])
-			{
-				// Use store default ids if that is selected for the entity
-				$row['group_ids'] = $this->_getStoreDefaultGroups($row['store_id']);
-			}
-			else
-			{
-				// We need the list of group ids as an array
-				$row['group_ids'] = explode(',', $row['group_ids']);
-			}
+			$this->_prepareRow($row);
 
 			// A new entity is being handled
 			if ($entityId !== $row['entity_id'])
@@ -210,6 +201,26 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 			$this->_getWriteAdapter()->insertMultiple($this->_getIndexTable(), $data);
 		}
 		Varien_Profiler::stop($this->_getProfilerName() . '::reindexEntity::insert');
+	}
+
+	/**
+	 * Prepare the record read from the database for the further indexind
+	 *
+	 * @param array $row
+	 * @return void
+	 */
+	protected function _prepareRow(array &$row)
+	{
+		if (Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT == $row['group_ids'])
+		{
+			// Use store default ids if that is selected for the entity
+			$row['group_ids'] = $this->_getStoreDefaultGroups($row['store_id']);
+		}
+		else
+		{
+			// We need the list of group ids as an array
+			$row['group_ids'] = explode(',', $row['group_ids']);
+		}
 	}
 
 	/**
