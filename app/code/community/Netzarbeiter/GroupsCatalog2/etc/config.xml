@@ -69,6 +69,24 @@
 					</netzarbeiter_groupscatalog2>
 				</observers>
 			</catalog_category_collection_load_before>
+			<catalog_product_load_after>
+				<observers>
+					<netzarbeiter_groupscatalog2>
+						<type>singleton</type>
+						<model>netzarbeiter_groupscatalog2/observer</model>
+						<method>catalogProductLoadAfter</method>
+					</netzarbeiter_groupscatalog2>
+				</observers>
+			</catalog_product_load_after>
+			<catalog_category_load_after>
+				<observers>
+					<netzarbeiter_groupscatalog2>
+						<type>singleton</type>
+						<model>netzarbeiter_groupscatalog2/observer</model>
+						<method>catalogCategoryLoadAfter</method>
+					</netzarbeiter_groupscatalog2>
+				</observers>
+			</catalog_category_load_after>
 		</events>
 	</frontend>
 	<default>

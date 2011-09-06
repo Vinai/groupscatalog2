@@ -75,6 +75,58 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 		return (bool) $setting;
 	}
 
+	public function isEntityVisible(Mage_Catalog_Model_Abstract $entity, $customerGroupId = null)
+	{
+		// Default to the current customer group id
+		if (is_null($customerGroupId))
+		{
+			$customerGroupId = $this->getCustomerGroupId();
+		}
+		
+		$groupIds = $entity->getData(self::HIDE_GROUPS_ATTRIBUTE);
+
+		if (! is_array($groupIds) && ! is_string($groupIds))
+		{
+			// If the value isn't set on the entity mode fall back to querying the db index table
+			return Mage::getResourceSingleton('netzarbeiter_groupscatalog2/filter')
+				->isEntityVisible($entity, $customerGroupId);
+		}
+
+		/* @var $entityType string The entity type code for the specified entity */
+		$entityType = $this->getEntityTypeCodeFromEntity($entity);
+	
+		if (is_string($groupIds))
+		{
+			if ('' === $groupIds)
+			{
+				// This case will not happen in production:
+				// at least USE_DEFAULT or USE_NONE should be in the value array.
+				// I just like to be cautious if I ever think of possible buggy cases :)
+				$groupIds = array();
+			}
+			else
+			{
+				$groupIds = explode(',', $groupIds);
+			}
+		}
+		
+		if (in_array(self::USE_NONE, $groupIds))
+		{
+			$groupIds = array();
+		}
+		elseif (in_array(self::USE_DEFAULT, $groupIds))
+		{
+			
+			// Get the default settings for this entity type without applying the mode settings
+			$groupIds = $this->getEntityVisibleDefaultGroupIds($entityType, $entity->getStore(), false);
+		}
+
+		// If the configured mode is 'show' the list of group id's must be inverse
+		$groupIds = $this->applyConfigModeSettingByStore($groupIds, $entityType, $entity->getStore());
+
+		return in_array($customerGroupId, $groupIds);
+	}
+
 	/**
 	 * Get the index table-id for the specified entity type
 	 *
@@ -100,24 +152,6 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	}
 
 	/**
-	 * Return true if the entity should be visible for the specified customer group id.
-	 * If no customer group id is specified, use the customer group id from the current customer session.
-	 *
-	 * @param Mage_Catalog_Model_Abstract $entity
-	 * @param int|null $customerGroupId
-	 * @return bool
-	 */
-	public function isEntityVisible(Mage_Catalog_Model_Abstract $entity, $customerGroupId = null)
-	{
-		if (is_null($customerGroupId))
-		{
-			$customerGroupId = $this->getCustomerGroupId();
-		}
-		$visibleGroups = $this->getEntityVisibleGroups($entity);
-		return in_array($customerGroupId, $visibleGroups);
-	}
-
-	/**
 	 * Return the customer id of the current customer
 	 *
 	 * @return int
@@ -128,24 +162,15 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	}
 
 	/**
-	 * Return an array with all customer groups the specified catalog entity should be visible to
+	 * Return the entity type code from a catalog entity
 	 *
 	 * @param Mage_Catalog_Model_Abstract $entity
-	 * @return array
+	 * @return string
 	 */
-	public function getEntityVisibleGroups(Mage_Catalog_Model_Abstract $entity)
+	public function getEntityTypeCodeFromEntity(Mage_Catalog_Model_Abstract $entity)
 	{
-		$entitySettings = (array) $entity->getData(self::HIDE_GROUPS_ATTRIBUTE);
-		$entityType = $entity->getResource()->getEntityType();
-		$store = $entity->getStore();
-
-		if (in_array(self::USE_DEFAULT, $entitySettings))
-		{
-			return $this->getEntityVisibleDefaultGroupIds($entityType, $store);
-		}
-		
-		$mode = $this->getModeSettingByEntityType($entityType, $store);
-		return $this->applyConfigModeSetting($entitySettings, $mode);
+		// $entity::ENTITY is only possible from PHP 5.3.0, but Magento requires only 5.2.13
+		return constant(get_class($entity) . '::ENTITY');;
 	}
 
 	/**
@@ -182,7 +207,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	 * @param null|int|string|Mage_Core_Model_Store $store
 	 * @return array
 	 */
-	public function getEntityVisibleDefaultGroupIds($entityType, $store = null)
+	public function getEntityVisibleDefaultGroupIds($entityType, $store = null, $applyMode = true)
 	{
 		$store = Mage::app()->getStore($store);
 		$entityType = Mage::getSingleton('eav/config')->getEntityType($entityType);
@@ -199,7 +224,13 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 		{
 			$this->_visibilityByStore[$entityTypeCode][$storeId] = $this->_getEntityVisibleDefaultGroupIds($entityType, $store);
 		}
-		return $this->_visibilityByStore[$entityTypeCode][$storeId];
+		$groupIds = $this->_visibilityByStore[$entityTypeCode][$storeId];
+		if ($applyMode)
+		{
+			$mode = $this->getModeSettingByEntityType($entityType, $store);
+			$groupIds = $this->applyConfigModeSetting($groupIds, $mode);
+		}
+		return $groupIds;
 	}
 
 	/**
@@ -230,7 +261,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 			}
 		}
 		
-		return $this->applyConfigModeSetting($groupIds, $mode);
+		return $groupIds;
 	}
 
 	/**

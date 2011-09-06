@@ -14,7 +14,7 @@ $installer->deleteTableRow(
 $installer->addAttribute('catalog_product', Netzarbeiter_GroupsCatalog2_Helper_Data::HIDE_GROUPS_ATTRIBUTE, array(
 		'label' => 'Hide/Show from Customer Groups',
 		'group' => 'General',
-		'type' => 'varchar',
+		'type' => 'text',
 		'input' => 'multiselect',
 		'source' => 'netzarbeiter_groupscatalog2/entity_attribute_source_customergroup_withdefault',
 		'backend' => 'netzarbeiter_groupscatalog2/entity_attribute_backend_customergroups',
@@ -32,7 +32,7 @@ $installer->addAttribute('catalog_product', Netzarbeiter_GroupsCatalog2_Helper_D
 $installer->addAttribute('catalog_category', Netzarbeiter_GroupsCatalog2_Helper_Data::HIDE_GROUPS_ATTRIBUTE, array(
 		'label' => 'Hide/Show from Customer Groups',
 		'group' => 'General Information',
-		'type' => 'varchar',
+		'type' => 'text',
 		'input' => 'multiselect',
 		'source' => 'netzarbeiter_groupscatalog2/entity_attribute_source_customergroup_withdefault',
 		'backend' => 'netzarbeiter_groupscatalog2/entity_attribute_backend_customergroups',
