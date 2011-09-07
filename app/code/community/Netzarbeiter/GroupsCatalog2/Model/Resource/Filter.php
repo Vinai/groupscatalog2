@@ -108,6 +108,9 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 		/* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
 		$helper = Mage::helper('netzarbeiter_groupscatalog2');
 
+		// Switch index table depending on the specified entity
+		$this->_init($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY), 'id');
+
 		$table = $this->getTable($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY));
 		$collection->getProductCountSelect()
 			->joinInner(
