@@ -79,6 +79,13 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 		}
 	}
 
+	/**
+	 * Add the groupscatalog filter to the product collection count so the numbers
+	 * beside the categories in the sidebar navigation are correct.
+	 * 
+	 * @param Varien_Event_Observer $observer
+	 * @return void
+	 */
 	public function catalogProductCollectionBeforeAddCountToCategories(Varien_Event_Observer $observer)
 	{
 		/* @var $collection Mage_Catalog_Model_Resource_Product_Collection */
@@ -90,6 +97,26 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 			$customerGroupId = $helper->getCustomerGroupId();
 			Mage::getResourceSingleton('netzarbeiter_groupscatalog2/filter')
 				->addGroupsCatalogFilterToProductCollectionCountSelect($collection, $customerGroupId);
+		}
+	}
+
+	/**
+	 * Recollect totals to update the items qty count, in case one of the quote item products has been hidden.
+	 * There might be a better way to do this but so far this is the best way I could thnk of.
+	 * 
+	 * @param Varien_Event_Observer $observer
+	 * @return void
+	 */
+	public function salesQuoteLoadAfter(Varien_Event_Observer $observer)
+	{
+		/* @var $quote Mage_Sales_Model_Quote */
+		$quote = $observer->getQuote();
+		/* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
+		$helper = Mage::helper('netzarbeiter_groupscatalog2');
+
+		if ($helper->isModuleActive($quote->getStore()) && $quote->getItemsQty() > 0)
+		{
+			$quote->collectTotals();
 		}
 	}
 

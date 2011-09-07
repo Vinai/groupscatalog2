@@ -102,6 +102,15 @@
 					</netzarbeiter_groupscatalog2>
 				</observers>
 			</catalog_product_collection_before_add_count_to_categories>
+			<sales_quote_load_after>
+				<observers>
+					<netzarbeiter_groupscatalog2>
+						<type>singleton</type>
+						<model>netzarbeiter_groupscatalog2/observer</model>
+						<method>salesQuoteLoadAfter</method>
+					</netzarbeiter_groupscatalog2>
+				</observers>
+			</sales_quote_load_after>
 		</events>
 	</frontend>
 	<adminhtml>
