@@ -36,6 +36,21 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	protected $_visibilityByStore = array();
 
 	/**
+	 * Return a configuration setting from within the netzarbeiter_groupscatalog2/general section.
+	 *
+	 * Just in case I decide to change the configuration path in future, this file should be the
+	 * only one where the config path is hardcoded.
+	 *
+	 * @param string $field
+	 * @param int|string|Mage_Core_Model_Store $store
+	 * @return mixed
+	 */
+	public function getConfig($field, $store = null)
+	{
+		return Mage::getStoreConfig('netzarbeiter_groupscatalog2/general/' . $field, $store);
+	}
+
+	/**
 	 * Return all groups including the NOT_LOGGED_IN group that is normally hidden.
 	 *
 	 * @return Mage_Customer_Model_Resource_Group_Collection
@@ -76,7 +91,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 		{
 			return false;
 		}
-		$setting = Mage::getStoreConfig('netzarbeiter_groupscatalog2/general/is_active', $store);
+		$setting = $this->getConfig('is_active', $store);
 		return (bool) $setting;
 	}
 
