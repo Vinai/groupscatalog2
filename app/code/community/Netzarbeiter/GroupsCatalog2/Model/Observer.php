@@ -102,7 +102,9 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 
 	/**
 	 * Recollect totals to update the items qty count, in case one of the quote item products has been hidden.
-	 * There might be a better way to do this but so far this is the best way I could thnk of.
+	 * 
+	 * There might be a better way to do this but so far this is the best way I could think of.
+	 * This is a very rare case that probably won't come into effect at all. Maybe disable?
 	 * 
 	 * @param Varien_Event_Observer $observer
 	 * @return void
