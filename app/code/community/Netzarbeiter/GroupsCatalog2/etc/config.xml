@@ -23,6 +23,12 @@
 					<category_index><table>groupscatalog_category_idx</table></category_index>
 				</entities>
 			</netzarbeiter_groupscatalog2_resource>
+			<!-- need to rewrite the category flat resource model -->
+			<catalog_resource>
+				<rewrite>
+					<category_flat>Netzarbeiter_GroupsCatalog2_Model_Catalog_Resource_Category_Flat</category_flat>
+				</rewrite>
+			</catalog_resource>
 		</models>
 		<helpers>
 			<netzarbeiter_groupscatalog2>

@@ -71,6 +71,11 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	 */
 	public function isModuleActive($store = null)
 	{
+		$store = Mage::app()->getStore($store);
+		if ($store->isAdmin())
+		{
+			return false;
+		}
 		$setting = Mage::getStoreConfig('netzarbeiter_groupscatalog2/general/is_active', $store);
 		return (bool) $setting;
 	}

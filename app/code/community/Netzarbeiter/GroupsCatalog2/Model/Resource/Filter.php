@@ -40,6 +40,13 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 		);
 	}
 
+	/**
+	 * Checks the given entities visibility against the groupscatalog index
+	 *
+	 * @param Mage_Catalog_Model_Abstract $entity
+	 * @param int $groupId
+	 * @return bool
+	 */
 	public function isEntityVisible(Mage_Catalog_Model_Abstract $entity, $groupId)
 	{
 		/* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
@@ -57,5 +64,34 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 
 		// If a matching record is found the entity is visible
 		return (bool) $this->_getReadAdapter()->fetchOne($select);
+	}
+
+	/**
+	 * Checks the list of ids against the groupscatalog index table and returns those that are visible
+	 *
+	 * @param string $entityTypeCode
+	 * @param array $ids
+	 * @param int $storeId
+	 * @param int $groupId
+	 * @return array
+	 */
+	public function getVisibleIdsFromEntityIdList($entityTypeCode, array $ids, $storeId, $groupId)
+	{
+		/* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
+		$helper = Mage::helper('netzarbeiter_groupscatalog2');
+		
+		// Dummy entry with invalid entity id so the select doesn't fail with an empty list
+		$ids[] = 0;
+
+		// Switch index table depending on the specified entity
+		$this->_init($helper->getIndexTableByEntityType($entityTypeCode), 'id');
+
+		$select = $this->_getReadAdapter()->select()
+				->from($this->getMainTable(), 'entity_id')
+				->where('entity_id IN(?)', $ids)
+				->where('group_id=?', $groupId)
+				->where('store_id=?', $storeId);
+		
+		return $this->_getReadAdapter()->fetchCol($select);
 	}
 }
