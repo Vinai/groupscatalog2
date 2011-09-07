@@ -95,6 +95,19 @@
 			</catalog_category_load_after>
 		</events>
 	</frontend>
+	<adminhtml>
+		<events>
+			<catalog_category_save_after>
+				<observers>
+					<netzarbeiter_groupscatalog2>
+						<type>model</type>
+						<model>netzarbeiter_groupscatalog2/observer</model>
+						<method>catalogCategorySaveAfter</method>
+					</netzarbeiter_groupscatalog2>
+				</observers>
+			</catalog_category_save_after>
+		</events>
+	</adminhtml>
 	<default>
 		<netzarbeiter_groupscatalog2>
 			<general>
@@ -105,6 +118,7 @@
 				<category_mode>show</category_mode>
 				<category_default_show>-1</category_default_show>
 				<category_default_hide>-1</category_default_hide>
+				<auto_refresh_block_cache>0</auto_refresh_block_cache>
 			</general>
 		</netzarbeiter_groupscatalog2>
 	</default>
