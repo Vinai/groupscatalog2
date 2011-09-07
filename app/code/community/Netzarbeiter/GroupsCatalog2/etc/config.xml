@@ -93,6 +93,15 @@
 					</netzarbeiter_groupscatalog2>
 				</observers>
 			</catalog_category_load_after>
+			<catalog_product_collection_before_add_count_to_categories>
+				<observers>
+					<netzarbeiter_groupscatalog2>
+						<type>singleton</type>
+						<model>netzarbeiter_groupscatalog2/observer</model>
+						<method>catalogProductCollectionBeforeAddCountToCategories</method>
+					</netzarbeiter_groupscatalog2>
+				</observers>
+			</catalog_product_collection_before_add_count_to_categories>
 		</events>
 	</frontend>
 	<adminhtml>

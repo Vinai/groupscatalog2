@@ -94,4 +94,28 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 		
 		return $this->_getReadAdapter()->fetchCol($select);
 	}
+	
+	/**
+	 * Inner join the groupscatalog index table to not count products
+	 * not visible to the specified customer group id
+	 *
+	 * @param Mage_Catalog_Model_Resource_Product_Collection $collection
+	 * @param int $customerGroupId
+	 * @return void
+	 */
+	public function addGroupsCatalogFilterToProductCollectionCountSelect(Mage_Catalog_Model_Resource_Product_Collection $collection, $customerGroupId)
+	{
+		/* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
+		$helper = Mage::helper('netzarbeiter_groupscatalog2');
+
+		$table = $this->getTable($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY));
+		$collection->getProductCountSelect()
+			->joinInner(
+				$table,
+				"{$table}.entity_id=e.entity_id AND " .
+					$this->_getReadAdapter()->quoteInto("{$table}.group_id=? AND ", $customerGroupId) .
+					$this->_getReadAdapter()->quoteInto("{$table}.store_id=?", $collection->getStoreId()),
+				''
+			);
+	}
 }

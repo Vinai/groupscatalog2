@@ -79,6 +79,20 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 		}
 	}
 
+	public function catalogProductCollectionBeforeAddCountToCategories(Varien_Event_Observer $observer)
+	{
+		/* @var $collection Mage_Catalog_Model_Resource_Product_Collection */
+		$collection = $observer->getCollection();
+		/* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
+		$helper = Mage::helper('netzarbeiter_groupscatalog2');
+		if ($helper->isModuleActive($collection->getStoreId()))
+		{
+			$customerGroupId = $helper->getCustomerGroupId();
+			Mage::getResourceSingleton('netzarbeiter_groupscatalog2/filter')
+				->addGroupsCatalogFilterToProductCollectionCountSelect($collection, $customerGroupId);
+		}
+	}
+
 	/**
 	 * "Unload" the specified catalog entity if the groupscatalog settings specify so
 	 * 
