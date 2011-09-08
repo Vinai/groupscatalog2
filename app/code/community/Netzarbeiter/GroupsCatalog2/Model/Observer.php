@@ -62,11 +62,10 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 	{
 		/* @var $category Mage_Catalog_Model_Category */
 		$category = $observer->getCategory();
-		/* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
-		$helper = Mage::helper('netzarbeiter_groupscatalog2');
+		$helper = $this->_getHelper();
 
 		// If the module isn't disabled on a global scale
-		if ($helper->isModuleActive($category->getStore(), false))
+		if ($helper->isModuleActive($category->getStore(), false) && ! $this->_isApiRequest())
 		{
 			if ($category->dataHasChangedFor(Netzarbeiter_GroupsCatalog2_Helper_Data::HIDE_GROUPS_ATTRIBUTE))
 			{
@@ -92,10 +91,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 	 */
 	public function wishlistItemsRenewed(Varien_Event_Observer $observer)
 	{
-		/* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
-		$helper = Mage::helper('netzarbeiter_groupscatalog2');
-
-		if ($helper->isModuleActive())
+		if ($this->_getHelper()->isModuleActive() && ! $this->_isApiRequest())
 		{
 			/* @var $wishlistHelper Mage_Wishlist_Helper_Data */
 			$wishlistHelper = Mage::helper('wishlist');
@@ -126,9 +122,8 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 	{
 		/* @var $collection Mage_Catalog_Model_Resource_Product_Collection */
 		$collection = $observer->getCollection();
-		/* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
-		$helper = Mage::helper('netzarbeiter_groupscatalog2');
-		if ($helper->isModuleActive($collection->getStoreId()))
+		$helper = $this->_getHelper();
+		if ($helper->isModuleActive($collection->getStoreId()) && ! $this->_isApiRequest())
 		{
 			$customerGroupId = $helper->getCustomerGroupId();
 			Mage::getResourceSingleton('netzarbeiter_groupscatalog2/filter')
@@ -153,14 +148,13 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 	{
 		/* @var $quote Mage_Sales_Model_Quote */
 		$quote = $observer->getQuote();
-		/* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
-		$helper = Mage::helper('netzarbeiter_groupscatalog2');
 
 		/*
 		 * This is an excerpt from Mage_Sales_Model_Quote::collectTotals(). We don't need to
 		 * recalculate all totals here, we just need to make sure the item quantities are correct.
 		 */
-		if ($helper->isModuleActive($quote->getStore()) && $quote->getItemsQty() > 0)
+		if ($this->_getHelper()->isModuleActive($quote->getStore()) &&
+			$quote->getItemsQty() > 0 && ! $this->_isApiRequest())
 		{
 			$itemsCount = $itemsQty = $virtualItemsQty = 0;
 			foreach ($quote->getAllVisibleItems() as $item) {
@@ -195,7 +189,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 	 */
 	protected function _applyGroupsCatalogSettingsToEntity(Mage_Catalog_Model_Abstract $entity)
 	{
-		$helper = Mage::helper('netzarbeiter_groupscatalog2');
+		$helper = $this->_getHelper();
 		if ($helper->isModuleActive() && ! $this->_isApiRequest())
 		{
 			if (! $helper->isEntityVisible($entity))
@@ -218,7 +212,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 	 */
 	protected function _addGroupsCatalogFilterToCollection(Mage_Eav_Model_Entity_Collection_Abstract $collection)
 	{
-		$helper = Mage::helper('netzarbeiter_groupscatalog2');
+		$helper = $this->_getHelper();
 		if ($helper->isModuleActive() && ! $this->_isApiRequest())
 		{
 			$customerGroupId = $helper->getCustomerGroupId();
@@ -235,5 +229,15 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 	protected function _isApiRequest()
 	{
 		return Mage::app()->getRequest()->getModuleName() === 'api';
+	}
+
+	/**
+	 * Helper convenience method
+	 *
+	 * @return Netzarbeiter_GroupsCatalog2_Helper_Data
+	 */
+	protected function _getHelper()
+	{
+		return Mage::helper('netzarbeiter_groupscatalog2');
 	}
 }
