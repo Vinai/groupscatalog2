@@ -100,10 +100,10 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 	 * not visible to the specified customer group id
 	 *
 	 * @param Mage_Catalog_Model_Resource_Product_Collection $collection
-	 * @param int $customerGroupId
+	 * @param int $groupId
 	 * @return void
 	 */
-	public function addGroupsCatalogFilterToProductCollectionCountSelect(Mage_Catalog_Model_Resource_Product_Collection $collection, $customerGroupId)
+	public function addGroupsCatalogFilterToProductCollectionCountSelect(Mage_Catalog_Model_Resource_Product_Collection $collection, $groupId)
 	{
 		/* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
 		$helper = Mage::helper('netzarbeiter_groupscatalog2');
@@ -112,13 +112,47 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 		$this->_init($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY), 'id');
 
 		$table = $this->getTable($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY));
-		$collection->getProductCountSelect()
-			->joinInner(
-				$table,
-				"{$table}.entity_id=e.entity_id AND " .
-					$this->_getReadAdapter()->quoteInto("{$table}.group_id=? AND ", $customerGroupId) .
-					$this->_getReadAdapter()->quoteInto("{$table}.store_id=?", $collection->getStoreId()),
-				''
-			);
+		$this->_addGroupsCatalogFilterToSelect($collection->getProductCountSelect(), $table, $groupId, $collection->getStoreId());
+	}
+
+	/**
+	 * Add the groupscatalog filter to a select instance returned by a product collection. More specifically
+	 * this is used to correct the number of results in the pager of the search results.
+	 *
+	 * @param Zend_Db_Select $select
+	 * @param int $groupId
+	 * @param int $storeId
+	 * @return void
+	 */
+	public function addGroupsCatalogFilterToSelectCountSql(Zend_Db_Select $select, $groupId, $storeId)
+	{
+		/* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
+		$helper = Mage::helper('netzarbeiter_groupscatalog2');
+
+		// Switch index table depending on the specified entity
+		$this->_init($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY), 'id');
+		$table = $this->getTable($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY));
+
+		$this->_addGroupsCatalogFilterToSelect($select, $table, $groupId, $storeId);
+	}
+
+	/**
+	 * Join the specified groupscatalog index table to the passed select instance
+	 *
+	 * @param Zend_Db_Select $select
+	 * @param string $table
+	 * @param int $groupId
+	 * @param int $storeId
+	 * @return void
+	 */
+	protected function _addGroupsCatalogFilterToSelect(Zend_Db_Select $select, $table, $groupId, $storeId)
+	{
+		$select->joinInner(
+			$table,
+			"{$table}.entity_id=e.entity_id AND " .
+				$this->_getReadAdapter()->quoteInto("{$table}.group_id=? AND ", $groupId) .
+				$this->_getReadAdapter()->quoteInto("{$table}.store_id=?", $storeId),
+			''
+		);
 	}
 }
