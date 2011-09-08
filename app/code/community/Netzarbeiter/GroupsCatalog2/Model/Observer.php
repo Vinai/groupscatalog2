@@ -101,13 +101,17 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 	}
 
 	/**
-	 * Recollect totals to update the items qty count, in case one of the quote item products has been hidden.
+	 * Update the quote items quantities, in case one of the quote item products has been hidden.
+	 * If we don't do that the sidebar cart item qty might be wrong.
 	 * 
 	 * There might be a better way to do this but so far this is the best way I could think of.
-	 * This is a very rare case that probably won't come into effect at all. Maybe disable?
+	 * This is a very rare case that probably won't come into effect at all, only when a product
+	 * that a customer has in the cart becomes hidden (may be a customer group change or a product
+	 * setting change). Maybe this can go if the overhead is too large. Leave for now.
 	 * 
 	 * @param Varien_Event_Observer $observer
 	 * @return void
+	 * @see Mage_Sales_Model_Quote::collectTotals()
 	 */
 	public function salesQuoteLoadAfter(Varien_Event_Observer $observer)
 	{
@@ -116,9 +120,34 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 		/* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
 		$helper = Mage::helper('netzarbeiter_groupscatalog2');
 
+		/*
+		 * This is an excerpt from Mage_Sales_Model_Quote::collectTotals(). We don't need to
+		 * recalculate all totals here, we just need to make sure the item quantities are correct.
+		 */
 		if ($helper->isModuleActive($quote->getStore()) && $quote->getItemsQty() > 0)
 		{
-			$quote->collectTotals();
+			$itemsCount = $itemsQty = $virtualItemsQty = 0;
+			foreach ($quote->getAllVisibleItems() as $item) {
+				if ($item->getParentItem()) {
+					continue;
+				}
+				$children = $item->getChildren();
+				if ($children && $item->isShipSeparately()) {
+					foreach ($children as $child) {
+						if ($child->getProduct()->getIsVirtual()) {
+							$virtualItemsQty += $child->getQty()*$item->getQty();
+						}
+					}
+				}
+				if ($item->getProduct()->getIsVirtual()) {
+					$virtualItemsQty += $item->getQty();
+				}
+				$itemsCount += 1;
+				$itemsQty += (float) $item->getQty();
+        	}
+			$quote->setVirtualItemsQty($virtualItemsQty)
+				->setItemsCount($itemsCount)
+				->setItemsQty($itemsQty);
 		}
 	}
 
