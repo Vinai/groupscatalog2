@@ -23,12 +23,18 @@
 					<category_index><table>groupscatalog_category_idx</table></category_index>
 				</entities>
 			</netzarbeiter_groupscatalog2_resource>
-			<!-- need to rewrite the category flat resource model -->
+			<!-- rewrite the category flat resource model t filtet the flat catalog queries -->
 			<catalog_resource>
 				<rewrite>
 					<category_flat>Netzarbeiter_GroupsCatalog2_Model_Catalog_Resource_Category_Flat</category_flat>
 				</rewrite>
 			</catalog_resource>
+			<!-- rewrite the catalogseach fulltext collection to add the filter to the getSelectCountSql() method -->
+			<catalogsearch_resource>
+				<rewrite>
+					<fulltext_collection>Netzarbeiter_GroupsCatalog2_Model_CatalogSearch_Resource_Fulltext_Collection</fulltext_collection>
+				</rewrite>
+			</catalogsearch_resource>
 		</models>
 		<helpers>
 			<netzarbeiter_groupscatalog2>
