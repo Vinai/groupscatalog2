@@ -111,6 +111,15 @@
 					</netzarbeiter_groupscatalog2>
 				</observers>
 			</sales_quote_load_after>
+			<wishlist_items_renewed>
+				<observers>
+					<netzarbeiter_groupscatalog2>
+						<type>singleton</type>
+						<model>netzarbeiter_groupscatalog2/observer</model>
+						<method>wishlistItemsRenewed</method>
+					</netzarbeiter_groupscatalog2>
+				</observers>
+			</wishlist_items_renewed>
 		</events>
 	</frontend>
 	<adminhtml>

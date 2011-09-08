@@ -82,12 +82,13 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	 * Return if the module is active for the current store view
 	 *
 	 * @param int|string|Mage_Core_Model_Store $store
+	 * @param bool $checkAdmin If false don't return false just because the specified store is the admin view
 	 * @return bool
 	 */
-	public function isModuleActive($store = null)
+	public function isModuleActive($store = null, $checkAdmin = true)
 	{
 		$store = Mage::app()->getStore($store);
-		if ($store->isAdmin())
+		if ($checkAdmin && $store->isAdmin())
 		{
 			return false;
 		}

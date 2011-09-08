@@ -65,17 +65,53 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 		/* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
 		$helper = Mage::helper('netzarbeiter_groupscatalog2');
 
-		if ($category->dataHasChangedFor(Netzarbeiter_GroupsCatalog2_Helper_Data::HIDE_GROUPS_ATTRIBUTE))
+		// If the module isn't disabled on a global scale
+		if ($helper->isModuleActive($category->getStore(), false))
 		{
-			if ($helper->getConfig('auto_refresh_block_cache'))
+			if ($category->dataHasChangedFor(Netzarbeiter_GroupsCatalog2_Helper_Data::HIDE_GROUPS_ATTRIBUTE))
 			{
-				// Only refresh the category block cache: Mage_Catalog_Model_Category::CACHE_TAG
-				Mage::app()->cleanCache(array(Mage_Catalog_Model_Category::CACHE_TAG));
+				if ($helper->getConfig('auto_refresh_block_cache'))
+				{
+					// Only refresh the category block cache: Mage_Catalog_Model_Category::CACHE_TAG
+					Mage::app()->cleanCache(array(Mage_Catalog_Model_Category::CACHE_TAG));
+				}
+				else
+				{
+					Mage::app()->getCacheInstance()->invalidateType(Mage_Core_Block_Abstract::CACHE_GROUP);
+				}
 			}
-			else
+		}
+	}
+
+	/**
+	 * This fixes a bug in the wishlist module that counts items even
+	 * though they have the is_deleted flag set.
+	 * 
+	 * @param Varien_Event_Observer $observer
+	 * @return void
+	 */
+	public function wishlistItemsRenewed(Varien_Event_Observer $observer)
+	{
+		/* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
+		$helper = Mage::helper('netzarbeiter_groupscatalog2');
+
+		if ($helper->isModuleActive())
+		{
+			/* @var $wishlistHelper Mage_Wishlist_Helper_Data */
+			$wishlistHelper = Mage::helper('wishlist');
+
+			$collection = $wishlistHelper->getWishlistItemCollection();
+			$session = Mage::getSingleton('customer/session');
+			$count = 0;
+
+			foreach ($collection as $item)
 			{
-				Mage::app()->getCacheInstance()->invalidateType(Mage_Core_Block_Abstract::CACHE_GROUP);
+				if (! $item->isDeleted())
+				{
+					$count++;
+				}
 			}
+			$session->setWishlistItemCount($count);
 		}
 	}
 
