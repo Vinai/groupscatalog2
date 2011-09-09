@@ -6,10 +6,10 @@ depending on their customer group. It is a rewrite of the extension
 Netzarbeiter_GroupsCatalog for Magento 1.6 and newer.
 
 If you use Magento 1.5 or 1.4 please refer to the older extension which is linked
-to from this modules page on [Magento Connect][]. Older versions of Magento are no
+to from this modules page on [Magento Connect][mc]. Older versions of Magento are no
 longer supported (the old module might work, though, but I don't test at all).
 
-[Magento Connect] http://www.magentocommerce.com/magento-connect/vinai/extension/635/netzarbeiter_groupscatalog "The GroupsCatalog Extension on Magento Connect"
+[mc] http://www.magentocommerce.com/magento-connect/vinai/extension/635/netzarbeiter_groupscatalog "The GroupsCatalog Extension on Magento Connect"
 
 
 This rewrite not only cleans up the code base, it also adds several new features and improvements:
