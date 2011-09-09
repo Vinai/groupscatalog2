@@ -146,7 +146,7 @@
 							<show_in_default>1</show_in_default>
 							<show_in_website>0</show_in_website>
 							<show_in_store>0</show_in_store>
-							<comment><![CDATA[Automatically refresh the CATEGORY BLOCK HTML cache to update the category top navigation when the visibility setting for a category is changed.]]></comment>
+							<comment><![CDATA[Automatically refresh the CATEGORY BLOCK HTML cache to update the category navigation when the visibility setting for a category is changed.]]></comment>
 							<depends>
 								<is_active>1</is_active>
 							</depends>
