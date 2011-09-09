@@ -9,7 +9,7 @@ If you use Magento 1.5 or 1.4 please refer to the older extension which is linke
 to from this modules page on [Magento Connect][mc]. Older versions of Magento are no
 longer supported (the old module might work, though, but I don't test at all).
 
-[mc] http://www.magentocommerce.com/magento-connect/vinai/extension/635/netzarbeiter_groupscatalog "The GroupsCatalog Extension on Magento Connect"
+[mc]: http://www.magentocommerce.com/magento-connect/vinai/extension/635/netzarbeiter_groupscatalog "The GroupsCatalog Extension on Magento Connect"
 
 
 This rewrite not only cleans up the code base, it also adds several new features and improvements:
