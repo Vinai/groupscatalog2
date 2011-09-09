@@ -23,7 +23,7 @@
 					<category_index><table>groupscatalog_category_idx</table></category_index>
 				</entities>
 			</netzarbeiter_groupscatalog2_resource>
-			<!-- rewrite the category flat resource model t filtet the flat catalog queries -->
+			<!-- rewrite the category flat resource model to filter the flat catalog queries -->
 			<catalog_resource>
 				<rewrite>
 					<category_flat>Netzarbeiter_GroupsCatalog2_Model_Catalog_Resource_Category_Flat</category_flat>
