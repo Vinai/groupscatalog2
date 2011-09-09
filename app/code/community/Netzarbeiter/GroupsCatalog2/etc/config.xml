@@ -168,6 +168,15 @@
 				</observers>
 			</catalog_category_save_after>
 		</events>
+		<translate>
+			<modules>
+				<Netzarbeiter_GroupsCatalog2>
+					<files>
+						<default>Netzarbeiter_GroupsCatalog2.csv</default>
+					</files>
+				</Netzarbeiter_GroupsCatalog2>
+			</modules>
+		</translate>
 	</adminhtml>
 	<default>
 		<netzarbeiter_groupscatalog2>
