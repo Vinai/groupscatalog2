@@ -41,6 +41,29 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 	}
 
 	/**
+	 * Inner join the groupscatalog index table to hide wishlist items whose
+	 * products are not visible to the specified customer group id
+	 *
+	 * @param Mage_Wishlist_Model_Resource_Item_Collection $collection
+	 * @param int $groupId
+	 * @param int $storeId
+	 * @return void
+	 */
+	public function addGroupsCatalogFilterToWishlistItemCollection(Mage_Wishlist_Model_Resource_Item_Collection $collection, $groupId, $storeId)
+	{
+		/* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
+		$helper = Mage::helper('netzarbeiter_groupscatalog2');
+
+		// Switch index table depending on the specified entity
+		$this->_init($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY), 'id');
+
+		$table = $this->getTable($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY));
+		$this->_addGroupsCatalogFilterToSelect(
+			$collection->getSelect(), $table, $groupId, $storeId, 'main_table.product_id'
+		);
+	}
+
+	/**
 	 * Checks the given entities visibility against the groupscatalog index
 	 *
 	 * @param Mage_Catalog_Model_Abstract $entity

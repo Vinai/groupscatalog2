@@ -83,31 +83,25 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 	}
 
 	/**
-	 * This fixes a bug in the wishlist module that counts items even
-	 * though they have the is_deleted flag set.
+	 * Add the groupscatalog filter to the wishlist item collection.
+	 * 
+	 * This event only exists because of the rewrite of the wishlist item collection. The event
+	 * prefix and object properties are not set in the core. A contribution patch is on its way, though.
 	 * 
 	 * @param Varien_Event_Observer $observer
 	 * @return void
 	 */
-	public function wishlistItemsRenewed(Varien_Event_Observer $observer)
+	public function wishlistItemCollectionLoadBefore(Varien_Event_Observer $observer)
 	{
-		if ($this->_getHelper()->isModuleActive() && ! $this->_isApiRequest())
+		/* @var $collection Mage_Wishlist_Model_Resource_Item_Collection */
+		$collection = $observer->getCollection();
+		$helper = $this->_getHelper();
+		$store = Mage::app()->getStore();
+		if ($helper->isModuleActive($store) && ! $this->_isApiRequest())
 		{
-			/* @var $wishlistHelper Mage_Wishlist_Helper_Data */
-			$wishlistHelper = Mage::helper('wishlist');
-
-			$collection = $wishlistHelper->getWishlistItemCollection();
-			$session = Mage::getSingleton('customer/session');
-			$count = 0;
-
-			foreach ($collection as $item)
-			{
-				if (! $item->isDeleted())
-				{
-					$count++;
-				}
-			}
-			$session->setWishlistItemCount($count);
+			$customerGroupId = $helper->getCustomerGroupId();
+			Mage::getResourceSingleton('netzarbeiter_groupscatalog2/filter')
+				->addGroupsCatalogFilterToWishlistItemCollection($collection, $customerGroupId, $store->getId());
 		}
 	}
 

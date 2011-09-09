@@ -35,6 +35,12 @@
 					<fulltext_collection>Netzarbeiter_GroupsCatalog2_Model_CatalogSearch_Resource_Fulltext_Collection</fulltext_collection>
 				</rewrite>
 			</catalogsearch_resource>
+			<!-- rewrite the wishlist item collection to add the filter (by setting the event prefix and object) -->
+			<wishlist_resource>
+				<rewrite>
+					<item_collection>Netzarbeiter_GroupsCatalog2_Model_Wishlist_Resource_Item_Collection</item_collection>
+				</rewrite>
+			</wishlist_resource>
 		</models>
 		<helpers>
 			<netzarbeiter_groupscatalog2>
@@ -117,15 +123,15 @@
 					</netzarbeiter_groupscatalog2>
 				</observers>
 			</sales_quote_load_after>
-			<wishlist_items_renewed>
+			<wishlist_item_collection_load_before>
 				<observers>
 					<netzarbeiter_groupscatalog2>
 						<type>singleton</type>
 						<model>netzarbeiter_groupscatalog2/observer</model>
-						<method>wishlistItemsRenewed</method>
+						<method>wishlistItemCollectionLoadBefore</method>
 					</netzarbeiter_groupscatalog2>
 				</observers>
-			</wishlist_items_renewed>
+			</wishlist_item_collection_load_before>
 		</events>
 	</frontend>
 	<adminhtml>
