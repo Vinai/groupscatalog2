@@ -33,6 +33,7 @@ This rewrite not only cleans up the code base, it also adds several new features
 - Faster frontend usage, especially noticeable with large catalogs and complex settings.
 - Fully configurable on a store view level.
 
+The source to this extension can be found on github: https://github.com/Vinai/groupscatalog2
 
 == USAGE ==
 
