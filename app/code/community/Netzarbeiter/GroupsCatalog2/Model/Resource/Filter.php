@@ -143,13 +143,14 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 	 * @param string $table
 	 * @param int $groupId
 	 * @param int $storeId
+	 * @param string $entityField The table column where the product or category id is stored
 	 * @return void
 	 */
-	protected function _addGroupsCatalogFilterToSelect(Zend_Db_Select $select, $table, $groupId, $storeId)
+	protected function _addGroupsCatalogFilterToSelect(Zend_Db_Select $select, $table, $groupId, $storeId, $entityField='e.entity_id')
 	{
 		$select->joinInner(
 			$table,
-			"{$table}.entity_id=e.entity_id AND " .
+			"{$table}.entity_id={$entityField} AND " .
 				$this->_getReadAdapter()->quoteInto("{$table}.group_id=? AND ", $groupId) .
 				$this->_getReadAdapter()->quoteInto("{$table}.store_id=?", $storeId),
 			''
