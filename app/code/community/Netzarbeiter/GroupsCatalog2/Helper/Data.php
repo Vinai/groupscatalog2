@@ -232,7 +232,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 			break;
 
 			case Mage_Catalog_Model_Category::ENTITY:
-				$path = self::XML_CONFIG_PRODUCT_MODE;
+				$path = self::XML_CONFIG_CATEGORY_MODE;
 			break;
 		}
 
