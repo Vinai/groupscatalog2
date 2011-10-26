@@ -43,27 +43,4 @@ class Netzarbeiter_GroupsCatalog2_Block_Adminhtml_Data_Form_Customergroup
 		
 		return $value;
 	}
-
-	public function getAfterElementHtml()
-	{
-		$html = parent::getAfterElementHtml();
-		return $html . $this->_getAfterElementHtmlJs();
-	}
-
-	protected function _getAfterElementHtmlJs()
-	{
-		$id = $this->getHtmlId();
-		$js = <<<EOT
-<script type="text/javascript">
-	Event.observe(window, 'load', function() {
-		var label = $$('label[for="{$id}"]');
-		alert(label[0].innerHTML);
-		$(label[0]).innerHTML = 'Neuer Text';
-		if (typeof label !== 'undefined') $(label[0]).innerHTML = 'ZZZZ';
-		alert(label[0].innerHTML);
-	});
-</script>
-EOT;
-		return '';
-	}
 }
