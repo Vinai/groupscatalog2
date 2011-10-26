@@ -211,7 +211,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	public function getEntityTypeCodeFromEntity(Mage_Catalog_Model_Abstract $entity)
 	{
 		// $entity::ENTITY is only possible from PHP 5.3.0, but Magento requires only 5.2.13
-		return constant(get_class($entity) . '::ENTITY');;
+		return constant(get_class($entity) . '::ENTITY');
 	}
 
 	/**
