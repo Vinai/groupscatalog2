@@ -284,7 +284,9 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	protected function _getEntityVisibleDefaultGroupIds($entityType, $store = null)
 	{
 		$prefix = $this->_getEntityVisibilityDefaultsPathPrefixByEntityType($entityType);
-		$mode = $this->getModeSettingByEntityType($entityType, $store);
+		$mode = $this->_getEntityVisibilityDefaultsPathPostfixByMode(
+			$this->getModeSettingByEntityType($entityType, $store)
+		);
 		$groupIds = Mage::getStoreConfig($prefix . $mode, $store);
 
 		if (null === $groupIds)
@@ -363,5 +365,27 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 			break;
 		}
 		return $path;
+	}
+
+	/**
+	 * Return the oposide mode flag, because that is where the default configuration
+	 * setting for the default groups is stored.
+	 * If the default is to show all categories, the default categories are under "hide" and
+	 * vica versa.
+	 * 
+	 * @param string $mode
+	 * @return string
+	 */
+	protected function _getEntityVisibilityDefaultsPathPostfixByMode($mode)
+	{
+		if ($mode == self::MODE_HIDE_BY_DEFAULT)
+		{
+			$mode = self::MODE_SHOW_BY_DEFAULT;
+		}
+		else
+		{
+			$mode = self::MODE_HIDE_BY_DEFAULT;
+		}
+		return $mode;
 	}
 }
