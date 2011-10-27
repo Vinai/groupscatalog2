@@ -248,6 +248,13 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	 */
 	protected function _prepareRow(array &$row)
 	{
+		// Entities that don't have a value for the groupscatalog attribute
+		if (null === $row['group_ids'])
+		{
+			$row['group_ids'] = Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT;
+			$row['store_id'] = Mage::app()->getStore(Mage_Core_Model_Store::ADMIN_CODE)->getId();
+		}
+		
 		if (Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT == $row['group_ids'])
 		{
 			// Use store default ids if that is selected for the entity
