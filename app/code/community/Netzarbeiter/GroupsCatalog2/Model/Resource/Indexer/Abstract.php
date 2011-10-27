@@ -194,14 +194,17 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 			// A new entity is being handled
 			if ($entityId !== $row['entity_id'])
 			{
-				// Add missing store id records to the insert data array (unless this is the first itteration)
+				// Add missing store id records to the insert data array for the previous entity id
+				// That is why we skip this condition on the first iteration.
+				// We need to do this last because then $storesHandled is set completely for the $entityId
 				if (null !== $entityId)
 				{
 					$this->_addMissingStoreRecords($data, $entityId, $entityDefaultGroups, $storesHandled);
 				}
+
 				// Set new entity as default
 				$entityId = $row['entity_id'];
-				// Set default groups for new entity (store id 0 is the first one)
+				// Set default groups for new entity (store id 0 is the first one for each entity in $result)
 				$entityDefaultGroups = $row['group_ids'];
 				// Reset stores handled for new entity to empty list
 				$storesHandled = array();
@@ -215,6 +218,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 				$data[] = array('entity_id' => $row['entity_id'], 'group_id' => $groupId, 'store_id' => $row['store_id']);
 				$storesHandled[] = $row['store_id'];
 			}
+
 			// Insert 1000 records at a time
 			if (count($data) >= 1000)
 			{
@@ -222,8 +226,10 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 				$data = array();
 			}
 		}
-		
-		// Add missing store id records to the insert data array
+
+		// The last iterations over $result will probably not have hit the >= 1000 mark, so we still need to insert
+
+		// Add missing store id records to the insert data array for the last $entityId
 		$this->_addMissingStoreRecords($data, $entityId, $entityDefaultGroups, $storesHandled);
 
 		// Insert missing index records
