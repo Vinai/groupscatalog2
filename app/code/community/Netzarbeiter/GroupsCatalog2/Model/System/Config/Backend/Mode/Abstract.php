@@ -24,10 +24,10 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_System_Config_Backend_Mode_Abst
 	extends Mage_Core_Model_Config_Data
 {
 	/**
-	 * Return the indexer code for this backendss entity
+	 * Return the indexer code for this backend entity
 	 *
 	 * @abstract
-	 * @return vstring
+	 * @return string
 	 */
 	abstract protected function _getIndexerCode();
 
