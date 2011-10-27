@@ -70,6 +70,7 @@
 							<label>Hide Products from</label>
 							<frontend_type>multiselect</frontend_type>
 							<source_model>netzarbeiter_groupscatalog2/system_config_source_customergroup</source_model>
+							<backend_model>netzarbeiter_groupscatalog2/system_config_backend_customergroup_product</backend_model>
 							<sort_order>30</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
@@ -84,7 +85,7 @@
 							<label>Show Products to</label>
 							<frontend_type>multiselect</frontend_type>
 							<source_model>netzarbeiter_groupscatalog2/system_config_source_customergroup</source_model>
-							<backend_model>netzarbeiter_groupscatalog2/system_config_backend_customergroup</backend_model>
+							<backend_model>netzarbeiter_groupscatalog2/system_config_backend_customergroup_product</backend_model>
 							<sort_order>30</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
@@ -112,6 +113,7 @@
 							<label>Hide Categories from</label>
 							<frontend_type>multiselect</frontend_type>
 							<source_model>netzarbeiter_groupscatalog2/system_config_source_customergroup</source_model>
+							<backend_model>netzarbeiter_groupscatalog2/system_config_backend_customergroup_category</backend_model>
 							<sort_order>50</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
@@ -126,7 +128,7 @@
 							<label>Show Categories to</label>
 							<frontend_type>multiselect</frontend_type>
 							<source_model>netzarbeiter_groupscatalog2/system_config_source_customergroup</source_model>
-							<backend_model>netzarbeiter_groupscatalog2/system_config_backend_customergroup</backend_model>
+							<backend_model>netzarbeiter_groupscatalog2/system_config_backend_customergroup_category</backend_model>
 							<sort_order>50</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>

@@ -20,16 +20,28 @@
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
  
-class Netzarbeiter_GroupsCatalog2_Model_System_Config_Backend_Customergroup extends Mage_Core_Model_Config_Data
+abstract class Netzarbeiter_GroupsCatalog2_Model_System_Config_Backend_Customergroup_Abstract extends Mage_Core_Model_Config_Data
 {
 	/**
-	 * Sanitize settings
+	 * Return the indexer code for this backend entity
+	 *
+	 * @abstract
+	 * @return string
+	 */
+	abstract protected function _getIndexerCode();
+	
+	/**
+	 * Sanitize settings and set the index to require reindex
 	 * 
 	 * @return void
 	 */
 	protected function _beforeSave()
 	{
 		$value = $this->getValue();
+		if (is_string($value))
+		{
+			$value = explode(',', $value);
+		}
 		if (is_array($value) && 1 < count($value))
 		{
 			// if USE_NONE is selected remove all other selected groups
@@ -38,6 +50,14 @@ class Netzarbeiter_GroupsCatalog2_Model_System_Config_Backend_Customergroup exte
 				$value = array(Netzarbeiter_GroupsCatalog2_Helper_Data::USE_NONE);
 				$this->setValue($value);
 			}
+		}
+		// Can't use isValueChanged() because it compares string value (old) with array (new)
+		$oldValue = explode(',', (string) $this->getOldValue());
+		if ($this->getValue() != $oldValue)
+		{
+			$indexerCode = $this->_getIndexerCode();
+			$process = Mage::getModel('index/indexer')->getProcessByCode($indexerCode);
+			$process->changeStatus(Mage_Index_Model_Process::STATUS_REQUIRE_REINDEX);
 		}
 		return parent::_beforeSave();
 	}
