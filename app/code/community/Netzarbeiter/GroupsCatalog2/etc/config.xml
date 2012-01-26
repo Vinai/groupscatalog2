@@ -177,7 +177,25 @@
 				</Netzarbeiter_GroupsCatalog2>
 			</modules>
 		</translate>
+		<layout>
+			<updates>
+				<netzarbeiter_groupscatalog2>
+					<file>netzarbeiter/groupscatalog2.xml</file>
+				</netzarbeiter_groupscatalog2>
+			</updates>
+		</layout>
 	</adminhtml>
+	<admin>
+		<routers>
+			<adminhtml>
+				<args>
+					<modules>
+						<Netzarbeiter_GroupsCatalog2 before="Mage_Adminhtml">Netzarbeiter_GroupsCatalog2_Adminhtml</Netzarbeiter_GroupsCatalog2>
+					</modules>
+				</args>
+			</adminhtml>
+		</routers>
+	</admin>
 	<default>
 		<netzarbeiter_groupscatalog2>
 			<general>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+	<adminhtml_netzarbeiter_groupscatalog2_migration_index>
+		<reference name="content">
+			<block type="netzarbeiter_groupscatalog2/adminhtml_system_tools_migration" name="groupscatalog2.migration" template="netzarbeiter/groupscatalog2/system/tools/migration.phtml"/>
+		</reference>
+	</adminhtml_netzarbeiter_groupscatalog2_migration_index>
+</layout>

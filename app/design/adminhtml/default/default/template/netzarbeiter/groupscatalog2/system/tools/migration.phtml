@@ -1,0 +1,94 @@
+<?php
+/**
+ * Netzarbeiter
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this Module to
+ * newer versions in the future.
+ *
+ * @category   Netzarbeiter
+ * @package    Netzarbeiter_GroupsCatalog2
+ * @copyright  Copyright (c) 2011 Vinai Kopp http://netzarbeiter.com
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+/* @var $this Netzarbeiter_GroupsCatalog2_Block_Adminhtml_System_Tools_Migration */
+?>
+<style type="text/css">
+	ol { margin-left:25px; list-style-type: decimal; }
+	.content-box { padding-bottom: 20px; }
+</style>
+<div class="content-header">
+	<table cellspacing="0">
+		<tr>
+			<td style="width:50%;"><h3><?php echo $this->__('Netzarbeiter Groups Catalog 2 Migration (BETA)') ?></h3></td>
+		</tr>
+	</table>
+</div>
+
+<?php if ($this->isGroupsCatalogInstallResourcePresent()): ?>
+<div class="content-box">
+	<h3><?php echo $this->__('Migration Steps:') ?></h3>
+	<ol>
+		<li><?php echo $this->__('<strong>You</strong> create a <strong>backup</strong>!') ?></li>
+		<li><?php echo $this->__('Remove any attribute models for the old GroupsCatalog extension') ?><span class="required">*</span></li>
+		<li><?php echo $this->__('Deactivate the old GroupsCatalog extension') ?><span class="required">*</span></li>
+		<li><?php echo $this->__('Migrate extension settings and build new GroupsCatalog2 index') ?><span class="required">*</span></li>
+		<li><?php echo $this->__("Clean up the database from relict's of the old extension") ?><span class="required">*</span></li>
+		<li><?php echo $this->__("Remove files from old GroupsCatalog extension") ?></li>
+	</ol>
+	<br/>
+	<span class="required">*</span> <?php echo $this->__('These steps can be done with the help of this assistant'); ?><br/>
+	<br/>
+	<span class="notice-msg"><?php echo $this->__("You are responsible for using this assistant! Don't blame anybody but yourself if you don't have a backup or are unable to restore!") ?></span>
+</div>
+<?php endif; ?>
+
+<div class="content-box">
+	<h3><?php echo $this->__('Status') ?></h3>
+	<?php if ($this->isGroupsCatalogActive()): ?>
+		<?php echo $this->__('The old GroupsCatalog Extension is <strong>installed and active</strong>.'); ?>
+	<?php elseif ($this->isGroupsCatalogInstalled()): ?>
+		<?php echo $this->__('The old GroupsCatalog Extension is <strong>installed</strong>, but inactive.'); ?>
+	<?php else: ?>
+		<?php echo $this->__('The old GroupsCatalog Extension is not installed.') ?><br/>
+	<?php endif; ?>
+</div>
+
+<?php if ($this->isGroupsCatalogInstallResourcePresent()): ?>
+<div class="content-box">
+	<h3><?php echo $this->__('Take Action') ?></h3>
+    <?php if ($this->isGroupsCatalogInstalled()): ?>
+		<form action="<?php echo $this->getUrl('*/*/doStep') ?>">
+			<?php if ($this->areAttributeModelsSpecified()): ?>
+				<?php echo $this->__("Next Step: unset the backend and source models from the attributes of the old GroupsCatalog extension") ?>
+				<input type="hidden" name="migration_step" value="unsetAttributeModels"/>
+			<?php elseif ($this->isGroupsCatalogActive()): ?>
+				<?php echo $this->__('Next Step: deactivate the old GroupsCatalog extension') ?>
+				<input type="hidden" name="migration_step" value="deactivateModule"/>
+			<?php elseif ($this->isGroupsCatalogInstalled() && $this->isGroupsCatalogAttributeAvailable()): ?>
+				<?php echo $this->__('Next Step: migrate system configuration and catalog data') ?>
+				<input type="hidden" name="migration_step" value="migrateData"/>
+			<?php elseif ($this->isGroupsCatalogAttributeAvailable()): ?>
+				<?php echo $this->__("Next Step: clean up relict's from the old GroupsCatalog extension from the database") ?>
+				<input type="hidden" name="migration_step" value="cleanupDb"/>
+			<?php else: ?>
+				<?php echo $this->__('Next Step: you now can safely remove all files from the old GroupsCatalog extension') ?>
+				<input type="hidden" name="migration_step" value="removeFiles"/>
+			<?php endif; ?>
+			<br/>
+			<button type="submit"><?php echo $this->__('Go') ?></button>
+		</form>
+	<?php else: ?>
+		<?php echo $this->__('The old GroupsCatalog module was completely removed, migration should be complete') ?>
+	<?php endif; ?>
+</div>
+<?php endif; ?>
+

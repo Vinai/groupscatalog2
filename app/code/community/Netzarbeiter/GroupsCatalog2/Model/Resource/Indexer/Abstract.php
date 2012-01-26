@@ -241,7 +241,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	}
 
 	/**
-	 * Prepare the record read from the database for the further indexind
+	 * Prepare the record read from the database for the further indexing
 	 *
 	 * @param array $row
 	 * @return void

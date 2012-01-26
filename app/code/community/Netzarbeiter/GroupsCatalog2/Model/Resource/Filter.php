@@ -23,6 +23,9 @@
 class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 	extends Mage_Core_Model_Resource_Db_Abstract
 {
+    /**
+     * Implement method required by abstract
+     */
 	protected function _construct()
 	{
 	}

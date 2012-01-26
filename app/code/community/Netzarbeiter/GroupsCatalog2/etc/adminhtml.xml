@@ -36,10 +36,33 @@
 									</netzarbeiter_groupscatalog2>
 								</children>
 							</config>
+							<tools>
+								<children>
+									<netzarbeiter_groupscatalog2 translate="title" module="netzarbeiter_groupscatalog2">
+										<title>Groups Catalog 2</title>
+										<sort_order>200</sort_order>
+									</netzarbeiter_groupscatalog2>
+								</children>
+							</tools>
 						</children>
 					</system>
 				</children>
 			</admin>
 		</resources>
 	</acl>
+	<menu>
+		<system>
+			<children>
+				<tools>
+					<children>
+						<netzarbeiter_groupscatalog2 translate="title" module="netzarbeiter_groupscatalog2">
+							<title>Groups Catalog 2 Migration</title>
+							<sort_order>200</sort_order>
+							<action>adminhtml/netzarbeiter_groupsCatalog2_migration</action>
+						</netzarbeiter_groupscatalog2>
+					</children>
+				</tools>
+			</children>
+		</system>
+	</menu>
 </config>
