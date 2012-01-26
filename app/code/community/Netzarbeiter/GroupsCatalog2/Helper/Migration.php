@@ -253,7 +253,6 @@ class Netzarbeiter_GroupsCatalog2_Helper_Migration
     protected function _removeOldConfigTableSettings()
     {
         $this->_getResource()->deleteDbConfigSettingsByPath('catalog/groupscatalog/');
-        Mage::throwException(__FUNCTION__ . ' not Implemented');
     }
 
 	protected function _removeFiles()

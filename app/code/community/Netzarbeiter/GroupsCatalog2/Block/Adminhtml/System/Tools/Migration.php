@@ -58,7 +58,6 @@ class Netzarbeiter_GroupsCatalog2_Block_Adminhtml_System_Tools_Migration
 	 */
 	public function isGroupsCatalogInstalled()
 	{
-		return true; //???
 		return (bool) $this->getGroupsCatalogInstallationStatus() & self::STATUS_INSTALLED;
 	}
 
@@ -151,7 +150,6 @@ class Netzarbeiter_GroupsCatalog2_Block_Adminhtml_System_Tools_Migration
 	 */
 	public function isGroupsCatalogAttributeAvailable()
 	{
-		return true; //???
 		$attribute = $this->_getProductGroupsCatalogAttribute();
 		if (! $attribute->getAttributeId())
 		{
@@ -195,11 +193,6 @@ class Netzarbeiter_GroupsCatalog2_Block_Adminhtml_System_Tools_Migration
 		return false;
 	}
 
-    public function isNewIndexEmpty()
-    {
-
-    }
-
 	/**
 	 * Return true if an entry for the old GroupsCatalog extension is present in the core_resource table
 	 *
@@ -207,7 +200,6 @@ class Netzarbeiter_GroupsCatalog2_Block_Adminhtml_System_Tools_Migration
 	 */
 	public function isGroupsCatalogInstallResourcePresent()
 	{
-		return true; //????
         return 0 < Mage::getResourceSingleton('core/resource')->getDbVersion('groupscatalog_setup');
 	}
 }
