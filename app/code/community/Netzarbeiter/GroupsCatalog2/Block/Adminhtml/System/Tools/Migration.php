@@ -58,7 +58,7 @@ class Netzarbeiter_GroupsCatalog2_Block_Adminhtml_System_Tools_Migration
 	 */
 	public function isGroupsCatalogInstalled()
 	{
-		return (bool) $this->getGroupsCatalogInstallationStatus() & self::STATUS_INSTALLED;
+		return (bool) ($this->getGroupsCatalogInstallationStatus() & self::STATUS_INSTALLED);
 	}
 
 	/**
@@ -68,7 +68,7 @@ class Netzarbeiter_GroupsCatalog2_Block_Adminhtml_System_Tools_Migration
 	 */
 	public function isGroupsCatalogActive()
 	{
-		return (bool) $this->getGroupsCatalogInstallationStatus() & self::STATUS_INSTALLED_ACTIVE;
+		return (bool) ($this->getGroupsCatalogInstallationStatus() & self::STATUS_INSTALLED_ACTIVE);
 	}
 
 	/**
@@ -87,8 +87,7 @@ class Netzarbeiter_GroupsCatalog2_Block_Adminhtml_System_Tools_Migration
 			if ($config)
 			{
 				$this->_groupsCatalogInstallationStatus |= self::STATUS_INSTALLED;
-
-				if ($config->active && in_array($config->active, array('1', 'true'), true))
+             	if ($config->active && in_array(strval($config->active), array('1', 'true'), true))
 				{
 					$this->_groupsCatalogInstallationStatus |= self::STATUS_INSTALLED_ACTIVE;
 				}
