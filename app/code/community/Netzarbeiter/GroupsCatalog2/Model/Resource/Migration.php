@@ -8,6 +8,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Migration
      */
     protected function _construct()
     {
+        $this->_setResource('core');
     }
 
     /**
@@ -20,21 +21,30 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Migration
      */
     public function copyAttributeValues(Mage_Eav_Model_Entity_Attribute $oldAttribute, Mage_Eav_Model_Entity_Attribute $newAttribute)
     {
+        $select = $this->_getReadAdapter()->select()
+                ->reset()
+                ->distinct(true)
+                ->from($oldAttribute->getBackendTable(), 'entity_id')
+                ->where('attribute_id=:attribute_id');
+        $entityIds = $this->_getReadAdapter()->fetchCol($select, array('attribute_id' => $oldAttribute->getId()));
+
+        // Remove new attribute value records for entities that are being migrated
+        $this->_getWriteAdapter()->delete($newAttribute->getBackendTable(), array(
+            'attribute_id=?' => $newAttribute->getId(),
+            'entity_id IN(?)' => $entityIds
+        ));
+
+        // Copy old attribute values to the new attribute
         $selectFields = array('entity_type_id', new Zend_Db_Expr($newAttribute->getId()), 'store_id', 'entity_id', 'value');
         $insertFields = array('entity_type_id', 'attribute_id',                           'store_id', 'entity_id', 'value');
-        $select = $this->_getWriteAdapter()->select()
+        $select->reset()
                 ->from($oldAttribute->getBackendTable(), $selectFields)
                 ->where('attribute_id=?', $oldAttribute->getId());
         $update = $this->_getWriteAdapter()->insertFromSelect(
             $select, $newAttribute->getBackendTable(), $insertFields, Varien_Db_Adapter_Interface::INSERT_IGNORE
         );
-        Mage::log($update);
-        //$this->_getWriteAdapter()->query($update);
+        $this->_getWriteAdapter()->query($update);
 
-        $select->reset()->distinct(true)->from($oldAttribute->getBackendTable(), 'entity_id')
-                ->where('attribute_id=:attribute_id');
-
-        $entityIds = $this->_getReadAdapter()->fetchCol($select, array('attribute_id' => $oldAttribute->getId()));
         return $entityIds;
     }
 
@@ -45,11 +55,11 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Migration
      * @param bool $like
      * @return Netzarbeiter_GroupsCatalog2_Model_Resource_Migration
      */
-    public function _removeOldConfigTableSettings($path, $like = true)
+    public function deleteDbConfigSettingsByPath($path, $like = true)
     {
         if ($like)
         {
-            $where = $this->_getWriteAdapter()->quoteInto('path LIKE ?', new Zend_Db_Expr("{$path}%"));
+            $where = $this->_getWriteAdapter()->quoteInto('path LIKE ?', "{$path}%");
         }
         else
         {
