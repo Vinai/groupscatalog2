@@ -58,17 +58,20 @@ class Netzarbeiter_GroupsCatalog2_Helper_Migration
 			);
 			Mage::throwException($message);
 		}
-		if (! is_writable($file))
-		{
-			$message = Mage::helper('netzarbeiter_groupscatalog2')->__(
-				'The file app/etc/modules/Netzarbeiter_GroupsCatalog.xml is not writable. Please fix it or deactivate the module manually in that file.'
-			);
-			Mage::throwException($message);
-		}
-		$xml = simplexml_load_file($file);
-		$xml->modules->Netzarbeiter_GroupsCatalog->active = 'false';
-		$xml->asXML($file);
-		Mage::app()->cleanCache(Mage_Core_Model_Config::CACHE_TAG);
+        $xml = simplexml_load_file($file);
+        if (in_array(strval($xml->modules->Netzarbeiter_GroupsCatalog->active), array('true', '1'), true))
+        {
+            if (! is_writable($file))
+            {
+                $message = Mage::helper('netzarbeiter_groupscatalog2')->__(
+                    'The file app/etc/modules/Netzarbeiter_GroupsCatalog.xml is not writable.<br/>Please fix it and flush the configuration cache, or deactivate the module manually in that file.'
+                );
+                Mage::throwException($message);
+            }
+            $xml->modules->Netzarbeiter_GroupsCatalog->active = 'false';
+            $xml->asXML($file);
+            Mage::app()->cleanCache(Mage_Core_Model_Config::CACHE_TAG);
+        }
 	}
 
 	protected function _migrateData()
@@ -76,6 +79,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Migration
 		$this->_migrateSystemConfig();
 		$this->_migrateProductSettings();
 		$this->_migrateCategorySettings();
+        $this->_removeOldAttributes();
 	}
 
 	protected function _migrateSystemConfig()
@@ -233,9 +237,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Migration
 
 	protected function _cleanupDb()
 	{
-        $this->_removeOldAttributes();
         $this->_removeOldConfigTableSettings();
-        Mage::throwException(__FUNCTION__ . ' not Implemented');
 	}
 
     protected function _removeOldAttributes()
@@ -248,15 +250,26 @@ class Netzarbeiter_GroupsCatalog2_Helper_Migration
         $oldCategoryAttribute = Mage::getSingleton('eav/config')
             ->getAttribute(Mage_Catalog_Model_Category::ENTITY, self::GROUPSCATALOG1_ATTRIBUTE_CODE);
         $oldCategoryAttribute->delete();
+
+        Mage::app()->cleanCache(Mage_Eav_Model_Attribute::CACHE_TAG);
     }
 
     protected function _removeOldConfigTableSettings()
     {
         $this->_getResource()->deleteDbConfigSettingsByPath('catalog/groupscatalog/');
+        Mage::app()->cleanCache(Mage_Core_Model_Config::CACHE_TAG);
     }
 
 	protected function _removeFiles()
 	{
-		Mage::throwException(__FUNCTION__ . ' not Implemented');
+        $message = $this->__('Remove the following files and directories to complete the uninstall:<br/>%s', implode('<br/>', array(
+            'app/etc/modules/Netzarbeiter_GroupsCatalog.xml',
+            'app/code/community/Netzarbeiter/GroupsCatalog/',
+            'app/locale/de_DE/Netzarbeiter_GroupsCatalog.csv',
+            'app/locale/en_US/Netzarbeiter_GroupsCatalog.csv',
+            'app/locale/fr_FR/Netzarbeiter_GroupsCatalog.csv',
+            'app/locale/nl_NL/Netzarbeiter_GroupsCatalog.csv'
+        )));
+		Mage::throwException($message);
 	}
 }
