@@ -27,8 +27,8 @@ group. It is a rewrite of the Magento extension Netzarbeiter_GroupsCatalog for M
 If you use Magento 1.5 or 1.4 please refer to the older extension which is linked
 to from this modules page on Magento Connect.
 
-If you use Magento 1.5 or 1.4 please refer to the older extension which is linked
-to from this modules page on Magento Connect.
+If you use Magento 1.5 or 1.4 please refer to the older extension:
+http://www.magentocommerce.com/magento-connect/netzarbeiter-groupscatalog.html
 
 This rewrite not only cleans up the code base, it also adds several new features and improvements:
 - Configurable if you want to hide everything and select products and categories to show or vica versa.
