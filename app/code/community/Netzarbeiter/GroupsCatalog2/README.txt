@@ -54,16 +54,18 @@ There check the checkboxes beside the indexes "GroupsCatalog Products" and "Grou
 
 == INSTALL ==
 
-After installation please refresh the cache, and then log out of the admin area and log back in again
-to avoid getting a 404 error on the Module configuration page.
+After installation please refresh the (config, layout and block_html) cache, and then log out of the admin area
+and log back in again to avoid getting a 404 error on the Module configuration page.
 Then visit the configuration page at
 System / Configuration / Netzarbeiter Extensions / Groups Catalog 2
 and configure as needed.
 
 == UPGRADE from 1.5 ==
 
-I'm planning to add a migration script to move configuration settings from the old version of the
-extension to the new one. But currently there is no such thing yet.
+To upgrade, first create a backup (file system and database).
+Then install the GroupsCatalog 2 module, and visit the admin page System > Tools > Groups Catalog 2 Migration
+There you will find a step-by-step wizard assisting you to migrate all settings for the system configuration,
+all products and all categories.
 
 == UNINSTALL ==
 
