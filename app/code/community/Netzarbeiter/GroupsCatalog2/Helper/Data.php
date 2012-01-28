@@ -142,7 +142,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 			{
 				// This case will not happen in production:
 				// at least USE_DEFAULT or USE_NONE should be in the value array.
-				// I just like to be cautious if I ever think of possible buggy cases :)
+				// Just your average paranoia...
 				$groupIds = array();
 			}
 			else
