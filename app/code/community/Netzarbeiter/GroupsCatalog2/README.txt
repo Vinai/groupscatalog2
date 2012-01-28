@@ -66,7 +66,8 @@ and configure as needed.
 == UPGRADE from 1.5 ==
 
 To upgrade, first create a backup (file system and database).
-Then install the GroupsCatalog 2 module, and visit the admin page System > Tools > Groups Catalog 2 Migration
+Then install the GroupsCatalog 2 module, and visit the admin page at
+System / Tools / Groups Catalog 2 Migration
 There you will find a step-by-step wizard assisting you to migrate all settings for the system configuration,
 all products and all categories.
 
