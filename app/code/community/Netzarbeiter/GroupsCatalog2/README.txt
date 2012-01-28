@@ -24,9 +24,6 @@
 This extension enables you to hide categories and products from customers depending on their customer
 group. It is a rewrite of the Magento extension Netzarbeiter_GroupsCatalog for Magento 1.6 and newer.
 
-If you use Magento 1.5 or 1.4 please refer to the older extension which is linked
-to from this modules page on Magento Connect.
-
 If you use Magento 1.5 or 1.4 please refer to the older extension:
 http://www.magentocommerce.com/magento-connect/netzarbeiter-groupscatalog.html
 
