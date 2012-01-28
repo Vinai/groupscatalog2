@@ -207,6 +207,13 @@
 				<category_default_show>-1</category_default_show>
 				<category_default_hide>-1</category_default_hide>
 				<auto_refresh_block_cache>0</auto_refresh_block_cache>
+				<entity_hidden_behaviour_guest>404</entity_hidden_behaviour_guest>
+				<entity_hidden_behaviour_customer>404</entity_hidden_behaviour_customer>
+				<entity_hidden_redirect_guest>customer/account/login</entity_hidden_redirect_guest>
+				<entity_hidden_redirect_customer>cms</entity_hidden_redirect_customer>
+				<display_entity_hidden_msg>0</display_entity_hidden_msg>
+				<entity_hidden_msg_guest>Please register an account and log in.</entity_hidden_msg_guest>
+				<entity_hidden_msg_customer>Please contact us to request further access privileges.</entity_hidden_msg_customer>
 			</general>
 		</netzarbeiter_groupscatalog2>
 	</default>
