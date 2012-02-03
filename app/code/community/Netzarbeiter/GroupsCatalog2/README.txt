@@ -84,6 +84,7 @@ Don't forget to clear the cache, afterwards.
 
 == CHANGES ==
 
+0.1.2 - Add italian translation - thanks to Marco Gallopin!
 0.1.0 - Initial release of the GroupsCatalog2 module
 
 
