@@ -22,6 +22,34 @@
 
 class Netzarbeiter_GroupsCatalog2_Model_Observer
 {
+    /**
+     * List of routes that have to match the current request
+     * for the configured message top be displayed.
+     *
+     * @var array
+     */
+    protected $_displayMessageRoutes = array();
+
+    /**
+     * Avoid adding the configured message more then once if more then one hidden entity is loaded,
+     * e.g. the main product and a related product or a product in a banner in the footer block.
+     * Set to true when the message has been added to the session.
+     *
+     * @var bool
+     */
+    protected $_messageAdded = false;
+
+    /**
+     * Initialize the _displayMessageRoutes property.
+     */
+    public function __construct()
+    {
+        $this->_displayMessageRoutes = array(
+            'catalog_product_view' => Mage_Catalog_Model_Product::ENTITY,
+            'catalog_category_view' => Mage_Catalog_Model_Category::ENTITY
+        );
+    }
+
 	/**
 	 * Add the groupscatalog filter sql to product collections
 	 *
@@ -80,8 +108,6 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 
 	/**
 	 * Apply the message display and redirect if configured.
-	 * Currently there is no differentiation between products and categories here, so
-	 * the entityTypeCode parameter is ignored. Might be used in future if requested.
 	 *
 	 * @param string $entityTypeCode
 	 */
@@ -90,36 +116,64 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 		$helper = $this->_getHelper();
 		if ($helper->isModuleActive() && !$this->_isApiRequest())
 		{
-			$this->_applyHiddenEntityMsg($entityTypeCode);
+            $this->_applyHiddenEntityMsg($entityTypeCode);
 			$this->_applyHiddenEntityRedirect($entityTypeCode);
 		}
 	}
 
 	/**
 	 * Apply the configured splash message to display if a hidden entity is accessed.
-	 * The passed in entity type code is currently being ignored.
 	 *
 	 * @param string $entityTypeCode
 	 */
 	protected function _applyHiddenEntityMsg($entityTypeCode)
 	{
-		$helper = $this->_getHelper();
-		if ($helper->getConfig('display_entity_hidden_msg'))
-		{
-			if (Mage::getSingleton('customer/session')->isLoggedIn())
-			{
-				$message = $helper->getConfig('entity_hidden_msg_customer');
-			}
-			else
-			{
-				$message = $helper->getConfig('entity_hidden_msg_guest');
-			}
-			if (mb_strlen($message, 'UTF-8') > 0)
-			{
-				Mage::getSingleton('core/session')->addError($message);
-			}
-		}
+        if ($this->_shouldDisplayMessage($entityTypeCode))
+        {
+            $this->_messageAdded = true;
+            if (Mage::getSingleton('customer/session')->isLoggedIn())
+            {
+                $message = $this->_getHelper()->getConfig('entity_hidden_msg_customer');
+            }
+            else
+            {
+                $message = $this->_getHelper()->getConfig('entity_hidden_msg_guest');
+            }
+            if (mb_strlen($message, 'UTF-8') > 0)
+            {
+                Mage::getSingleton('core/session')->addError($message);
+            }
+        }
 	}
+
+    /**
+     * Check if a configured message should be shown.
+     *
+     * @param string $entityTypeCode
+     * @return bool
+     */
+    protected function _shouldDisplayMessage($entityTypeCode)
+    {
+        // Avoid double messages if two hidden entities are loaded
+        if (! $this->_messageAdded)
+        {
+            if ($action = Mage::app()->getFrontController()->getAction())
+            {
+                $fullActionName = $action->getFullActionName();
+                if (isset($this->_displayMessageRoutes[$fullActionName]))
+                {
+                    if ($this->_displayMessageRoutes[$fullActionName] == $entityTypeCode)
+                    {
+                        if ($this->_getHelper()->getConfig('display_entity_hidden_msg'))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
 	/**
 	 * Apply redirects for hidden entity page requests if configured.
