@@ -26,6 +26,7 @@
 
 app/code/community/Netzarbeiter/GroupsCatalog2 app/code/community/Netzarbeiter/GroupsCatalog2
 app/etc/modules/Netzarbeiter_GroupsCatalog2.xml app/etc/modules/Netzarbeiter_GroupsCatalog2.xml
-app/locale/de_DE/Netzarbeiter_GroupsCatalog2.csv app/locale/de_DE/Netzarbeiter_GroupsCatalog2.csv
 app/design/adminhtml/default/default/layout/netzarbeiter/groupscatalog2.xml app/design/adminhtml/default/default/layout/netzarbeiter/groupscatalog2.xml
 app/design/adminhtml/default/default/template/netzarbeiter/groupscatalog2/system/tools/migration.phtml app/design/adminhtml/default/default/template/netzarbeiter/groupscatalog2/system/tools/migration.phtml
+app/locale/de_DE/Netzarbeiter_GroupsCatalog2.csv app/locale/de_DE/Netzarbeiter_GroupsCatalog2.csv
+app/locale/it_IT/Netzarbeiter_GroupsCatalog2.csv app/locale/it_IT/Netzarbeiter_GroupsCatalog2.csv
