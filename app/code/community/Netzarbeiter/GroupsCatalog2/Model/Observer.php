@@ -86,7 +86,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 		$this->_applyGroupsCatalogSettingsToEntity($category);
 		if ($category->getData('forbidden_by_groupscatalog2'))
 		{
-			$this->_applyHiddenEntityHandling(Mage_Catalog_Model_Product::ENTITY);
+			$this->_applyHiddenEntityHandling(Mage_Catalog_Model_Category::ENTITY);
 		}
 	}
 
