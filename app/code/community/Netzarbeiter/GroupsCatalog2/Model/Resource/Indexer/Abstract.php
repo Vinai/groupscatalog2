@@ -15,25 +15,26 @@
  * newer versions in the future.
  *
  * @category   Netzarbeiter
- * @package    Netzarbeiter_GroupsCatalog2
+ * @package	Netzarbeiter_GroupsCatalog2
  * @copyright  Copyright (c) 2012 Vinai Kopp http://netzarbeiter.com
- * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @license	http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
- 
+
 abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract extends Mage_Index_Model_Resource_Abstract
 {
 	/**
-	 * Initialize an array with store and group default visibility settings for this indexers entity
+	 * An array with store and group default visibility settings for this indexers entity
 	 *
 	 * array(
-	 * 	 storeId1 => array(
-	 *     group1-id,
-	 *     group2-id,
-	 *   ),
-	 *   ...
+	 *     storeId1 => array(
+	 *	       group1-id,
+	 *         group2-id,
+	 *     ),
+	 *     ...
 	 * )
 	 *
 	 * Only groups that are allowed to see this indexers entities are included in the list.
+	 * This array is initialized for each store view as needed.
 	 *
 	 * @var array $_storeDefaults
 	 */
@@ -82,17 +83,14 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	}
 
 	/**
-	 * Initialize $_storeDefaults and $_frontendStoreIds array
-	 * 
+	 * Initialize $_frontendStoreIds array.
+	 * Do not initialize the $_storeDefaults, it will be loaded by _getStoreDefaultGroups() if needed.
+	 *
 	 * @return void
 	 */
 	protected function _initStores()
 	{
-		foreach (Mage::app()->getStores() as $store)
-		{
-			$this->_storeDefaults[$store->getId()] = array();
-		}
-		$this->_frontendStoreIds = array_keys($this->_storeDefaults);
+		$this->_frontendStoreIds = array_keys(Mage::app()->getStores());
 	}
 
 	protected function _getProfilerName()
@@ -109,9 +107,10 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	protected function _getStoreDefaultGroups($store)
 	{
 		$store = Mage::app()->getStore($store);
-		if (! array_key_exists($store->getId(), $this->_storeDefaults))
+		if (!array_key_exists($store->getId(), $this->_storeDefaults))
 		{
-			$this->_storeDefaults[$store->getId()] = $this->_helper()->getEntityVisibleDefaultGroupIds($this->_getEntityTypeCode(), $store);
+			$this->_storeDefaults[$store->getId()] = $this->_helper()
+				->getEntityVisibleDefaultGroupIds($this->_getEntityTypeCode(), $store);
 		}
 		return $this->_storeDefaults[$store->getId()];
 	}
@@ -160,7 +159,6 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 			->order('e.entity_id ASC')
 			->order('a.store_id ASC');
 
-		
 		if (is_null($event))
 		{
 			$this->_getWriteAdapter()->truncateTable($this->_getIndexTable());
@@ -186,6 +184,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	{
 		Varien_Profiler::start($this->_getProfilerName() . '::reindexEntity::insert');
 		$entityId = null;
+		$useConfigDefaultGroups = null;
 		$data = $storesHandled = $entityDefaultGroups = array();
 		foreach ($result as $row)
 		{
@@ -199,7 +198,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 				// We need to do this last because then $storesHandled is set completely for the $entityId
 				if (null !== $entityId)
 				{
-					$this->_addMissingStoreRecords($data, $entityId, $entityDefaultGroups, $storesHandled);
+					$this->_addMissingStoreRecords($data, $entityId, $entityDefaultGroups, $storesHandled, $useConfigDefaultGroups);
 				}
 
 				// Set new entity as default
@@ -208,6 +207,8 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 				$entityDefaultGroups = $row['group_ids'];
 				// Reset stores handled for new entity to empty list
 				$storesHandled = array();
+				// Flag if config settings or row value group ids be applied in _addMissingStoreRecords()
+				$useConfigDefaultGroups = Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT === $row['orig_group_ids'];
 				// We don't need an index entry for store id 0, simply use it as the default
 				continue;
 			}
@@ -230,7 +231,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 		// The last iterations over $result will probably not have hit the >= 1000 mark, so we still need to insert
 
 		// Add missing store id records to the insert data array for the last $entityId
-		$this->_addMissingStoreRecords($data, $entityId, $entityDefaultGroups, $storesHandled);
+		$this->_addMissingStoreRecords($data, $entityId, $entityDefaultGroups, $storesHandled, $useConfigDefaultGroups);
 
 		// Insert missing index records
 		if (count($data) > 0)
@@ -249,12 +250,17 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	protected function _prepareRow(array &$row)
 	{
 		// Entities that don't have a value for the groupscatalog attribute
+
 		if (null === $row['group_ids'])
 		{
 			$row['group_ids'] = Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT;
 			$row['store_id'] = Mage::app()->getStore(Mage_Core_Model_Store::ADMIN_CODE)->getId();
 		}
-		
+
+		// This is needed for the additional mising store record handling
+		// We need to know if it is USE_DEFAULT or a real setting for the entity
+		$row['orig_group_ids'] = $row['group_ids'];
+
 		if (Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT == $row['group_ids'])
 		{
 			// Use store default ids if that is selected for the entity
@@ -281,13 +287,29 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	 * @param int $entityId
 	 * @param array $entityDefaultGroups
 	 * @param array $storesHandled
+	 * @param bool $useConfigDefaultGroups
 	 * @return void
 	 */
-	protected function _addMissingStoreRecords(array &$data, $entityId, array $entityDefaultGroups, array $storesHandled)
+	protected function _addMissingStoreRecords(array &$data, $entityId, array $entityDefaultGroups, array $storesHandled, $useConfigDefaultGroups)
 	{
 		foreach (array_diff($this->_frontendStoreIds, $storesHandled) as $storeId)
 		{
-			foreach ($entityDefaultGroups as $groupId)
+			if ($useConfigDefaultGroups)
+			{
+				$groupIds = $this->_getStoreDefaultGroups($storeId);
+			}
+			else
+			{
+				$groupIds = $entityDefaultGroups;
+			}
+			/* Handy debug code, keep around for now. Mage::log(array(
+				'entity_id' => $entityId,
+				'store_id' => $storeId,
+				'default group ids' => $entityDefaultGroups,
+				'use config groups' => intval($useConfigDefaultGroups),
+				'using' => $groupIds
+			)); */
+			foreach ($groupIds as $groupId)
 			{
 				$data[] = array('entity_id' => $entityId, 'group_id' => $groupId, 'store_id' => $storeId);
 			}
