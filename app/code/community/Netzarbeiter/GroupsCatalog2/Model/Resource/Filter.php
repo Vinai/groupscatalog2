@@ -31,6 +31,25 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 	}
 
 	/**
+	 * Return the collection entity table alias.
+	 *
+	 * This is ugly, but so far I haven't come up with a better way. On the other hand
+	 * the alias haven't changed since Magento 1.0 so I guess it's kinda safe.
+	 *
+	 * @param Varien_Data_Collection_Db $collection
+	 * @return string
+	 */
+	protected function _getCollectionTableAlias(Varien_Data_Collection_Db $collection)
+	{
+		$tableAlias = 'main_table';
+		if ($collection instanceof Mage_Eav_Model_Entity_Collection_Abstract)
+		{
+			$tableAlias = 'e';
+		}
+		return $tableAlias;
+	}
+
+	/**
 	 * Inner join the groupscatalog index table to hide entities not visible to the specified customer group id
 	 *
 	 * @param Mage_Eav_Model_Entity_Collection_Abstract $collection
@@ -51,6 +70,12 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 		$entity = $collection->getNewEmptyItem();
 		$entityType = $helper->getEntityTypeCodeFromEntity($entity);
 
+		// NOTE to self:
+		// Using joinTable() seems to trigger an exception for some users that I can't reproduce (so far).
+		// It is related to the flat catalog (Mage_Catalog_Model_Resource_Category_Flat_Collection missing
+		// joinTable()). Using getSelect()->joinInner() to work around this issue.
+
+		/*
 		$collection->joinTable(
 			$helper->getIndexTableByEntityType($entityType), // table
 			"entity_id=entity_id", // primary bind
@@ -60,6 +85,15 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 				'store_id' => $collection->getStoreId(),
 			),
 			'inner' // join type
+		);
+		*/
+		$filterTable = $collection->getResource()->getTable($helper->getIndexTableByEntityType($entityType));
+		$collection->getSelect()->joinInner(
+			$filterTable,
+			"{$this->_getCollectionTableAlias($collection)}.entity_id={$filterTable}.entity_id" .
+			" AND {$filterTable}.group_id={$groupId}" .
+			" AND {$filterTable}.store_id={$collection->getStoreId()}",
+			array()
 		);
 	}
 
