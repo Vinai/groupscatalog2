@@ -83,7 +83,9 @@ Don't forget to clear the cache, afterwards.
 
 
 == CHANGES ==
-
+0.1.6 - Fix indexer to work with large catalogs and identical settings for most stores
+        Add dutch translation
+0.1.5 - Avoid joinTable which seems to trigger an exception for some users
 0.1.4 - Fix bug that didn't apply website and store default settings during indexing
 0.1.3 - Fix bug that stopped the hidden message to be displayed for categories
 0.1.2 - Add italian translation - thanks to Marco Gallopin!
