@@ -32,7 +32,7 @@ class Netzarbeiter_GroupsCatalog2_Block_Adminhtml_Data_Form_Customergroup
 	public function getValue()
 	{
 		// Don't use parent::getValue(); since some PHP versions don't map that to __call()
-		$value = $this->getDate('value');
+		$value = $this->getData('value');
 		if (! is_null($value) && ! is_array($value))
 		{
 			$value = explode(',', (string) $value);
