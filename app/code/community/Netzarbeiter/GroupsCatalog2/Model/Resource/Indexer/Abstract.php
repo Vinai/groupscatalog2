@@ -223,7 +223,11 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 			// Insert 1000 records at a time
 			if (count($data) >= 1000)
 			{
-				$this->_getWriteAdapter()->insertMultiple($this->_getIndexTable(), $data);
+				// Since _addMissingStoreRecords() potentially adds many records, chunk this into sizes that are ok by MySQL
+				foreach (array_chunk($data, 1000) as $chunk)
+				{
+					$this->_getWriteAdapter()->insertMultiple($this->_getIndexTable(), $chunk);
+				}
 				$data = array();
 			}
 		}
@@ -236,7 +240,11 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 		// Insert missing index records
 		if (count($data) > 0)
 		{
-			$this->_getWriteAdapter()->insertMultiple($this->_getIndexTable(), $data);
+			// Since _addMissingStoreRecords() potentially adds many records, chunk this into sizes that are ok by MySQL
+			foreach (array_chunk($data, 1000) as $chunk)
+			{
+				$this->_getWriteAdapter()->insertMultiple($this->_getIndexTable(), $chunk);
+			}
 		}
 		Varien_Profiler::stop($this->_getProfilerName() . '::reindexEntity::insert');
 	}
