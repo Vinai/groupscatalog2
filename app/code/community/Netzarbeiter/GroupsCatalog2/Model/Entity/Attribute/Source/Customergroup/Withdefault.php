@@ -67,7 +67,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Entity_Attribute_Source_Customergroup_Wi
 	{
 		$options = $this->getAllOptions();
 
-		if (strpos($value, ','))
+		if (is_scalar($value) && strpos($value, ','))
 		{
 			$value = explode(',', $value);
 		}
