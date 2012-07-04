@@ -116,8 +116,10 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 		$helper = $this->_getHelper();
 		if ($helper->isModuleActive() && !$this->_isApiRequest())
 		{
-            $this->_applyHiddenEntityMsg($entityTypeCode);
-			$this->_applyHiddenEntityRedirect($entityTypeCode);
+			if ($this->_applyHiddenEntityRedirect($entityTypeCode))
+			{
+            	$this->_applyHiddenEntityMsg($entityTypeCode);
+			}
 		}
 	}
 
@@ -179,6 +181,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 	 * Apply redirects for hidden entity page requests if configured.
 	 *
 	 * @param string $entityTypeCode
+	 * @return bool true if redirect was set
 	 */
 	protected function _applyHiddenEntityRedirect($entityTypeCode)
 	{
@@ -199,13 +202,15 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 			$targetRoute = $helper->getConfig($targetRouteSetting);
 			if (! $this->_isCurrentRequest($targetRoute))
 			{
-				$route = Mage::getUrl($targetRoute);
+				$url = Mage::getSingleton('core/url')->sessionUrlVar(Mage::getUrl($targetRoute));
 				Mage::app()->getResponse()
-					->setRedirect($route)
+					->setRedirect($url)
 					->sendHeaders();
 				Mage::app()->getRequest()->setDispatched(true);
+				return true;
 			}
 		}
+		return false;
 	}
 
 	/**
@@ -222,11 +227,12 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 			$req->getActionName()
 		);
 		$targetRoute = explode('/', $targetRoute);
-		if (! isset($targetRoute[1]) || '*' === $targetRoute[1]) {
-			$targetRoute[1] = $current[1];
+		$front = Mage::app()->getFrontController();
+		if (! isset($targetRoute[1])) {
+			$targetRoute[1] = $front->getDefault('controller');
 		}
-		if (! isset($targetRoute[2]) || '*' === $targetRoute[2]) {
-			$targetRoute[1] = $current[2];
+		if (! isset($targetRoute[2])) {
+			$targetRoute[2] = $front->getDefault('action');
 		}
 		return $targetRoute === $current;
 	}
