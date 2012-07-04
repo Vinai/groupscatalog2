@@ -196,12 +196,39 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 		$type = $helper->getConfig($handlingTypeSetting);
 		if (Netzarbeiter_GroupsCatalog2_Model_System_Config_Source_HiddenEntityHandling::HIDDEN_ENTITY_HANDLING_REDIRECT == $type)
 		{
-			$route = Mage::getUrl($helper->getConfig($targetRouteSetting));
-			Mage::app()->getResponse()
-				->setRedirect($route)
-				->sendHeaders();
-			Mage::app()->getRequest()->setDispatched(true);
+			$targetRoute = $helper->getConfig($targetRouteSetting);
+			if (! $this->_isCurrentRequest($targetRoute))
+			{
+				$route = Mage::getUrl($targetRoute);
+				Mage::app()->getResponse()
+					->setRedirect($route)
+					->sendHeaders();
+				Mage::app()->getRequest()->setDispatched(true);
+			}
 		}
+	}
+
+	/**
+	 * Check if the current request matches the passed route
+	 *
+	 * @param string $targetRoute
+	 */
+	protected function _isCurrentRequest($targetRoute)
+	{
+		$req = Mage::app()->getRequest();
+		$current = array(
+			$req->getModuleName(),
+			$req->getControllerName(),
+			$req->getActionName()
+		);
+		$targetRoute = explode('/', $targetRoute);
+		if (! isset($targetRoute[1]) || '*' === $targetRoute[1]) {
+			$targetRoute[1] = $current[1];
+		}
+		if (! isset($targetRoute[2]) || '*' === $targetRoute[2]) {
+			$targetRoute[1] = $current[2];
+		}
+		return $targetRoute === $current;
 	}
 
 	/**
