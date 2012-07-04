@@ -15,40 +15,40 @@
  * newer versions in the future.
  *
  * @category   Netzarbeiter
- * @package	Netzarbeiter_GroupsCatalog2
+ * @package    Netzarbeiter_GroupsCatalog2
  * @copyright  Copyright (c) 2012 Vinai Kopp http://netzarbeiter.com
- * @license	http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
 class Netzarbeiter_GroupsCatalog2_Model_Observer
 {
-    /**
-     * List of routes that have to match the current request
-     * for the configured message top be displayed.
-     *
-     * @var array
-     */
-    protected $_displayMessageRoutes = array();
+	/**
+	 * List of routes that have to match the current request
+	 * for the configured message top be displayed.
+	 *
+	 * @var array
+	 */
+	protected $_displayMessageRoutes = array();
 
-    /**
-     * Avoid adding the configured message more then once if more then one hidden entity is loaded,
-     * e.g. the main product and a related product or a product in a banner in the footer block.
-     * Set to true when the message has been added to the session.
-     *
-     * @var bool
-     */
-    protected $_messageAdded = false;
+	/**
+	 * Avoid adding the configured message more then once if more then one hidden entity is loaded,
+	 * e.g. the main product and a related product or a product in a banner in the footer block.
+	 * Set to true when the message has been added to the session.
+	 *
+	 * @var bool
+	 */
+	protected $_messageAdded = false;
 
-    /**
-     * Initialize the _displayMessageRoutes property.
-     */
-    public function __construct()
-    {
-        $this->_displayMessageRoutes = array(
-            'catalog_product_view' => Mage_Catalog_Model_Product::ENTITY,
-            'catalog_category_view' => Mage_Catalog_Model_Category::ENTITY
-        );
-    }
+	/**
+	 * Initialize the _displayMessageRoutes property.
+	 */
+	public function __construct()
+	{
+		$this->_displayMessageRoutes = array(
+			'catalog_product_view' => Mage_Catalog_Model_Product::ENTITY,
+			'catalog_category_view' => Mage_Catalog_Model_Category::ENTITY
+		);
+	}
 
 	/**
 	 * Add the groupscatalog filter sql to product collections
@@ -118,7 +118,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 		{
 			if ($this->_applyHiddenEntityRedirect($entityTypeCode))
 			{
-            	$this->_applyHiddenEntityMsg($entityTypeCode);
+				$this->_applyHiddenEntityMsg($entityTypeCode);
 			}
 		}
 	}
@@ -130,52 +130,52 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 	 */
 	protected function _applyHiddenEntityMsg($entityTypeCode)
 	{
-        if ($this->_shouldDisplayMessage($entityTypeCode))
-        {
-            $this->_messageAdded = true;
-            if (Mage::getSingleton('customer/session')->isLoggedIn())
-            {
-                $message = $this->_getHelper()->getConfig('entity_hidden_msg_customer');
-            }
-            else
-            {
-                $message = $this->_getHelper()->getConfig('entity_hidden_msg_guest');
-            }
-            if (mb_strlen($message, 'UTF-8') > 0)
-            {
-                Mage::getSingleton('core/session')->addError($message);
-            }
-        }
+		if ($this->_shouldDisplayMessage($entityTypeCode))
+		{
+			$this->_messageAdded = true;
+			if (Mage::getSingleton('customer/session')->isLoggedIn())
+			{
+				$message = $this->_getHelper()->getConfig('entity_hidden_msg_customer');
+			}
+			else
+			{
+				$message = $this->_getHelper()->getConfig('entity_hidden_msg_guest');
+			}
+			if (mb_strlen($message, 'UTF-8') > 0)
+			{
+				Mage::getSingleton('core/session')->addError($message);
+			}
+		}
 	}
 
-    /**
-     * Check if a configured message should be shown.
-     *
-     * @param string $entityTypeCode
-     * @return bool
-     */
-    protected function _shouldDisplayMessage($entityTypeCode)
-    {
-        // Avoid double messages if two hidden entities are loaded
-        if (! $this->_messageAdded)
-        {
-            if ($action = Mage::app()->getFrontController()->getAction())
-            {
-                $fullActionName = $action->getFullActionName();
-                if (isset($this->_displayMessageRoutes[$fullActionName]))
-                {
-                    if ($this->_displayMessageRoutes[$fullActionName] == $entityTypeCode)
-                    {
-                        if ($this->_getHelper()->getConfig('display_entity_hidden_msg'))
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
+	/**
+	 * Check if a configured message should be shown.
+	 *
+	 * @param string $entityTypeCode
+	 * @return bool
+	 */
+	protected function _shouldDisplayMessage($entityTypeCode)
+	{
+		// Avoid double messages if two hidden entities are loaded
+		if (!$this->_messageAdded)
+		{
+			if ($action = Mage::app()->getFrontController()->getAction())
+			{
+				$fullActionName = $action->getFullActionName();
+				if (isset($this->_displayMessageRoutes[$fullActionName]))
+				{
+					if ($this->_displayMessageRoutes[$fullActionName] == $entityTypeCode)
+					{
+						if ($this->_getHelper()->getConfig('display_entity_hidden_msg'))
+						{
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Apply redirects for hidden entity page requests if configured.
@@ -197,10 +197,13 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 			$targetRouteSetting = 'entity_hidden_redirect_guest';
 		}
 		$type = $helper->getConfig($handlingTypeSetting);
-		if (Netzarbeiter_GroupsCatalog2_Model_System_Config_Source_HiddenEntityHandling::HIDDEN_ENTITY_HANDLING_REDIRECT == $type)
+		if (
+			Netzarbeiter_GroupsCatalog2_Model_System_Config_Source_HiddenEntityHandling::HIDDEN_ENTITY_HANDLING_REDIRECT ==
+				$type
+		)
 		{
 			$targetRoute = $helper->getConfig($targetRouteSetting);
-			if (! $this->_isCurrentRequest($targetRoute))
+			if (!$this->_isCurrentRequest($targetRoute))
 			{
 				$url = Mage::getSingleton('core/url')->sessionUrlVar(Mage::getUrl($targetRoute));
 				Mage::app()->getResponse()
@@ -228,10 +231,12 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 		);
 		$targetRoute = explode('/', $targetRoute);
 		$front = Mage::app()->getFrontController();
-		if (! isset($targetRoute[1])) {
+		if (!isset($targetRoute[1]))
+		{
 			$targetRoute[1] = $front->getDefault('controller');
 		}
-		if (! isset($targetRoute[2])) {
+		if (!isset($targetRoute[2]))
+		{
 			$targetRoute[2] = $front->getDefault('action');
 		}
 		return $targetRoute === $current;
