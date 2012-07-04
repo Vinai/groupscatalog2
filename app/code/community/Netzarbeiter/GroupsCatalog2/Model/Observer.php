@@ -198,8 +198,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 		}
 		$type = $helper->getConfig($handlingTypeSetting);
 		if (
-			Netzarbeiter_GroupsCatalog2_Model_System_Config_Source_HiddenEntityHandling::HIDDEN_ENTITY_HANDLING_REDIRECT ==
-				$type
+			Netzarbeiter_GroupsCatalog2_Model_System_Config_Source_HiddenEntityHandling::HIDDEN_ENTITY_HANDLING_REDIRECT == $type
 		)
 		{
 			$targetRoute = $helper->getConfig($targetRouteSetting);
@@ -223,12 +222,6 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 	 */
 	protected function _isCurrentRequest($targetRoute)
 	{
-		$req = Mage::app()->getRequest();
-		$current = array(
-			$req->getModuleName(),
-			$req->getControllerName(),
-			$req->getActionName()
-		);
 		$targetRoute = explode('/', $targetRoute);
 		$front = Mage::app()->getFrontController();
 		if (!isset($targetRoute[1]))
@@ -239,6 +232,12 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 		{
 			$targetRoute[2] = $front->getDefault('action');
 		}
+		$req = Mage::app()->getRequest();
+		$current = array(
+			$req->getModuleName(),
+			$req->getControllerName(),
+			$req->getActionName()
+		);
 		return $targetRoute === $current;
 	}
 
