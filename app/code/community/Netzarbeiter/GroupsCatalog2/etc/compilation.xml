@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <includes>
+        <catalog>
+            <Netzarbeiter_GroupsCatalog2_Helper_Data/>
+            <Netzarbeiter_GroupsCatalog2_Model_Observer/>
+            <Netzarbeiter_GroupsCatalog2_Model_Resource_Filter/>
+            <Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Product/>
+            <Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Category/>
+        </catalog>
+    </includes>
+</config>
