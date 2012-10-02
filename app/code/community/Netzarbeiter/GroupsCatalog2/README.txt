@@ -83,6 +83,7 @@ Don't forget to clear the cache, afterwards.
 
 
 == CHANGES ==
+0.1.9 - Fix bug I couldn't reproduct when the flat catalog is enabled
 0.1.6 - Fix indexer to work with large catalogs and identical settings for most stores
         Add dutch translation
 0.1.5 - Avoid joinTable which seems to trigger an exception for some users

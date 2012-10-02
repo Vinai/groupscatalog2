@@ -401,10 +401,10 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 	/**
 	 * Add the groupscatalog filter sql to catalog collections using the groupscatalog filter resource model
 	 *
-	 * @param Mage_Eav_Model_Entity_Collection_Abstract $collection
+	 * @param Mage_Eav_Model_Entity_Collection_Abstract|Mage_Catalog_Model_Resource_Category_Flat_Collection $collection
 	 * @return void
 	 */
-	protected function _addGroupsCatalogFilterToCollection(Mage_Eav_Model_Entity_Collection_Abstract $collection)
+	protected function _addGroupsCatalogFilterToCollection(Varien_Data_Collection_Db $collection)
 	{
 		$helper = $this->_getHelper();
 		if ($helper->isModuleActive() && !$this->_isApiRequest())

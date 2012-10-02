@@ -52,11 +52,11 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 	/**
 	 * Inner join the groupscatalog index table to hide entities not visible to the specified customer group id
 	 *
-	 * @param Mage_Eav_Model_Entity_Collection_Abstract $collection
+	 * @param Varien_Data_Collection_Db $collection
 	 * @param int $groupId The customer group id
 	 * @return void
 	 */
-	public function addGroupsCatalogFilterToCollection(Mage_Eav_Model_Entity_Collection_Abstract $collection, $groupId)
+	public function addGroupsCatalogFilterToCollection(Varien_Data_Collection_Db $collection, $groupId)
 	{
 		/* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
 		$helper = Mage::helper('netzarbeiter_groupscatalog2');
