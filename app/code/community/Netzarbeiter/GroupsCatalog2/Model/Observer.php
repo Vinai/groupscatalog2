@@ -222,7 +222,8 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 	 */
 	protected function _isCurrentRequest($targetRoute)
 	{
-		$targetRoute = explode('/', $targetRoute);
+		// Ignore parameters for now
+		$targetRoute = array_slice(explode('/', $targetRoute), 0, 3);
 		$front = Mage::app()->getFrontController();
 		if (!isset($targetRoute[1]))
 		{
