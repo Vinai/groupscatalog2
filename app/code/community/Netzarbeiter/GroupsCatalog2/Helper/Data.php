@@ -56,6 +56,13 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	protected $_visibilityByStore = array();
 
 	/**
+	 * If set to false groupscatalog2 filtering is skipped
+	 *
+	 * @var bool
+	 */
+	protected $_moduleActive = null;
+
+	/**
 	 * Return a configuration setting from within the netzarbeiter_groupscatalog2/general section.
 	 *
 	 * Just in case I decide to change the configuration path in future, this file should be the
@@ -112,6 +119,13 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 		{
 			return false;
 		}
+
+		// Temporary setting has higher priority then system config setting
+		if (null !== $this->getModuleActiveFlag())
+		{
+			return $this->getModuleActiveFlag();
+		}
+
 		$setting = $this->getConfig('is_active', $store);
 		return (bool) $setting;
 	}
@@ -123,7 +137,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 		{
 			$customerGroupId = $this->getCustomerGroupId();
 		}
-		
+
 		$groupIds = $entity->getData(self::HIDE_GROUPS_ATTRIBUTE);
 
 		if (! is_array($groupIds) && ! is_string($groupIds))
@@ -135,7 +149,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 
 		/* @var $entityType string The entity type code for the specified entity */
 		$entityType = $this->getEntityTypeCodeFromEntity($entity);
-	
+
 		if (is_string($groupIds))
 		{
 			if ('' === $groupIds)
@@ -150,14 +164,14 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 				$groupIds = explode(',', $groupIds);
 			}
 		}
-		
+
 		if (in_array(self::USE_NONE, $groupIds))
 		{
 			$groupIds = array();
 		}
 		elseif (in_array(self::USE_DEFAULT, $groupIds))
 		{
-			
+
 			// Get the default settings for this entity type without applying the mode settings
 			$groupIds = $this->getEntityVisibleDefaultGroupIds($entityType, $entity->getStore(), false);
 		}
@@ -276,7 +290,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 
 	/**
 	 * See self::getEntityVisibleDefaultGroupIds() for a detailed description.
-	 * 
+	 *
 	 * @param string|int|Mage_Eav_Model_Entity_Type $entityType
 	 * @param null|int|string|Mage_Core_Model_Store $store
 	 * @return array
@@ -303,7 +317,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 				$groupIds = array();
 			}
 		}
-		
+
 		return $groupIds;
 	}
 
@@ -368,11 +382,11 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	}
 
 	/**
-	 * Return the oposide mode flag, because that is where the default configuration
+	 * Return the opposite mode flag, because that is where the default configuration
 	 * setting for the default groups is stored.
 	 * If the default is to show all categories, the default categories are under "hide" and
 	 * vica versa.
-	 * 
+	 *
 	 * @param string $mode
 	 * @return string
 	 */
@@ -387,5 +401,39 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 			$mode = self::MODE_HIDE_BY_DEFAULT;
 		}
 		return $mode;
+	}
+
+	/**
+	 * Provide ability to (de)activate the extension on the fly
+	 *
+	 * @param bool $state
+	 * @return Netzarbeiter_GroupsCatalog2_Helper_Data
+	 */
+	public function setModuleActive($state = true)
+	{
+		$this->_moduleActive = $state;
+		return $this;
+	}
+
+	/**
+	 * Reset the module to use the system configuration activation state
+	 *
+	 * @param null $store
+	 * @return Netzarbeiter_GroupsCatalog2_Helper_Data
+	 */
+	public function resetActivationState()
+	{
+		$this->_moduleActive = null;
+		return $this;
+	}
+
+	/**
+	 * Return the value of the _moduleActive flag
+	 *
+	 * @return bool
+	 */
+	public function getModuleActiveFlag()
+	{
+		return $this->_moduleActive;
 	}
 }
