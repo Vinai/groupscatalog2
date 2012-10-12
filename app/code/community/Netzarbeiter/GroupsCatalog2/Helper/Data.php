@@ -58,7 +58,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	/**
 	 * If set to false groupscatalog2 filtering is skipped
 	 *
-	 * @var bool
+	 * @var bool|null
 	 */
 	protected $_moduleActive = null;
 
