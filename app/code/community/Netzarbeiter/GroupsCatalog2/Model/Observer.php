@@ -204,9 +204,16 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 			$targetRoute = $helper->getConfig($targetRouteSetting);
 			if (!$this->_isCurrentRequest($targetRoute))
 			{
+				if ('customer/account/login' == $targetRoute) {
+					// Special case, set before_auth_url in session for redirects to the login page
+					$currentUrl = Mage::helper('core/url')->getCurrentUrl();
+					$currentUrl = Mage::getSingleton('core/url')->sessionUrlVar($currentUrl);
+					Mage::getSingleton('customer/session')->setAfterAuthUrl($currentUrl);
+				}
+
 				$url = Mage::getSingleton('core/url')->sessionUrlVar(Mage::getUrl($targetRoute));
 				Mage::app()->getResponse()
-					->setRedirect($url)
+					->setRedirect($url, 307)
 					->sendHeaders();
 				Mage::app()->getRequest()->setDispatched(true);
 				return true;
