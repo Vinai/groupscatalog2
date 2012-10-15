@@ -84,6 +84,7 @@ Don't forget to clear the cache, afterwards.
 
 == CHANGES ==
 0.2.0 - Provide ability to (de)activate te module on the fly (PHP code level)
+      - Set after-auth-url for redirects to login page
 0.1.9 - Fix bug I couldn't reproduct when the flat catalog is enabled
 0.1.6 - Fix indexer to work with large catalogs and identical settings for most stores
         Add dutch translation
