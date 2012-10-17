@@ -418,8 +418,14 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 		if ($helper->isModuleActive() && !$this->_isApiRequest())
 		{
 			$customerGroupId = $helper->getCustomerGroupId();
-			Mage::getResourceSingleton('netzarbeiter_groupscatalog2/filter')
-				->addGroupsCatalogFilterToCollection($collection, $customerGroupId);
+
+			// Avoid double join on frontend sitemap
+			$flag = 'groupscatalog2_filter_applied';
+			if (! $collection->getFlag($flag)) {
+				Mage::getResourceSingleton('netzarbeiter_groupscatalog2/filter')
+					->addGroupsCatalogFilterToCollection($collection, $customerGroupId);
+				$collection->setFlag($flag, true);
+			}
 		}
 	}
 
