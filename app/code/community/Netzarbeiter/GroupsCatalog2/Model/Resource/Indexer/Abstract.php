@@ -48,6 +48,13 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	protected $_frontendStoreIds = array();
 
 	/**
+	 * Array of all valid group ids plus Netzarbeiter_GroupsCatalog2_Helper_Data::USE_NONE
+	 *
+	 * @var array $_groupIds
+	 */
+	protected $_groupIds = array();
+
+	/**
 	 * Module helper instance
 	 *
 	 * @var Netzarbeiter_GroupsCatalog2_Helper_Data
@@ -68,8 +75,9 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	public function __construct()
 	{
 		parent::__construct();
-		$this->_initStores();
 		$this->_helper = Mage::helper('netzarbeiter_groupscatalog2');
+		$this->_initStores();
+		$this->_initGroupIds();
 	}
 
 	/**
@@ -91,6 +99,12 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	protected function _initStores()
 	{
 		$this->_frontendStoreIds = array_keys(Mage::app()->getStores());
+	}
+
+	protected function _initGroupIds()
+	{
+		$this->_groupIds = $this->_helper->getCustomerGroupIds();
+		$this->_groupIds[] = Netzarbeiter_GroupsCatalog2_Helper_Data::USE_NONE;
 	}
 
 	protected function _getProfilerName()
@@ -152,7 +166,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 		$select = $this->_getReadAdapter()->select()
 			->from(array('e' => $this->getTable($entityType->getEntityTable())), array('entity_id' => 'e.entity_id'))
 			->joinLeft(
-				array('a' => $attribute->getBackendTable()),
+				array('a' => $attribute->getBackend()->getTable()),
 				$this->_getReadAdapter()->quoteInto('e.entity_id=a.entity_id AND a.attribute_id = ?', $attribute->getId()),
 				array('group_ids' => 'value', 'store_id' => 'store_id')
 			)
@@ -265,7 +279,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 			$row['store_id'] = Mage::app()->getStore(Mage_Core_Model_Store::ADMIN_CODE)->getId();
 		}
 
-		// This is needed for the additional mising store record handling
+		// This is needed for the additional missing store record handling
 		// We need to know if it is USE_DEFAULT or a real setting for the entity
 		$row['orig_group_ids'] = $row['group_ids'];
 
@@ -278,6 +292,10 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 		{
 			// We need the list of group ids as an array
 			$row['group_ids'] = explode(',', $row['group_ids']);
+
+			// Check for invalid group ids. This might happen when a customer
+			// group is deleted but a category or product still references it
+			$row['group_ids'] = array_intersect($row['group_ids'], $this->_groupIds);
 
 			// Apply the hide/show configuration settings
 			$row['group_ids'] = $this->_helper()->applyConfigModeSettingByStore(
