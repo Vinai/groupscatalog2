@@ -83,6 +83,7 @@ Don't forget to clear the cache, afterwards.
 
 
 == CHANGES ==
+0.2.3 - Add notice to reindex when a new customer group is created
 0.2.2 - Filter out no longer valid customer groups during indexing
 0.2.1 - Fix issue with frontend sitemap
 0.2.0 - Provide ability to (de)activate te module on the fly (PHP code level)
