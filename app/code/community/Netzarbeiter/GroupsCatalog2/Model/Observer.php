@@ -284,6 +284,25 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 	}
 
 	/**
+	 * Add a notice to rebuild the groupscatalog indexer whenever a new customer group is created.
+	 *
+	 * @param Varien_Event_Observer $observer
+	 */
+	public function customerGroupSaveAfter(Varien_Event_Observer $observer)
+	{
+		/** @var $group Mage_Customer_Model_Group */
+		$group = $observer->getObject();
+		if ($group->isObjectNew())
+		{
+			foreach (array('groupscatalog2_category', 'groupscatalog2_product') as $indexerCode)
+			{
+				$process = Mage::getModel('index/indexer')->getProcessByCode($indexerCode);
+				$process->changeStatus(Mage_Index_Model_Process::STATUS_REQUIRE_REINDEX);
+			}
+		}
+	}
+
+	/**
 	 * Add the groupscatalog filter to the wishlist item collection.
 	 *
 	 * This event only exists because of the rewrite of the wishlist item collection. The event

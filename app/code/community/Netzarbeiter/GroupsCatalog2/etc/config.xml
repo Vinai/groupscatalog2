@@ -167,6 +167,15 @@
 					</netzarbeiter_groupscatalog2>
 				</observers>
 			</catalog_category_save_after>
+			<customer_group_save_after>
+				<observers>
+					<netzarbeiter_groupscatalog2>
+						<type>model</type>
+						<model>netzarbeiter_groupscatalog2/observer</model>
+						<method>customerGroupSaveAfter</method>
+					</netzarbeiter_groupscatalog2>
+				</observers>
+			</customer_group_save_after>
 		</events>
 		<translate>
 			<modules>
