@@ -24,7 +24,7 @@
 <config>
 	<modules>
 		<Netzarbeiter_GroupsCatalog2>
-			<version>0.2.2</version>
+			<version>0.2.3</version>
 		</Netzarbeiter_GroupsCatalog2>
 	</modules>
 	<global>
