@@ -23,6 +23,11 @@
 abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract extends Mage_Index_Model_Resource_Abstract
 {
 	/**
+	 * How many records to insert into the indexes with a single query
+	 */
+	const INSERT_CHUNK_SIZE = 1000;
+
+	/**
 	 * An array with store and group default visibility settings for this indexers entity
 	 *
 	 * array(
@@ -235,32 +240,45 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 			}
 
 			// Insert 1000 records at a time
-			if (count($data) >= 1000)
-			{
-				// Since _addMissingStoreRecords() potentially adds many records, chunk this into sizes that are ok by MySQL
-				foreach (array_chunk($data, 1000) as $chunk)
-				{
-					$this->_getWriteAdapter()->insertMultiple($this->_getIndexTable(), $chunk);
-				}
-				$data = array();
-			}
+			// If INSERT_CHUNK_SIZE records exist in $data then it is reset to an empty array afterwards
+			$this->_insertIndexRecordsChunkedIfMinSizeReached($data, self::INSERT_CHUNK_SIZE);
 		}
 
-		// The last iterations over $result will probably not have hit the >= 1000 mark, so we still need to insert
+		// The last iterations over $result will probably not have hit the >= INSERT_CHUNK_SIZE mark,
+		// so we still need to insert these, too.
 
 		// Add missing store id records to the insert data array for the last $entityId
 		$this->_addMissingStoreRecords($data, $entityId, $entityDefaultGroups, $storesHandled, $useConfigDefaultGroups);
 
 		// Insert missing index records
-		if (count($data) > 0)
+		$this->_insertIndexRecordsChunkedIfMinSizeReached($data, 1);
+
+		Varien_Profiler::stop($this->_getProfilerName() . '::reindexEntity::insert');
+	}
+
+	/**
+	 * Insert the records present in $data into the index table, if $minSize records are present.
+	 *
+	 * If $minSize records are present, then all records in $data are inserted into the index
+	 * table, INSERT_CHUNK_SIZE records at a time.
+	 *
+	 * If $minSize records are present, then also $data is reset to an empty array after the
+	 * records are inserted into the index table.
+	 *
+	 * @param array $data  The array is passed into the method by reference
+	 * @param int $minSize  Only insert the records if this number of entries are present in the $data array
+	 */
+	protected function _insertIndexRecordsChunkedIfMinSizeReached(&$data, $minSize)
+	{
+		if (count($data) >= $minSize)
 		{
 			// Since _addMissingStoreRecords() potentially adds many records, chunk this into sizes that are ok by MySQL
-			foreach (array_chunk($data, 1000) as $chunk)
+			foreach (array_chunk($data, self::INSERT_CHUNK_SIZE) as $chunk)
 			{
 				$this->_getWriteAdapter()->insertMultiple($this->_getIndexTable(), $chunk);
 			}
+			$data = array();
 		}
-		Varien_Profiler::stop($this->_getProfilerName() . '::reindexEntity::insert');
 	}
 
 	/**
@@ -271,8 +289,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	 */
 	protected function _prepareRow(array &$row)
 	{
-		// Entities that don't have a value for the groupscatalog attribute
-
+		// Entities that don't have a value for the groupscatalog2_groups attribute
 		if (null === $row['group_ids'])
 		{
 			$row['group_ids'] = Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT;
