@@ -308,7 +308,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 		else
 		{
 			// We need the list of group ids as an array
-			$row['group_ids'] = explode(',', $row['group_ids']);
+			$row['group_ids'] = array_unique(explode(',', $row['group_ids']));
 
 			// Check for invalid group ids. This might happen when a customer
 			// group is deleted but a category or product still references it
