@@ -9,7 +9,7 @@
    "repositories": [
       {
          "type": "vcs",
-         "url": "git://github.com:Vinai/groupscatalog2.git"
+         "url": "git://github.com/Vinai/groupscatalog2.git"
       }
    ]
 }
