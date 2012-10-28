@@ -3,6 +3,13 @@
    "version": "dev-master",
    "type": "magento-module",
    "minimum-stability": "dev",
+    "license": "OSL-3.0",
+    "authors":[
+        {
+            "name":"Vinai Kopp",
+            "email":"vinai@netzarbeiter.com"
+        }
+    ],
    "require": {
       "magento-hackathon/magento-composer-installer": "dev-master"
    },
