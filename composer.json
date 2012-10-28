@@ -1,6 +1,5 @@
 {
    "name": "netzarbeiter/groupscatalog2",
-   "version": "dev-master",
    "type": "magento-module",
    "minimum-stability": "dev",
     "license": "OSL-3.0",
