@@ -1,0 +1,15 @@
+{
+   "name": "netzarbeiter/groupscatalog2",
+   "version": "dev-master",
+   "type": "magento-module",
+   "minimum-stability": "dev",
+   "require": {
+      "magento-hackathon/magento-composer-installer": "dev-master"
+   },
+   "repositories": [
+      {
+         "type": "vcs",
+         "url": "git://github.com:Vinai/groupscatalog2.git"
+      }
+   ]
+}
