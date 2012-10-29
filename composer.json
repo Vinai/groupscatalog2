@@ -1,21 +1,21 @@
 {
-   "name": "netzarbeiter/groupscatalog2",
-   "type": "magento-module",
-   "minimum-stability": "dev",
-    "license": "OSL-3.0",
+    "name":"netzarbeiter/groupscatalog2",
+    "type":"magento-module",
+    "minimum-stability":"dev",
+    "license":"OSL-3.0",
     "authors":[
         {
             "name":"Vinai Kopp",
             "email":"vinai@netzarbeiter.com"
         }
     ],
-   "require": {
-      "magento-hackathon/magento-composer-installer": "dev-master"
-   },
-   "repositories": [
-      {
-         "type": "vcs",
-         "url": "git://github.com/Vinai/groupscatalog2.git"
-      }
-   ]
+    "require":{
+        "magento-hackathon/magento-composer-installer":"dev-master"
+    },
+    "repositories":[
+        {
+            "type":"vcs",
+            "url":"git://github.com/Vinai/groupscatalog2.git"
+        }
+    ]
 }
