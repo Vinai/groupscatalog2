@@ -11,11 +11,5 @@
     ],
     "require":{
         "magento-hackathon/magento-composer-installer":"dev-master"
-    },
-    "repositories":[
-        {
-            "type":"vcs",
-            "url":"git://github.com/Vinai/groupscatalog2.git"
-        }
-    ]
+    }
 }
