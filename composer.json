@@ -3,7 +3,7 @@
     "type":"magento-module",
     "license":"OSL-3.0",
     "homepage":"https://github.com/Vinai/groupscatalog2",
-    "description":"Magento extension to hide categories and products from customers depending on their customer group",
+    "description":"Magento extension to hide categories and products from customers depending on their customer group.",
     "authors":[
         {
             "name":"Vinai Kopp",
