@@ -59,7 +59,6 @@ Installation Instructions
 1. Install the extension via Magento Connect with the key shown above or copy all the files into your document root.
 2. Clear the cache, logout from the admin panel and then login again.
 3. Configure and activate the extension under System - Configuration - Netzarbeiter Extensions - Groups Catalog 2
-4. ...
 
 Upgrade from Magento 1.5
 ------------------------
