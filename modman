@@ -1,33 +1,11 @@
 #
-# Netzarbeiter
-#
-# NOTICE OF LICENSE
-#
-# This source file is subject to the Open Software License (OSL 3.0)
-# that is bundled with this package in the file LICENSE.txt.
-# It is also available through the world-wide-web at this URL:
-# http://opensource.org/licenses/osl-3.0.php
-#
-# DISCLAIMER
-#
-# Do not edit or add to this file if you wish to upgrade this Module to
-# newer versions in the future.
-#
-# @category   Netzarbeiter
-# @package    Netzarbeiter_GroupsCatalog2
-# @copyright  Copyright (c) 2012 Vinai Kopp http://netzarbeiter.com
-# @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+# Netzarbeiter_GroupsCatalog2 modman file
 #
 
-#
-# This file is for the module manager by script by Colin Mollenhour which can be found at
-#     http://code.google.com/p/module-manager/
-#
-
-app/code/community/Netzarbeiter/GroupsCatalog2 app/code/community/Netzarbeiter/GroupsCatalog2
-app/etc/modules/Netzarbeiter_GroupsCatalog2.xml app/etc/modules/Netzarbeiter_GroupsCatalog2.xml
+app/code/community/Netzarbeiter/GroupsCatalog2      app/code/community/Netzarbeiter/GroupsCatalog2
+app/etc/modules/Netzarbeiter_GroupsCatalog2.xml     app/etc/modules/Netzarbeiter_GroupsCatalog2.xml
 app/design/adminhtml/default/default/layout/netzarbeiter/groupscatalog2.xml app/design/adminhtml/default/default/layout/netzarbeiter/groupscatalog2.xml
 app/design/adminhtml/default/default/template/netzarbeiter/groupscatalog2/system/tools/migration.phtml app/design/adminhtml/default/default/template/netzarbeiter/groupscatalog2/system/tools/migration.phtml
-app/locale/de_DE/Netzarbeiter_GroupsCatalog2.csv app/locale/de_DE/Netzarbeiter_GroupsCatalog2.csv
-app/locale/it_IT/Netzarbeiter_GroupsCatalog2.csv app/locale/it_IT/Netzarbeiter_GroupsCatalog2.csv
-app/locale/nl_NL/Netzarbeiter_GroupsCatalog2.csv app/locale/nl_NL/Netzarbeiter_GroupsCatalog2.csv
+app/locale/de_DE/Netzarbeiter_GroupsCatalog2.csv    app/locale/de_DE/Netzarbeiter_GroupsCatalog2.csv
+app/locale/it_IT/Netzarbeiter_GroupsCatalog2.csv    app/locale/it_IT/Netzarbeiter_GroupsCatalog2.csv
+app/locale/nl_NL/Netzarbeiter_GroupsCatalog2.csv    app/locale/nl_NL/Netzarbeiter_GroupsCatalog2.csv
