@@ -3,7 +3,7 @@
 class Netzarbeiter_GroupsCatalog2_Helper_Hidden extends Mage_Core_Helper_Abstract
 {
     /**
-     * If set to true, display the configured hidden entity message
+     * If set to true, display the configured hidden entity message.
      * Avoid adding the configured message more then once if more then one hidden entity is loaded,
      * e.g. the main product and a related product or a product in a banner in the footer block.
      *
@@ -31,7 +31,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Hidden extends Mage_Core_Helper_Abstrac
     }
 
     /**
-     * Main entry method to apply hidden entity handling
+     * Main entry method to apply hidden entity handling.
      *
      * @param $entityTypeCode
      * @return Netzarbeiter_GroupsCatalog2_Helper_Hidden
@@ -87,7 +87,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Hidden extends Mage_Core_Helper_Abstrac
     protected function _applyEntityRedirectTargetRoute($targetRouteSetting)
     {
         $targetRoute = $this->_getHelper()->getConfig($targetRouteSetting);
-        if ($this->_isCurrentRequest($targetRoute)) {
+        if ($this->_isCurrentRoute($targetRoute)) {
             // Don't display the message if the current request matches the target route
             $this->_addMessage = false;
             return false;
@@ -109,7 +109,6 @@ class Netzarbeiter_GroupsCatalog2_Helper_Hidden extends Mage_Core_Helper_Abstrac
      *
      * @param $targetRouteSetting
      * @return bool Redirect was applied
-     * @todo: avoid double messages in case of chained redirects (e.g. product and containing category are hidden)
      */
     protected function _applyEntityRedirectParentDirectory($targetRouteSetting)
     {
@@ -145,13 +144,13 @@ class Netzarbeiter_GroupsCatalog2_Helper_Hidden extends Mage_Core_Helper_Abstrac
                 }
             }
         }
-        // Don't display configured message if we already are requesting the target (top level) url
+        // Don't display configured message if we already are requesting the target (top level) url.
         $this->_addMessage = false;
         return false;
     }
 
     /**
-     * Return the URL of the current request
+     * Return the URL of the current request.
      *
      * @return string
      */
@@ -183,11 +182,11 @@ class Netzarbeiter_GroupsCatalog2_Helper_Hidden extends Mage_Core_Helper_Abstrac
     }
 
     /**
-     * Check if the current request matches the passed route
+     * Check if the current request matches the passed route.
      *
      * @param string $targetRoute
      */
-    protected function _isCurrentRequest($targetRoute)
+    protected function _isCurrentRoute($targetRoute)
     {
         // Ignore parameters for now
         $targetRoute = array_slice(explode('/', $targetRoute), 0, 3);
@@ -222,7 +221,11 @@ class Netzarbeiter_GroupsCatalog2_Helper_Hidden extends Mage_Core_Helper_Abstrac
                 $message = $this->_getHelper()->getConfig('entity_hidden_msg_guest');
             }
             if (mb_strlen($message, 'UTF-8') > 0) {
-                Mage::getSingleton('core/session')->addError($message);
+                /* @var $session Mage_Core_Model_Session */
+                $session = Mage::getSingleton('core/session');
+                if (! $this->_messageExistsInSession($session, $message)) {
+                    $session->addError($message);
+                }
             }
         }
     }
@@ -252,7 +255,49 @@ class Netzarbeiter_GroupsCatalog2_Helper_Hidden extends Mage_Core_Helper_Abstrac
     }
 
     /**
-     * Helper convenience method
+     * return true if the specified message already is set on the passed session model.
+     *
+     * Simply setting a flag on $this won't work if the parent directory we redirect to is also hidden.
+     * Messages are applied during separate requests in that case, so a flag won't be available.
+     *
+     * @param Mage_Core_Model_Session_Abstract $session
+     * @param string $message
+     * @return bool
+     */
+    protected function _messageExistsInSession(Mage_Core_Model_Session_Abstract $session, $message)
+    {
+        foreach ($this->_getMessages($session) as $msg) {
+            if ($msg->getCode() === $message) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Return all currently registered messages from block and specified session.
+     *
+     * @param Mage_Core_Model_Session_Abstract $session
+     * @return array
+     */
+    protected function _getMessages(Mage_Core_Model_Session_Abstract $session)
+    {
+        $messages = array();
+        $type = 'error';
+
+        // If the message block already has been instantiated, get those messages
+        /** @var $block Mage_Core_Block_Messages */
+        if ($block = Mage::app()->getLayout()->getBlock('messages')) {
+            $messages = array_merge($messages, $block->getMessages($type));
+        }
+
+        // Merge in the messages from the session
+        $messages = array_merge($messages, $session->getMessages()->getItems($type));
+        return $messages;
+    }
+
+    /**
+     * Helper convenience method.
      *
      * @return Netzarbeiter_GroupsCatalog2_Helper_Data
      */
