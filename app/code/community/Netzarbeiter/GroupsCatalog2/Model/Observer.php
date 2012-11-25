@@ -251,9 +251,6 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
                 $entity->setData(null)->setId(null);
                 // Set flag to make it easier to implement a redirect if needed (or debug)
                 $entity->setData('forbidden_by_groupscatalog2', true);
-                $entity->setData('forbidden_by_groupscatalog2_debug', array(
-                    'method' => __METHOD__, 'file' => __FILE__, 'line' => (__LINE__ - 4)
-                ));
             }
         }
     }
