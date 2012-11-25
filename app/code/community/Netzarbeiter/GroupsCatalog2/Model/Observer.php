@@ -84,7 +84,12 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
     protected function _applyHiddenEntityHandling($entityTypeCode)
     {
         if ($this->_getHelper()->isModuleActive() && !$this->_isApiRequest()) {
-            Mage::helper('netzarbeiter_groupscatalog2/hidden')->applyHiddenEntityHandling($entityTypeCode);
+            // Do not apply redirects and messages to customer module (order history and dashboard for example).
+            // Otherwise products that where previously purchased by the customer and now are hidden from him
+            // would make the customer account inaccessable.
+            if (Mage::app()->getRequest()->getModuleName() !== 'customer') {
+                Mage::helper('netzarbeiter_groupscatalog2/hidden')->applyHiddenEntityHandling($entityTypeCode);
+            }
         }
     }
 
