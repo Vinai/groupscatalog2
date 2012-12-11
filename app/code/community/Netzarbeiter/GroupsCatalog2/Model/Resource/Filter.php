@@ -19,7 +19,7 @@
  * @copyright  Copyright (c) 2012 Vinai Kopp http://netzarbeiter.com
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
- 
+
 class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 	extends Mage_Core_Model_Resource_Db_Abstract
 {
@@ -70,31 +70,14 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 		$entity = $collection->getNewEmptyItem();
 		$entityType = $helper->getEntityTypeCodeFromEntity($entity);
 
-		// NOTE to self:
-		// Using joinTable() seems to trigger an exception for some users that I can't reproduce (so far).
-		// It is related to the flat catalog (Mage_Catalog_Model_Resource_Category_Flat_Collection missing
-		// joinTable()). Using getSelect()->joinInner() to work around this issue.
+        $this->_init($helper->getIndexTableByEntityType($entityType), 'id');
 
-		/*
-		$collection->joinTable(
-			$helper->getIndexTableByEntityType($entityType), // table
-			"entity_id=entity_id", // primary bind
-			array('group_id' => 'group_id', 'store_id' => 'store_id'), // alias to field mappings for the bind cond.
-			array( // additional bind conditions (see mappings above)
-				'group_id' => $groupId,
-				'store_id' => $collection->getStoreId(),
-			),
-			'inner' // join type
-		);
-		*/
 		$filterTable = $collection->getResource()->getTable($helper->getIndexTableByEntityType($entityType));
-		$collection->getSelect()->joinInner(
-			$filterTable,
-			"{$this->_getCollectionTableAlias($collection)}.entity_id={$filterTable}.entity_id" .
-			" AND {$filterTable}.group_id={$groupId}" .
-			" AND {$filterTable}.store_id={$collection->getStoreId()}",
-			array()
-		);
+        $entityIdField = "{$this->_getCollectionTableAlias($collection)}.entity_id";
+
+        $this->_addGroupsCatalogFilterToSelect(
+            $collection->getSelect(), $filterTable, $groupId, $collection->getStoreId(), $entityIdField
+        );
 	}
 
 	/**
@@ -159,7 +142,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 	{
 		/* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
 		$helper = Mage::helper('netzarbeiter_groupscatalog2');
-		
+
 		// Dummy entry with invalid entity id so the select doesn't fail with an empty list
 		$ids[] = 0;
 
@@ -171,10 +154,10 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 				->where('entity_id IN(?)', $ids)
 				->where('group_id=?', $groupId)
 				->where('store_id=?', $storeId);
-		
+
 		return $this->_getReadAdapter()->fetchCol($select);
 	}
-	
+
 	/**
 	 * Inner join the groupscatalog index table to not count products
 	 * not visible to the specified customer group id
@@ -228,12 +211,40 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 	 */
 	protected function _addGroupsCatalogFilterToSelect(Zend_Db_Select $select, $table, $groupId, $storeId, $entityField='e.entity_id')
 	{
-		$select->joinInner(
-			$table,
-			"{$table}.entity_id={$entityField} AND " .
-				$this->_getReadAdapter()->quoteInto("{$table}.group_id=? AND ", $groupId) .
-				$this->_getReadAdapter()->quoteInto("{$table}.store_id=?", $storeId),
-			''
+		// NOTE to self:
+		// Using joinTable() seems to trigger an exception for some users that I can't reproduce (so far).
+		// It is related to the flat catalog (Mage_Catalog_Model_Resource_Category_Flat_Collection missing
+		// joinTable()). Using getSelect()->joinInner() to work around this issue.
+
+		/*
+		$collection->joinTable(
+			$helper->getIndexTableByEntityType($entityType), // table
+			"entity_id=entity_id", // primary bind
+			array('group_id' => 'group_id', 'store_id' => 'store_id'), // alias to field mappings for the bind cond.
+			array( // additional bind conditions (see mappings above)
+				'group_id' => $groupId,
+				'store_id' => $collection->getStoreId(),
+			),
+			'inner' // join type
 		);
+		*/
+
+        // Avoid double joins for the wishlist collection.
+        // They clone and clear() the collection each time, but the joins on the
+        // collections select objects persist. This is more reliable then setting
+        // a flag on the collection object.
+        foreach ($select->getPart(Zend_Db_Select::FROM) as $joinedTable) {
+            if ($joinedTable['tableName'] == $table)
+                // filter join already applied
+                return;
+        }
+
+        $select->joinInner(
+            $table,
+            "{$table}.entity_id={$entityField} AND " .
+                $this->_getReadAdapter()->quoteInto("{$table}.group_id=? AND ", $groupId) .
+                $this->_getReadAdapter()->quoteInto("{$table}.store_id=?", $storeId),
+            array()
+        );
 	}
 }
