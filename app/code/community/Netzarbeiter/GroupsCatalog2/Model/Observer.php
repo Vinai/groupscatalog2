@@ -155,16 +155,12 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
         /* @var $collection Mage_Wishlist_Model_Resource_Item_Collection */
         $collection = $observer->getCollection();
         $helper = $this->_getHelper();
-        $store = Mage::app()->getStore();
-        if ($helper->isModuleActive($store) && !$this->_isApiRequest()) {
+        if ($helper->isModuleActive() && !$this->_isApiRequest()) {
             $customerGroupId = $helper->getCustomerGroupId();
-            // Avoid double join on frontend sitemap
-            $flag = 'groupscatalog2_filter_applied';
-            if (!$collection->getFlag($flag)) {
-                Mage::getResourceSingleton('netzarbeiter_groupscatalog2/filter')
-                        ->addGroupsCatalogFilterToWishlistItemCollection($collection, $customerGroupId, $store->getId());
-                $collection->setFlag($flag, true);
-            }
+
+            $storeId = Mage::app()->getStore()->getId();
+            $this->_getResource()
+                    ->addGroupsCatalogFilterToWishlistItemCollection($collection, $customerGroupId, $storeId);
         }
     }
 
@@ -182,7 +178,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
         $helper = $this->_getHelper();
         if ($helper->isModuleActive($collection->getStoreId()) && !$this->_isApiRequest()) {
             $customerGroupId = $helper->getCustomerGroupId();
-            Mage::getResourceSingleton('netzarbeiter_groupscatalog2/filter')
+            $this->_getResource()
                     ->addGroupsCatalogFilterToProductCollectionCountSelect($collection, $customerGroupId);
         }
     }
@@ -267,13 +263,8 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
         if ($helper->isModuleActive() && !$this->_isApiRequest()) {
             $customerGroupId = $helper->getCustomerGroupId();
 
-            // Avoid double join on frontend sitemap
-            $flag = 'groupscatalog2_filter_applied';
-            if (!$collection->getFlag($flag)) {
-                Mage::getResourceSingleton('netzarbeiter_groupscatalog2/filter')
-                        ->addGroupsCatalogFilterToCollection($collection, $customerGroupId);
-                $collection->setFlag($flag, true);
-            }
+            $this->_getResource()
+                    ->addGroupsCatalogFilterToCollection($collection, $customerGroupId);
         }
     }
 
@@ -295,5 +286,15 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
     protected function _getHelper()
     {
         return Mage::helper('netzarbeiter_groupscatalog2');
+    }
+
+    /**
+     * Filter resource convenience method
+     *
+     * @return Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
+     */
+    protected function _getResource()
+    {
+        return Mage::getResourceSingleton('netzarbeiter_groupscatalog2/filter');
     }
 }
