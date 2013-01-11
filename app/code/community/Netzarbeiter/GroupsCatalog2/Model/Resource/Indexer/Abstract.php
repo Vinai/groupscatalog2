@@ -239,7 +239,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 				$storesHandled[] = $row['store_id'];
 			}
 
-			// Insert 1000 records at a time
+			// Insert INSERT_CHUNK_SIZE records at a time.
 			// If INSERT_CHUNK_SIZE records exist in $data then it is reset to an empty array afterwards
 			$this->_insertIndexRecordsIfMinChunkSizeReached($data, self::INSERT_CHUNK_SIZE);
 		}
