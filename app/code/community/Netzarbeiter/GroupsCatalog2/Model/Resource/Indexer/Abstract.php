@@ -241,7 +241,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 
 			// Insert 1000 records at a time
 			// If INSERT_CHUNK_SIZE records exist in $data then it is reset to an empty array afterwards
-			$this->_insertIndexRecordsChunkedIfMinSizeReached($data, self::INSERT_CHUNK_SIZE);
+			$this->_insertIndexRecordsIfMinChunkSizeReached($data, self::INSERT_CHUNK_SIZE);
 		}
 
 		// The last iterations over $result will probably not have hit the >= INSERT_CHUNK_SIZE mark,
@@ -251,7 +251,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 		$this->_addMissingStoreRecords($data, $entityId, $entityDefaultGroups, $storesHandled, $useConfigDefaultGroups);
 
 		// Insert missing index records
-		$this->_insertIndexRecordsChunkedIfMinSizeReached($data, 1);
+		$this->_insertIndexRecordsIfMinChunkSizeReached($data, 1);
 
 		Varien_Profiler::stop($this->_getProfilerName() . '::reindexEntity::insert');
 	}
@@ -268,7 +268,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	 * @param array $data  The array is passed into the method by reference
 	 * @param int $minSize  Only insert the records if this number of entries are present in the $data array
 	 */
-	protected function _insertIndexRecordsChunkedIfMinSizeReached(&$data, $minSize)
+	protected function _insertIndexRecordsIfMinChunkSizeReached(&$data, $minSize)
 	{
 		if (count($data) >= $minSize)
 		{
