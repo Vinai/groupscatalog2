@@ -20,29 +20,17 @@
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
  
-abstract class Netzarbeiter_GroupsCatalog2_Model_System_Config_Backend_Mode_Abstract
-	extends Mage_Core_Model_Config_Data
+class Netzarbeiter_GroupsCatalog2_Model_System_Config_Backend_Reindex_Product
+	extends Netzarbeiter_GroupsCatalog2_Model_System_Config_Backend_Reindex_Abstract
 {
 	/**
-	 * Return the indexer code for this backend entity
+	 * Return the indexer code
 	 *
-	 * @abstract
 	 * @return string
+	 * @see Netzarbeiter_GroupsCatalog2_Model_System_Config_Backend_Mode_Abstract::_afterSave()
 	 */
-	abstract protected function _getIndexerCode();
-
-	/**
-	 * Set the index to require reindex
-	 * 
-	 * @return void
-	 */
-	protected function _afterSave()
+	protected function _getIndexerCode()
 	{
-		if ($this->isValueChanged())
-		{
-			$indexerCode = $this->_getIndexerCode();
-			$process = Mage::getModel('index/indexer')->getProcessByCode($indexerCode);
-			$process->changeStatus(Mage_Index_Model_Process::STATUS_REQUIRE_REINDEX);
-		}
+		return 'groupscatalog2_product';
 	}
 }

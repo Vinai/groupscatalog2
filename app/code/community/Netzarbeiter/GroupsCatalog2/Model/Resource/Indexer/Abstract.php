@@ -97,13 +97,20 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 
 	/**
 	 * Initialize $_frontendStoreIds array.
-	 * Do not initialize the $_storeDefaults, it will be loaded by _getStoreDefaultGroups() if needed.
+     *
+	 * Do not initialize the $_storeDefaults, it will
+     * be loaded by _getStoreDefaultGroups() if needed.
+     * Don't include disabled stores in the frontend store id's array.
 	 *
 	 * @return void
 	 */
 	protected function _initStores()
 	{
-		$this->_frontendStoreIds = array_keys(Mage::app()->getStores());
+		foreach (array_keys(Mage::app()->getStores()) as $storeId) {
+            if ($this->_helper()->isModuleActive($storeId, false)) {
+                $this->_frontendStoreIds[] = $storeId;
+            }
+        }
 	}
 
 	protected function _initGroupIds()
@@ -232,6 +239,11 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 				continue;
 			}
 
+            // Don't include stores in the index where the module is disabled anyway
+            if ($this->_isModuleDisabledInStore($row['store_id'])) {
+                continue;
+            }
+
 			// Add index record for each group id
 			foreach ($row['group_ids'] as $groupId)
 			{
@@ -255,6 +267,20 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 
 		Varien_Profiler::stop($this->_getProfilerName() . '::reindexEntity::insert');
 	}
+
+    /**
+     * Check if the specified store is part of the frontend store id's
+     *
+     * If the module is disabled on a store view, then that store is
+     * not included in the _frontendStoreIds array.
+     *
+     * @param int $storeId
+     * @return bool
+     */
+    protected function _isModuleDisabledInStore($storeId)
+    {
+        return ! in_array($storeId, $this->_frontendStoreIds);
+    }
 
 	/**
 	 * Insert the records present in $data into the index table, if $minSize records are present.
@@ -324,7 +350,10 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	}
 
 	/**
-	 * Add unhandled store default index records
+	 * Add unhandled store default index records.
+     *
+     * Only stores where the module is active will be added, because
+     * only such stores are included in the _frontendStoreIds array.
 	 *
 	 * @param array $data
 	 * @param int $entityId
