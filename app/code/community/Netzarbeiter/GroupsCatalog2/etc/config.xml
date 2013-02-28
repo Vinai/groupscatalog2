@@ -226,4 +226,11 @@
 			</general>
 		</netzarbeiter_groupscatalog2>
 	</default>
+    <phpunit>
+        <suite>
+            <modules>
+                <Netzarbeiter_GroupsCatalog2/>
+            </modules>
+        </suite>
+    </phpunit>
 </config>
