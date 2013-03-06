@@ -1,0 +1,36 @@
+-
+  - usa # Store
+  - 0 # Customer Group NOT LOGGED IN
+-
+  - usa # Store
+  - 1 # Customer Group General
+-
+  - usa # Store
+  - 2 # Customer Group Wholesale
+-
+  - canada # Store
+  - 0 # Customer Group NOT LOGGED IN
+-
+  - canada # Store
+  - 1 # Customer Group General
+-
+  - canada # Store
+  - 2 # Customer Group Wholesale
+-
+  - germany # Store
+  - 0 # Customer Group NOT LOGGED IN
+-
+  - germany # Store
+  - 1 # Customer Group General
+-
+  - germany # Store
+  - 2 # Customer Group Wholesale
+-
+  - germany2 # Store
+  - 0 # Customer Group NOT LOGGED IN
+-
+  - germany2 # Store
+  - 1 # Customer Group General
+-
+  - germany2 # Store
+  - 2 # Customer Group Wholesale

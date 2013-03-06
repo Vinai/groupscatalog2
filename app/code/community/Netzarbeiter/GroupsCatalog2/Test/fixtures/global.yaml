@@ -1,0 +1,152 @@
+# ===== Test Setup ======
+#
+# System config settings:
+#
+# Module is globally enabled
+# System config: Show products by default
+# Module disabled on website scope canada
+# Module disabled on store view scope germany2
+#
+# Product entity settings:
+#
+# Product 1 is hidden from groups 0 and 1 (NOT LOGGED IN and General)
+# Product 2 is visible to all (uses default system config settings)
+# Product 2 is hidden from group Wholesale (2) in website scope usa
+# Product 2 is hidden from group General (1) in store scope germany
+#
+scope:
+  website: # Initialize websites
+    - website_id: 2
+      code: usa_website
+      name: USA Website
+      default_group_id: 2
+    - website_id: 3
+      code: canada_website
+      name: Canada Website
+      default_group_id: 3
+    - website_id: 4
+      code: german_website
+      name: German Website
+      default_group_id: 4
+  group: # Initializes store groups
+    - group_id: 2
+      website_id: 2
+      name: USA Store Group
+      default_store_id: 2
+      root_category_id: 2 # Default Category
+    - group_id: 3
+      website_id: 3
+      name: Canada Store Group
+      default_store_id: 3
+      root_category_id: 2 # Default Category
+    - group_id: 4
+      website_id: 4
+      name: German Store Group
+      default_store_id: 4
+      root_category_id: 2 # Default Category
+  store: # Initializes store views
+    - store_id: 2
+      website_id: 2
+      group_id: 2
+      code: usa
+      name: USA Store
+      is_active: 1
+    - store_id: 3
+      website_id: 3
+      group_id: 3
+      code: canada
+      name: Canada Store
+      is_active: 1
+    - store_id: 4
+      website_id: 4
+      group_id: 4
+      code: germany
+      name: Germany Store
+      is_active: 1
+    - store_id: 5
+      website_id: 4
+      group_id: 4
+      code: germany2
+      name: Germany Store 2
+      is_active: 1
+
+config:
+  default/netzarbeiter_groupscatalog2/general/is_active: 1
+  default/netzarbeiter_groupscatalog2/general/product_mode: show
+  default/netzarbeiter_groupscatalog2/general/product_default_hide: -1
+  default/netzarbeiter_groupscatalog2/general/product_default_show: -1
+  stores/germany2/netzarbeiter_groupscatalog2/general/is_active: 0 # deactivate in german2 store view scope
+  websites/canada_website/netzarbeiter_groupscatalog2/general/is_active: 0 # deactivate in canada website scope
+
+tables:
+  customer/customer_group:
+    - customer_group_id: 0
+      customer_group_code: NOT LOGGED IN
+      tax_class_id: 3 # default customer tax class id
+    - customer_group_id: 1
+      customer_group_code: General
+      tax_class_id: 3
+    - customer_group_id: 2
+      customer_group_code: Wholesale
+      tax_class_id: 3
+    - customer_group_id: 3
+      customer_group_code: Retailer
+      tax_class_id: 3
+
+eav:
+  catalog_product:
+
+    - entity_id: 1
+      type_id: simple
+      sku: product1
+      name: Product One
+      short_description: A test product
+      description: A great test product
+      url_key: product_one
+      stock:
+        qty: 1000.00
+        is_in_stock: 1
+      website_ids:
+        - usa_website
+        - canada_website
+        - german_website
+      category_ids:
+        - 2 # Default Category
+      price: 12.99
+      tax_class_id: 2 # Taxable Goods
+      status: 1 # Enabled
+      visibility: 4 # Visible in Catalog & Search
+      groupscatalog2_groups: # Hide from groups
+        - 0 # Not logged in
+        - 1 # General
+
+    - entity_id: 2
+      type_id: simple
+      sku: product2
+      name: Product Two
+      short_description: Another test product
+      description: Another great test product
+      url_key: product_two
+      stock:
+        qty: 1000.00
+        is_in_stock: 1
+      website_ids:
+        - usa_website
+        - canada_website
+        - german_website
+      category_ids:
+        - 2 # Default Category
+      price: 12.99
+      tax_class_id: 2 # Taxable Goods
+      status: 1 # Enabled
+      visibility: 4 # Visible in Catalog & Search
+      groupscatalog2_groups: # Hide from groups
+        - -1 # Use default (show to all)
+      /websites:
+        usa_website:
+          groupscatalog2_groups:
+            - 2 # Hide from Wholesale group in usa website
+      /stores:
+        germany:
+          groupscatalog2_groups:
+            - 1 # Hide from General group in germany store view

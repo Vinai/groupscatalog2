@@ -1,15 +1,42 @@
 <?php
 
+/**
+ * @loadSharedFixture global.yaml
+ */
 class Netzarbeiter_GroupsCatalog2_Test_Helper_Data extends EcomDev_PHPUnit_Test_Case
 {
+    protected $configSection = 'netzarbeiter_groupscatalog2';
+    protected $configGroup = 'general';
+    /** @var Netzarbeiter_GroupsCatalog2_Helper_Data */
+    protected $helper;
+
+    public static function setUpBeforeClass() {
+        // Fix SET @SQL_MODE='NO_AUTO_VALUE_ON_ZERO' bugs from shared fixture files
+        /** @var $db Varien_Db_Adapter_Pdo_Mysql */
+        $db = Mage::getSingleton('core/resource')->getConnection('customer_write');
+        $db->update(
+            Mage::getSingleton('core/resource')->getTableName('customer/customer_group'),
+            array('customer_group_id' => 0),
+            "customer_group_code='NOT LOGGED IN'"
+        );
+
+        Mage::getModel('index/indexer')->getProcessByCode('groupscatalog2_product')->reindexEverything();
+
+        //print_r($db->fetchAll('SELECT * FROM groupscatalog_product_idx'));
+    }
+
     /**
      * @return Mage_Core_Model_Store
      * @throwException Exception
      */
-    protected function getFrontendStore()
+    protected function getFrontendStore($code = null)
     {
         foreach (Mage::app()->getStores() as $store) {
-            if (! $store->isAdmin()) return $store;
+            if (null === $code) {
+                if (! $store->isAdmin()) return $store;
+            } else {
+                if ($store->getCode() == $code) return $store;
+            }
         }
         $this->throwException(new Exception('Unable to find frontend store'));
     }
@@ -22,71 +49,96 @@ class Netzarbeiter_GroupsCatalog2_Test_Helper_Data extends EcomDev_PHPUnit_Test_
         return Mage::app()->getStore('admin');
     }
 
+    /**
+     * @return string
+     */
+    protected function getConfigPrefix()
+    {
+        return $this->configSection . '/' . $this->configGroup .'/';
+    }
+
+    public function setUp()
+    {
+        /** @var helper Netzarbeiter_GroupsCatalog2_Helper_Data */
+        $this->helper = Mage::helper('netzarbeiter_groupscatalog2');
+    }
+
+    // Tests #######
+
     public function testGetConfig()
     {
-        $store = $this->getFrontendStore();
-        $store->setConfig('netzarbeiter_groupscatalog2/general/test', 256);
-        $helper = Mage::helper('netzarbeiter_groupscatalog2');
-        $this->assertEquals($helper->getConfig('test', $store), 256);
+        $store = $this->getFrontendStore('germany');
+        $store->setConfig($this->getConfigPrefix() . 'test', 256);
+        $this->assertEquals($this->helper->getConfig('test', $store), 256);
     }
 
     public function testGetGroups()
     {
-        /* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
-        $helper = Mage::helper('netzarbeiter_groupscatalog2');
-        $groups = $helper->getGroups();
+        $groups = $this->helper->getGroups();
 
         $this->assertInstanceOf('Mage_Customer_Model_Resource_Group_Collection', $groups);
     }
 
     public function testGetGroupsContainsNotLoggedIn()
     {
-        /* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
-        $helper = Mage::helper('netzarbeiter_groupscatalog2');
-        $group = $helper->getGroups()->getItemByColumnValue('customer_group_code', 'NOT LOGGED IN');
+        $group = $this->helper->getGroups()->getItemByColumnValue('customer_group_code', 'NOT LOGGED IN');
         $this->assertInstanceOf('Mage_Customer_Model_Group', $group);
     }
 
     public function testIsModuleActiveFrontend()
     {
-        /* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
-        $helper = Mage::helper('netzarbeiter_groupscatalog2');
         $store = $this->getFrontendStore();
 
-        $store->setConfig('netzarbeiter_groupscatalog2/general/is_active', 1);
-        $this->assertEquals(true, $helper->isModuleActive($store), 'Store config active');
+        $store->setConfig($this->getConfigPrefix() . 'is_active', 1);
+        $this->assertEquals(true, $this->helper->isModuleActive($store), 'Store config active');
 
-        $helper->setModuleActive(false);
-        $this->assertEquals(false, $helper->isModuleActive($store), 'ModuleActive Flag should override store config');
+        $this->helper->setModuleActive(false);
+        $this->assertEquals(false, $this->helper->isModuleActive($store), 'ModuleActive Flag should override store config');
 
-        $helper->resetActivationState();
-        $this->assertEquals(true, $helper->isModuleActive($store), 'resetActivationState() should revert to store config');
+        $this->helper->resetActivationState();
+        $this->assertEquals(true, $this->helper->isModuleActive($store), 'resetActivationState() should revert to store config');
 
-        $store->setConfig('netzarbeiter_groupscatalog2/general/is_active', 0);
-        $this->assertEquals(false, $helper->isModuleActive($store), 'Store config inactive');
+        $store->setConfig($this->getConfigPrefix() . 'is_active', 0);
+        $this->assertEquals(false, $this->helper->isModuleActive($store), 'Store config inactive');
     }
 
     public function testIsModuleActiveAdmin()
     {
-        /* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
-        $helper = Mage::helper('netzarbeiter_groupscatalog2');
         $store = $this->getAdminStore();
 
-        $store->setConfig('netzarbeiter_groupscatalog2/general/is_active', 1);
-        $this->assertEquals(false, $helper->isModuleActive($store), 'Admin store is always inactive by default');
-        $this->assertEquals(true, $helper->isModuleActive($store, false), 'Admin check disabled should return store setting');
+        $store->setConfig($this->getConfigPrefix() . 'is_active', 1);
+        $this->assertEquals(false, $this->helper->isModuleActive($store), 'Admin store is always inactive by default');
+        $this->assertEquals(true, $this->helper->isModuleActive($store, false), 'Admin check disabled should return store setting');
 
-        $store->setConfig('netzarbeiter_groupscatalog2/general/is_active', 0);
-        $helper->setModuleActive(true);
-        $this->assertEquals(false, $helper->isModuleActive($store), 'Admin scope should ignore module state flag');
-        $this->assertEquals(true, $helper->isModuleActive($store, false), 'Admin check disabled should return module state flag');
+        $store->setConfig($this->getConfigPrefix() . 'is_active', 0);
+        $this->helper->setModuleActive(true);
+        $this->assertEquals(false, $this->helper->isModuleActive($store), 'Admin scope should ignore module state flag');
+        $this->assertEquals(true, $this->helper->isModuleActive($store, false), 'Admin check disabled should return module state flag');
 
-        $helper->resetActivationState();
+        $this->helper->resetActivationState();
     }
 
-    public function testIsEntityVisible()
+    /**
+     * @param string $storeCode
+     * @param int $customerGroupId
+     *
+     * @dataProvider dataProvider
+     */
+    public function testIsProductVisible($storeCode, $customerGroupId)
     {
-        $this->markTestIncomplete();
+        $this->setCurrentStore($storeCode);
+        foreach (array(1, 2) as $productId) {
+            $product = Mage::getModel('catalog/product')->load($productId);
+            $expected = $this->expected('%s-%s-%s', $storeCode, $customerGroupId, $productId);
+            $visible = $this->helper->isEntityVisible($product, $customerGroupId);
+            $message = sprintf(
+                "Visibility for product %d, store %s, customer group %s (%d) is expected to be %d but found to be %d",
+                $productId, $storeCode,
+                $this->helper->getGroups()->getItemById($customerGroupId)->getCustomerGroupCode(),
+                $customerGroupId, $expected->getIsVisible(), $visible
+            );
+            $this->assertEquals($expected->getIsVisible(), $visible, $message);
+        }
     }
 
     public function testGetEntityVisibleDefaultGroupIds()

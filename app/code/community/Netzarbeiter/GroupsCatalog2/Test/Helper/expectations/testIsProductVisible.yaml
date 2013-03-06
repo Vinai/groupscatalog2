@@ -1,0 +1,74 @@
+usa-0-1: # Store, CustomerGroup NOT LOGGED IN, Product 1
+  is_visible: false # Product hidden from group
+
+usa-0-2: # Store, CustomerGroup NOT LOGGED IN, Product 2
+  is_visible: true # Product uses system default
+
+usa-1-1: # Store, CustomerGroup General, Product 1
+  is_visible: false # Product hidden from group
+
+usa-1-2: # Store, CustomerGroup General, Product 2
+  is_visible: true # Product uses system default
+
+usa-2-1: # Store, CustomerGroup Wholesale, Product 1
+  is_visible: true # Product NOT hidden from group
+
+usa-2-2: # Store, CustomerGroup Wholesale, Product 2
+  is_visible: false # Product is hidden from group in website scope
+
+
+canada-0-1: # Store, CustomerGroup NOT LOGGED IN, Product 1
+  is_visible: false # Module deactivated, not be in index
+
+canada-0-2: # Store, CustomerGroup NOT LOGGED IN, Product 2
+  is_visible: false # Module deactivated, not be in index
+
+canada-1-1: # Store, CustomerGroup General, Product 1
+  is_visible: false # Module deactivated, not be in index
+
+canada-1-2: # Store, CustomerGroup General, Product 2
+  is_visible: false # Module deactivated, not be in index
+
+canada-2-1: # Store, CustomerGroup Wholesale, Product 1
+  is_visible: false # Module deactivated, not be in index
+
+canada-2-2: # Store, CustomerGroup Wholesale, Product 2
+  is_visible: false # Module deactivated, not be in index
+
+
+germany-0-1: # Store, CustomerGroup NOT LOGGED IN, Product 1
+  is_visible: false # Product hidden from group
+
+germany-0-2: # Store, CustomerGroup NOT LOGGED IN, Product 2
+  is_visible: true # Product NOT hidden from group
+
+germany-1-1: # Store, CustomerGroup General, Product 1
+  is_visible: false # Product hidden from group
+
+germany-1-2: # Store, CustomerGroup General, Product 2
+  is_visible: true # Product NOT hidden from group
+
+germany-2-1: # Store, CustomerGroup Wholesale, Product 1
+  is_visible: true # Product NOT hidden from group
+
+germany-2-2: # Store, CustomerGroup Wholesale, Product 2
+  is_visible: false # Product hidden from group in store view scope
+
+
+germany2-0-1: # Store, CustomerGroup NOT LOGGED IN, Product 1
+  is_visible: false # Module deactivated, not be in index
+
+germany2-0-2: # Store, CustomerGroup NOT LOGGED IN, Product 2
+  is_visible: false # Module deactivated, not be in index
+
+germany2-1-1: # Store, CustomerGroup General, Product 1
+  is_visible: false # Module deactivated, not be in index
+
+germany2-1-2: # Store, CustomerGroup General, Product 2
+  is_visible: false # Module deactivated, not be in index
+
+germany2-2-1: # Store, CustomerGroup Wholesale, Product 1
+  is_visible: false # Module deactivated, not be in index
+
+germany2-2-2: # Store, CustomerGroup Wholesale, Product 2
+  is_visible: false # Module deactivated, not be in index
