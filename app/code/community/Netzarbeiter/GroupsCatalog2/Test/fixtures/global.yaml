@@ -96,6 +96,7 @@ tables:
 eav:
   catalog_product:
 
+    # Product 1 is hidden from groups 0 and 1 (NOT LOGGED IN and General)
     - entity_id: 1
       type_id: simple
       sku: product1
@@ -120,6 +121,9 @@ eav:
         - 0 # Not logged in
         - 1 # General
 
+    # Product 2 is visible to all (uses default system config settings)
+    # Product 2 is hidden from group Wholesale (2) in website scope usa
+    # Product 2 is hidden from group General (1) in store scope germany
     - entity_id: 2
       type_id: simple
       sku: product2
