@@ -340,10 +340,10 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 		{
 			// Because by default the specified entity is visible, the configured groups should NOT
 			// see the entities. Because of this the array needs to be "inverted".
-			$groupIds = array_diff($this->getCustomerGroupIds(), $groupIds);
+			$groupIds = array_values(array_diff($this->getCustomerGroupIds(), $groupIds));
 			return $groupIds;
 		}
-		return $groupIds;
+		return array_values($groupIds);
 	}
 
 	/**
