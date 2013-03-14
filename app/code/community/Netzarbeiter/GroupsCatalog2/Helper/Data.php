@@ -132,19 +132,24 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 
 	public function isEntityVisible(Mage_Catalog_Model_Abstract $entity, $customerGroupId = null)
 	{
-		// Default to the current customer group id
-		if (is_null($customerGroupId))
-		{
-			$customerGroupId = $this->getCustomerGroupId();
-		}
+        // if the module is deactivated or a store view all entities are visible
+        if (! $this->isModuleActive($entity->getStoreId())) {
+            return true;
+        }
+
+        // Default to the current customer group id
+        if (is_null($customerGroupId))
+        {
+            $customerGroupId = $this->getCustomerGroupId();
+        }
 
 		$groupIds = $entity->getData(self::HIDE_GROUPS_ATTRIBUTE);
 
 		if (! is_array($groupIds) && ! is_string($groupIds))
 		{
-			// If the value isn't set on the entity mode fall back to querying the db index table
-			return Mage::getResourceSingleton('netzarbeiter_groupscatalog2/filter')
-				->isEntityVisible($entity, $customerGroupId);
+            // If the value isn't set on the entity mode fall back to querying the db index table
+            return Mage::getResourceSingleton('netzarbeiter_groupscatalog2/filter')
+                ->isEntityVisible($entity, $customerGroupId);
 		}
 
 		/* @var $entityType string The entity type code for the specified entity */
