@@ -1,32 +1,18 @@
 -
-  - # group ids
-    - 0
-    - 1
-    - 2
-    - 3
-  - show
+  - [0, 1, 2, 3] # group ids
+  - show         # mode
 -
-  - # group ids
-    - 0
-    - 1
-    - 3
-  - show
+  - [0, 1, 3]    # group ids
+  - show         # mode
 -
-  - # group ids
-  - show
+  - []           # group ids
+  - show         # mode
 -
-  - # group ids
-    - 0
-    - 1
-    - 2
-    - 3
-  - hide
+  - [0, 1, 2, 3] # group ids
+  - hide         # mode
 -
-  - # group ids
-    - 0
-    - 1
-    - 3
-  - hide
+  - [0, 1, 3]    # group ids
+  - hide         # mode
 -
-  - # group ids
-  - hide
+  - []           # group ids
+  - hide         # mode
