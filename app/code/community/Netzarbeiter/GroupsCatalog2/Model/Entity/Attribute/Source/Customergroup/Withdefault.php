@@ -95,4 +95,32 @@ class Netzarbeiter_GroupsCatalog2_Model_Entity_Attribute_Source_Customergroup_Wi
 		}
 		return false;
 	}
+
+    /**
+     * Return the matching option value(s) for the passed option label(s)
+     *
+     * @param int|string $value A single option label or a comma separated list for multiselect
+     * @return null|string
+     */
+    public function getOptionId($value)
+    {
+        if ($this->getAttribute()->getFrontendInput() === 'multiselect' && (is_array($value) || strpos($value, ',') !== false)) {
+            if (is_scalar($value)) {
+                $value = explode(',', $value);
+            }
+
+            $optionIds = array();
+            foreach ($value as $optionValue) {
+                $optionIds[] = $this->getOptionId($optionValue);
+            }
+            return implode(',', $optionIds);
+        }
+
+        foreach ($this->getAllOptions() as $option) {
+            if (strcasecmp($option['label'], $value)==0 || $option['value'] == $value) {
+                return $option['value'];
+            }
+        }
+        return null;
+    }
 }
