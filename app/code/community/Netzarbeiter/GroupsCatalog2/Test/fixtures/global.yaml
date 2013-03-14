@@ -9,11 +9,13 @@
 #
 # Product entity settings:
 #
-# Product 1 is hidden from groups 0 and 1 (NOT LOGGED IN and General)
-# Product 2 is visible to all (uses default system config settings)
-# Product 2 is hidden from group Wholesale (2) in website scope usa
-# Product 2 is hidden from group General (1) in store scope germany
+# Product 1 is hidden from groups 0 and 1 (NOT LOGGED IN and General), visible to groups 2 and 3
+# Product 2 is visible to all 0, 1, 2 and 3 (uses default system config settings)
+# Product 2 is hidden from group Wholesale (2) in website scope usa (visible to 0, 1, 3)
+# Product 2 is hidden from group General (1) in store scope germany (visible to 0, 2, 3)
+# Product 3 has no groupscatalog attribute values set, so it will use the system defaults
 #
+
 scope:
   website: # Initialize websites
     - website_id: 2
@@ -73,10 +75,12 @@ scope:
 config:
   default/netzarbeiter_groupscatalog2/general/is_active: 1
   default/netzarbeiter_groupscatalog2/general/product_mode: show
+  default/netzarbeiter_groupscatalog2/general/category_mode: show
   default/netzarbeiter_groupscatalog2/general/product_default_hide: -1
-  default/netzarbeiter_groupscatalog2/general/product_default_show: -1
   stores/germany2/netzarbeiter_groupscatalog2/general/is_active: 0 # deactivate in german2 store view scope
+  stores/germany2/netzarbeiter_groupscatalog2/general/category_mode: hide # set default mode for categories to hide
   websites/canada_website/netzarbeiter_groupscatalog2/general/is_active: 0 # deactivate in canada website scope
+  websites/canada_website/netzarbeiter_groupscatalog2/general/product_default_hide: 1,2,3 # hide from not logged in
 
 tables:
   customer/customer_group:
@@ -117,9 +121,7 @@ eav:
       tax_class_id: 2 # Taxable Goods
       status: 1 # Enabled
       visibility: 4 # Visible in Catalog & Search
-      groupscatalog2_groups: # Hide from groups
-        - 0 # Not logged in
-        - 1 # General
+      groupscatalog2_groups: NOT LOGGED IN,General
 
     # Product 2 is visible to all (uses default system config settings)
     # Product 2 is hidden from group Wholesale (2) in website scope usa
@@ -144,13 +146,33 @@ eav:
       tax_class_id: 2 # Taxable Goods
       status: 1 # Enabled
       visibility: 4 # Visible in Catalog & Search
-      groupscatalog2_groups: # Hide from groups
-        - -1 # Use default (show to all)
+      groupscatalog2_groups: [ USE DEFAULT ]
       /websites:
         usa_website:
-          groupscatalog2_groups:
-            - 2 # Hide from Wholesale group in usa website
+          groupscatalog2_groups: Wholesale
       /stores:
         germany:
-          groupscatalog2_groups:
-            - 1 # Hide from General group in germany store view
+          groupscatalog2_groups: General
+
+    # Product 3 has no groupscatalog attribute values set, so it will use the system defaults
+    - entity_id: 3
+      type_id: simple
+      sku: product3
+      name: Product Three
+      short_description: Yet another test product
+      description: Yet another great test product
+      url_key: product_three
+      stock:
+        qty: 1000.00
+        is_in_stock: 1
+      website_ids:
+        - usa_website
+        - canada_website
+        - german_website
+      category_ids:
+        - 2 # Default Category
+      price: 12.99
+      tax_class_id: 2 # Taxable Goods
+      status: 1 # Enabled
+      visibility: 4 # Visible in Catalog & Search
+      # groupscatalog2_groups: not set

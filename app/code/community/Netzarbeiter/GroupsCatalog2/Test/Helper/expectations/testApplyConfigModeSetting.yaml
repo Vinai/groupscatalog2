@@ -1,0 +1,28 @@
+show-0123:
+  group_ids:
+
+show-013:
+  group_ids:
+    - 2
+
+show-:
+  group_ids:
+    - 0
+    - 1
+    - 2
+    - 3
+
+hide-0123:
+  group_ids:
+    - 0
+    - 1
+    - 2
+    - 3
+hide-013:
+  group_ids:
+    - 0
+    - 1
+    - 3
+
+hide-:
+  group_ids:

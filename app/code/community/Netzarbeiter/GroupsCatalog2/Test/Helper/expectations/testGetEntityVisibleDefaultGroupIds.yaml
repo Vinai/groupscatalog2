@@ -1,0 +1,21 @@
+catalog_product-usa:
+  visible_to_groups:
+    - 0
+    - 1
+    - 2
+    - 3
+catalog_product-canada:
+  visible_to_groups:
+    - 0
+catalog_product-germany:
+  visible_to_groups:
+    - 0
+    - 1
+    - 2
+    - 3
+catalog_product-germany2:
+  visible_to_groups:
+    - 0
+    - 1
+    - 2
+    - 3

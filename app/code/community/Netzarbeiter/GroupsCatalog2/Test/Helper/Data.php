@@ -2,6 +2,7 @@
 
 /**
  * @loadSharedFixture global.yaml
+ * @doNotIndexAll
  */
 class Netzarbeiter_GroupsCatalog2_Test_Helper_Data extends EcomDev_PHPUnit_Test_Case
 {
@@ -12,7 +13,7 @@ class Netzarbeiter_GroupsCatalog2_Test_Helper_Data extends EcomDev_PHPUnit_Test_
 
     public static function setUpBeforeClass() {
         // Fix SET @SQL_MODE='NO_AUTO_VALUE_ON_ZERO' bugs from shared fixture files
-        /** @var $db Varien_Db_Adapter_Pdo_Mysql */
+        /** @var $db Varien_Db_Adapter_Interface */
         $db = Mage::getSingleton('core/resource')->getConnection('customer_write');
         $db->update(
             Mage::getSingleton('core/resource')->getTableName('customer/customer_group'),
@@ -20,12 +21,12 @@ class Netzarbeiter_GroupsCatalog2_Test_Helper_Data extends EcomDev_PHPUnit_Test_
             "customer_group_code='NOT LOGGED IN'"
         );
 
+        // Rebuild GroupsCatalog2 product index
         Mage::getModel('index/indexer')->getProcessByCode('groupscatalog2_product')->reindexEverything();
-
-        //print_r($db->fetchAll('SELECT * FROM groupscatalog_product_idx'));
     }
 
     /**
+     * @var string $code
      * @return Mage_Core_Model_Store
      * @throwException Exception
      */
@@ -121,38 +122,79 @@ class Netzarbeiter_GroupsCatalog2_Test_Helper_Data extends EcomDev_PHPUnit_Test_
     /**
      * @param string $storeCode
      * @param int $customerGroupId
-     *
      * @dataProvider dataProvider
      */
     public function testIsProductVisible($storeCode, $customerGroupId)
     {
         $this->setCurrentStore($storeCode);
-        foreach (array(1, 2) as $productId) {
+        foreach (array(1, 2, 3) as $productId) {
             $product = Mage::getModel('catalog/product')->load($productId);
-            $expected = $this->expected('%s-%s-%s', $storeCode, $customerGroupId, $productId);
+            $expected = $this->expected('%s-%s-%s', $storeCode, $customerGroupId, $productId)->getIsVisible();
             $visible = $this->helper->isEntityVisible($product, $customerGroupId);
+
             $message = sprintf(
                 "Visibility for product %d, store %s, customer group %s (%d) is expected to be %d but found to be %d",
                 $productId, $storeCode,
                 $this->helper->getGroups()->getItemById($customerGroupId)->getCustomerGroupCode(),
-                $customerGroupId, $expected->getIsVisible(), $visible
+                $customerGroupId, $expected, $visible
             );
-            $this->assertEquals($expected->getIsVisible(), $visible, $message);
+            $this->assertEquals($expected, $visible, $message);
         }
     }
 
-    public function testGetEntityVisibleDefaultGroupIds()
+    /**
+     * @param string $entityTypeCode
+     * @param int|string|Mage_Core_Model_Store $store
+     * @dataProvider dataProvider
+     */
+    public function testGetEntityVisibleDefaultGroupIds($entityTypeCode, $store)
     {
-        $this->markTestIncomplete();
+        $store = Mage::app()->getStore($store);
+        $expected = $this->expected('%s-%s', $entityTypeCode, $store->getCode());
+        $groups = $this->helper->getEntityVisibleDefaultGroupIds($entityTypeCode, $store);
+        $message = sprintf(
+            'Default visible to groups for store %s "%s" not matching expected list "%s"',
+            $store->getCode(), implode(',', $groups), implode(',', $expected->getVisibleToGroups())
+        );
+        $this->assertEquals($expected->getVisibleToGroups(), $groups, $message);
     }
 
-    public function testGetModeSettingByEntityType()
+    /**
+     * @param string $entityTypeCode
+     * @param int|string|Mage_Core_Model_Store $store
+     * @dataProvider dataProvider
+     */
+    public function testGetModeSettingByEntityType($entityTypeCode, $store)
     {
-        $this->markTestIncomplete();
+        $store = Mage::app()->getStore($store);
+        $expected = $this->expected('%s-%s', $entityTypeCode, $store->getCode())->getMode();
+        $mode = $this->helper->getModeSettingByEntityType($entityTypeCode, $store);
+        $message = sprintf(
+            'Mode setting for %s in store %s is "%s"',
+            $entityTypeCode, $store->getCode(), $mode
+        );
+        $this->assertEquals($expected, $mode, $message);
     }
 
-    public function testApplyConfigModeSetting()
+    /**
+     * @param array $groupIds
+     * @param string $mode show | hide
+     * @dataProvider dataProvider
+     */
+    public function testApplyConfigModeSetting($groupIds, $mode)
     {
-        $this->markTestIncomplete();
+        if (! $groupIds) {
+            $groupIds = array(); // Can't specify an empty array in yaml provider
+        }
+        $expected = $this->expected('%s-%s', $mode, implode('', $groupIds))->getGroupIds();
+        if ('' === $expected) {
+            $expected = array(); // Can't specify an empty array in yaml expectations
+        }
+        $result = $this->helper->applyConfigModeSetting($groupIds, $mode);
+        $message = sprintf(
+            'Apply mode "%s" to group ids "%s" is expected to result in "%s" but was "%s"',
+            $mode, implode(',', $groupIds), implode(',', $expected), implode(',', $result)
+        );
+        $this->assertEquals($expected, $result, $message);
     }
 }

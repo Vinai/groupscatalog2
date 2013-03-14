@@ -1,0 +1,17 @@
+catalog_product-usa:
+  mode: show
+catalog_product-canada:
+  mode: show
+catalog_product-germany:
+  mode: show
+catalog_product-germany2:
+  mode: show
+
+catalog_category-usa:
+  mode: show
+catalog_category-canada:
+  mode: show
+catalog_category-germany:
+  mode: show
+catalog_category-germany2:
+  mode: hide
