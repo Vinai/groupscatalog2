@@ -176,12 +176,11 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 		}
 		elseif (in_array(self::USE_DEFAULT, $groupIds))
 		{
-
 			// Get the default settings for this entity type without applying the mode settings
 			$groupIds = $this->getEntityVisibleDefaultGroupIds($entityType, $entity->getStore(), false);
 		}
 
-		// If the configured mode is 'show' the list of group id's must be inverse
+		// If the configured mode is 'show' the list of group ids must be inverse
 		$groupIds = $this->applyConfigModeSettingByStore($groupIds, $entityType, $entity->getStore());
 
 		return in_array($customerGroupId, $groupIds);
@@ -265,6 +264,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	 *
 	 * @param string|int|Mage_Eav_Model_Entity_Type $entityType
 	 * @param null|int|string|Mage_Core_Model_Store $store
+     * @param bool $applyMode
 	 * @return array
 	 */
 	public function getEntityVisibleDefaultGroupIds($entityType, $store = null, $applyMode = true)
@@ -423,7 +423,6 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 	/**
 	 * Reset the module to use the system configuration activation state
 	 *
-	 * @param null $store
 	 * @return Netzarbeiter_GroupsCatalog2_Helper_Data
 	 */
 	public function resetActivationState()
