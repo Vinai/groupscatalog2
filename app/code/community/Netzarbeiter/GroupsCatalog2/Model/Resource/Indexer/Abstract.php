@@ -100,32 +100,45 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
      *
 	 * Do not initialize the $_storeDefaults, it will
      * be loaded by _getStoreDefaultGroups() if needed.
-     * Don't include disabled stores in the frontend store id's array.
+     * Don't include disabled stores in the frontend store ids array.
+     * Don't include store ids where this module is disabled in
+     * the array either.
 	 *
 	 * @return void
 	 */
 	protected function _initStores()
 	{
-		foreach (array_keys(Mage::app()->getStores()) as $storeId) {
-            if ($this->_helper()->isModuleActive($storeId, false)) {
+		foreach (Mage::app()->getStores() as $storeId => $store) {
+            /** @var $store Mage_Core_Model_Store */
+            if ($store->getIsActive() && $this->_helper()->isModuleActive($storeId, false)) {
                 $this->_frontendStoreIds[] = $storeId;
             }
         }
 	}
 
-	protected function _initGroupIds()
+    /**
+     * Initialize list of customer group ids
+     *
+     * @return void
+     */
+    protected function _initGroupIds()
 	{
 		$this->_groupIds = $this->_helper->getCustomerGroupIds();
 		$this->_groupIds[] = Netzarbeiter_GroupsCatalog2_Helper_Data::USE_NONE;
 	}
 
-	protected function _getProfilerName()
+    /**
+     * Utility method to return identifier prefix for Varien_Profiler buckets
+     *
+     * @return string
+     */
+    protected function _getProfilerName()
 	{
 		return 'Netzarbeiter_GroupsCatalog2::' . $this->_getEntityTypeCode();
 	}
 
 	/**
-	 * Return the ids of the customer groups that may see this indexers entity
+	 * Return the ids of the customer groups set in the system config that may see this entity
 	 *
 	 * @param int|string|Mage_Core_Model_Store $store
 	 * @return array
@@ -269,7 +282,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	}
 
     /**
-     * Check if the specified store is part of the frontend store id's
+     * Check if the specified store is part of the frontend store ids
      *
      * If the module is disabled on a store view, then that store is
      * not included in the _frontendStoreIds array.
