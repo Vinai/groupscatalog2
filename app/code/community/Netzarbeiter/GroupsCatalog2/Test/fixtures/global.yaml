@@ -146,7 +146,7 @@ eav:
       tax_class_id: 2 # Taxable Goods
       status: 1 # Enabled
       visibility: 4 # Visible in Catalog & Search
-      groupscatalog2_groups: [ USE DEFAULT ]
+      groupscatalog2_groups: '[ USE DEFAULT ]'
       /websites:
         usa_website:
           groupscatalog2_groups: Wholesale
