@@ -1,0 +1,98 @@
+# ===== Test Setup ======
+#
+# This fixture refers to issue https://github.com/Vinai/groupscatalog2/issues/33
+#
+# System config settings:
+#
+# Extension active by default with option "Hide products by default"
+# Extension active on store 1 with option "Show products by default"
+#
+# Then, product A has the following config :
+#
+# by default, "Show to groups" is set to [USE DEFAULT]
+# for store 1, "Hide from groups" use the default value of the product.
+# In that configuration, product A will never show up in store 1, although IMHO it should, because :
+#
+# store 1 default behavior is "Show products by default"
+# product A "Hide from groups" for store 1 is using the default product value, which is "[ USE DEFAULT]".
+#
+# However, what seems to happen is that if the default value of the product is used for the
+# "Hide from Groups" field, the default behavior will be applied too, regardless of the actual
+# default behavior of the current store.
+#
+# Condensed Settings:
+# Module is globally enabled
+# System config:
+#  Hide products by default
+#  Module enabled by default
+#  In store_one "Show products by default" mode
+#
+# Product entity settings:
+#
+# Product
+#  default scope: [ USE DEFAULT ]
+#  No scope setting for the store
+
+scope:
+  website: # Initialize websites
+    - website_id: 2
+      code: usa_website
+      name: TEST Website
+      default_group_id: 2
+  group: # Initializes store groups
+    - group_id: 2
+      website_id: 2
+      name: TEST Store Group
+      default_store_id: 2
+      root_category_id: 2 # Default Category
+  store: # Initializes store views
+    - store_id: 2
+      website_id: 2
+      group_id: 2
+      code: store_one
+      name: TEST Store 1
+      is_active: 1
+    - store_id: 3
+      website_id: 2
+      group_id: 2
+      code: store_two
+      name: TEST Store 2
+      is_active: 1
+
+config:
+  default/netzarbeiter_groupscatalog2/general/is_active: 1
+  default/netzarbeiter_groupscatalog2/general/product_mode: hide
+  default/netzarbeiter_groupscatalog2/general/product_default_show: -1
+  stores/store_one/netzarbeiter_groupscatalog2/general/product_mode: show
+
+tables:
+  customer/customer_group:
+    - customer_group_id: 0
+      customer_group_code: NOT LOGGED IN
+      tax_class_id: 3 # default customer tax class id
+    - customer_group_id: 1
+      customer_group_code: General
+      tax_class_id: 3 # default customer tax class id
+
+eav:
+  catalog_product:
+
+    - entity_id: 1
+      type_id: simple
+      sku: product1
+      name: Product One
+      short_description: A test product
+      description: A great test product
+      url_key: product_one
+      stock:
+        qty: 1000.00
+        is_in_stock: 1
+      website_ids:
+        - usa_website
+      category_ids: [ 2 ]
+      price: 12.99
+      tax_class_id: 2 # Taxable Goods
+      status: 1 # Enabled
+      visibility: 4 # Visible in Catalog & Search
+      groupscatalog2_groups: '[ USE DEFAULT ]'
+      # No store scope setting
