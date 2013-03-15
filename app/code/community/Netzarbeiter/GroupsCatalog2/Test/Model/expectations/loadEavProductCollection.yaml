@@ -1,0 +1,73 @@
+
+#
+# For reference further down:
+#
+
+all_product_present: &allProductsPresent
+    product1: true
+    product2: true
+    product3: true
+
+all_present_complete: &allPresentComplete
+  product_present: *allProductsPresent
+  product_count: 3
+
+#
+# Test case expectations
+#
+
+usa-0: # Group NOT LOGGED IN
+  product_present:
+    product1: false # Hidden from group in global scope
+    product2: true
+    product3: true
+  product_count: 2
+
+usa-1: # Group General
+  product_present:
+    product1: false # Hidden from group in global scope
+    product2: true
+    product3: true
+  product_count: 2
+
+
+usa-2: # Group Wholesale
+  product_present:
+    product1: true
+    product2: false # Hidden from group on website scope
+    product3: true
+  product_count: 2
+
+usa-3: *allPresentComplete # Group Retail
+
+
+# Module disabled on website scope, all entities visible
+canada-0: *allPresentComplete
+canada-1: *allPresentComplete
+canada-2: *allPresentComplete
+canada-3: *allPresentComplete
+
+
+germany-0: # Group NOT LOGGED IN
+  product_present:
+    product1: false # Hidden from group in global scope
+    product2: true
+    product3: true
+  product_count: 2
+
+germany-1: # Group General
+  product_present:
+    product1: false # Hidden from group in global scope
+    product2: false # Hidden from group on store scope
+    product3: true
+  product_count: 1
+
+germany-2: *allPresentComplete
+germany-3: *allPresentComplete
+
+
+# Module disabled on store scope, all entities visible
+germany2-0: *allPresentComplete
+germany2-1: *allPresentComplete
+germany2-2: *allPresentComplete
+germany2-3: *allPresentComplete
