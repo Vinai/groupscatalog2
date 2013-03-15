@@ -10,6 +10,7 @@ class Netzarbeiter_GroupsCatalog2_Test_Helper_Data extends EcomDev_PHPUnit_Test_
     protected $configGroup = 'general';
     /** @var Netzarbeiter_GroupsCatalog2_Helper_Data */
     protected $helper;
+    protected $originalCustomerSession;
 
     public static function setUpBeforeClass() {
         // Fix SET @SQL_MODE='NO_AUTO_VALUE_ON_ZERO' bugs from shared fixture files
@@ -60,10 +61,33 @@ class Netzarbeiter_GroupsCatalog2_Test_Helper_Data extends EcomDev_PHPUnit_Test_
         return $this->configSection . '/' . $this->configGroup .'/';
     }
 
-    public function setUp()
+    protected function setUp()
     {
         /** @var helper Netzarbeiter_GroupsCatalog2_Helper_Data */
         $this->helper = Mage::helper('netzarbeiter_groupscatalog2');
+
+        // Mock customer session
+        $mockSession = $this->getModelMockBuilder('customer/session')
+                    ->disableOriginalConstructor()
+                    ->getMock();
+
+        $registryKey = '_singleton/customer/session';
+        if (Mage::registry($registryKey)) {
+            $this->originalCustomerSession = Mage::registry($registryKey);
+            Mage::unregister($registryKey);
+        }
+        Mage::register($registryKey, $mockSession);
+    }
+
+    protected function tearDown()
+    {
+        // Get rid of mocked customer session
+        $registryKey = '_singleton/customer/session';
+        Mage::unregister($registryKey);
+        if ($this->originalCustomerSession) {
+            Mage::register($registryKey, $this->originalCustomerSession);
+            $this->originalCustomerSession = null;
+        }
     }
 
     // Tests #######
@@ -128,6 +152,13 @@ class Netzarbeiter_GroupsCatalog2_Test_Helper_Data extends EcomDev_PHPUnit_Test_
      */
     public function testIsProductVisible($storeCode, $customerGroupId)
     {
+        // Complete mock of customer session
+        /* @var $session PHPUnit_Framework_MockObject_MockObject Stub */
+        $mockSession = Mage::getSingleton('customer/session');
+        $mockSession->expects($this->any()) // Will be only called if current store is deactivated
+            ->method('getCustomerGroupId')
+            ->will($this->returnValue($customerGroupId));
+
         $this->setCurrentStore($storeCode);
         foreach (array(1, 2, 3) as $productId) {
             $product = Mage::getModel('catalog/product')->load($productId);
