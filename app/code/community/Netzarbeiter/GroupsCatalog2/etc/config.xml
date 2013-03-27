@@ -49,6 +49,7 @@
 			<catalog_resource>
 				<rewrite>
 					<category_flat>Netzarbeiter_GroupsCatalog2_Model_Catalog_Resource_Category_Flat</category_flat>
+                    <category_flat_collection>Netzarbeiter_GroupsCatalog2_Model_Catalog_Resource_Category_Flat_Collection</category_flat_collection>
 				</rewrite>
 			</catalog_resource>
 			<!-- rewrite the catalogseach fulltext collection to add the filter to the getSelectCountSql() method -->
