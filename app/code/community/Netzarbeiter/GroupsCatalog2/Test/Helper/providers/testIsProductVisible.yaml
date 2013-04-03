@@ -8,6 +8,15 @@
   - usa # Store
   - 2 # Customer Group Wholesale
 -
+  - usa2 # Store
+  - 0 # Customer Group NOT LOGGED IN
+-
+  - usa2 # Store
+  - 1 # Customer Group General
+-
+  - usa2 # Store
+  - 2 # Customer Group Wholesale
+-
   - canada # Store
   - 0 # Customer Group NOT LOGGED IN
 -

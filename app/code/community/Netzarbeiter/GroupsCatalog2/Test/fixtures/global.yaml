@@ -6,12 +6,15 @@
 # System config: Show products by default
 # Module disabled on website scope canada
 # Module disabled on store view scope germany2
+# Mode is switched to hide on store viiw scope usa2
 #
 # Product entity settings:
 #
 # Product 1 is hidden from groups 0 and 1 (NOT LOGGED IN and General), visible to groups 2 and 3
+# Product 1 is hidden from groups 2 and 3 (Wholesale and Retail) and visible to groups 0 and 1 in usa2 store
 # Product 2 is visible to all 0, 1, 2 and 3 (uses default system config settings)
 # Product 2 is hidden from group Wholesale (2) in website scope usa (visible to 0, 1, 3)
+# Product 2 is visible to group Wholesale (2) in store view scope usa2 (hidden from 0, 1, 3)
 # Product 2 is hidden from group General (1) in store scope germany (visible to 0, 2, 3)
 # Product 3 has no groupscatalog attribute values set, so it will use the system defaults
 #
@@ -53,6 +56,12 @@ scope:
       code: usa
       name: USA Store
       is_active: 1
+    - store_id: 6
+      website_id: 2
+      group_id: 2
+      code: usa2
+      name: USA Store 2
+      is_active: 1
     - store_id: 3
       website_id: 3
       group_id: 3
@@ -79,6 +88,7 @@ config:
   default/netzarbeiter_groupscatalog2/general/product_default_hide: -1
   stores/germany2/netzarbeiter_groupscatalog2/general/is_active: 0 # deactivate in german2 store view scope
   stores/germany2/netzarbeiter_groupscatalog2/general/category_mode: hide # set default mode for categories to hide
+  stores/usa2/netzarbeiter_groupscatalog2/general/product_mode: hide # set default mode for products to hide on store scope
   websites/canada_website/netzarbeiter_groupscatalog2/general/is_active: 0 # deactivate in canada website scope
   websites/canada_website/netzarbeiter_groupscatalog2/general/product_default_hide: 1,2,3 # hide from not logged in
 

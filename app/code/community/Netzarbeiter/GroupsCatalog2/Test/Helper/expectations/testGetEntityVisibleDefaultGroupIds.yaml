@@ -1,6 +1,9 @@
 catalog_product-usa:
   visible_to_groups: [0, 1, 2, 3]
 
+catalog_product-usa2:
+  visible_to_groups: []
+
 catalog_product-canada:
   visible_to_groups: [0]
 

@@ -3,6 +3,9 @@
   - usa
 -
   - catalog_product
+  - usa2
+-
+  - catalog_product
   - canada
 -
   - catalog_product
@@ -13,6 +16,9 @@
 -
   - catalog_category
   - usa
+-
+  - catalog_category
+  - usa2
 -
   - catalog_category
   - canada

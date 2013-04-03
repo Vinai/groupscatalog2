@@ -1,73 +1,67 @@
-
 #
-# For reference further down:
+# placeholder for further reference
 #
 
-all_product_present: &allProductsPresent
-    product1: true
-    product2: true
-    product3: true
-
-all_present_complete: &allPresentComplete
-  product_present: *allProductsPresent
-  product_count: 3
+all_products_present: &allProductsPresent
+  products_present: [1, 2, 3]
 
 #
 # Test case expectations
 #
 
 usa-0: # Group NOT LOGGED IN
-  product_present:
-    product1: false # Hidden from group in global scope
-    product2: true
-    product3: true
-  product_count: 2
+  # Product 1 hidden from group in global scope
+  products_present: [2, 3]
 
 usa-1: # Group General
-  product_present:
-    product1: false # Hidden from group in global scope
-    product2: true
-    product3: true
-  product_count: 2
-
+  # Product 1 hidden from group in global scope
+  products_present: [2, 3]
 
 usa-2: # Group Wholesale
-  product_present:
-    product1: true
-    product2: false # Hidden from group on website scope
-    product3: true
-  product_count: 2
+  # Product 2 hidden from group in website scope
+  products_present: [1, 3]
 
-usa-3: *allPresentComplete # Group Retail
+usa-3: *allProductsPresent # Group Retail
+
+
+usa2-0: # Group NOT LOGGED IN
+  # Mode reversend to hide in store scope config
+  products_present: [1]
+
+usa2-1: # Group General
+  # Mode reversend to hide in store scope config
+  products_present: [1]
+
+usa2-2: # Group Wholesale
+  # Show to grp on website scope, hidden mode configured on store scope
+  products_present: [2]
+
+usa2-3: # Group Retail
+  # Use defaut, default scope is hide mode on store view scope
+  products_present: []
 
 
 # Module disabled on website scope, all entities visible
-canada-0: *allPresentComplete
-canada-1: *allPresentComplete
-canada-2: *allPresentComplete
-canada-3: *allPresentComplete
+canada-0: *allProductsPresent
+canada-1: *allProductsPresent
+canada-2: *allProductsPresent
+canada-3: *allProductsPresent
 
 
 germany-0: # Group NOT LOGGED IN
-  product_present:
-    product1: false # Hidden from group in global scope
-    product2: true
-    product3: true
-  product_count: 2
+  # Product 1 hidden from grp on global scope
+  products_present: [2, 3]
 
 germany-1: # Group General
-  product_present:
-    product1: false # Hidden from group in global scope
-    product2: false # Hidden from group on store scope
-    product3: true
-  product_count: 1
+   # Product 1 hidden on global scope, product 2 on store scope
+  products_present: [3]
 
-germany-2: *allPresentComplete
-germany-3: *allPresentComplete
+germany-2: *allProductsPresent
+germany-3: *allProductsPresent
 
 
 # Module disabled on store scope, all entities visible
-germany2-0: *allPresentComplete
-germany2-1: *allPresentComplete
-germany2-2: *allPresentComplete
-germany2-3: *allPresentComplete
+germany2-0: *allProductsPresent
+germany2-1: *allProductsPresent
+germany2-2: *allProductsPresent
+germany2-3: *allProductsPresent

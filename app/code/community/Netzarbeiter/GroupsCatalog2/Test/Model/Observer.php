@@ -62,7 +62,7 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Observer extends EcomDev_PHPUnit_Te
             Mage::register($registryKey, $this->originalCustomerSession);
             $this->originalCustomerSession = null;
         }
-        $this->app()->setCurrentStore('admin');
+        $this->setCurrentStore('admin');
     }
 
     /**
@@ -77,7 +77,7 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Observer extends EcomDev_PHPUnit_Te
     public function loadEavProductCollection($storeCode, $customerGroupId)
     {
         // In test fixture setup
-        $this->app()->setCurrentStore($storeCode);
+        $this->setCurrentStore($storeCode);
 
         /* @var $session PHPUnit_Framework_MockObject_MockObject Stub */
         $mockSession = Mage::getSingleton('customer/session');
@@ -85,29 +85,26 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Observer extends EcomDev_PHPUnit_Te
             ->method('getCustomerGroupId')
             ->will($this->returnValue($customerGroupId));
 
-        $expected = $this->expected("%s-%s", $storeCode, $customerGroupId);
 
         // Instantiate and load collection
         /** @var $collection Mage_Catalog_Model_Resource_Product_Collection */
         $collection = Mage::getModel('catalog/product')->getCollection()->load();
 
-        // Assertions
-        $message = sprintf(
-            "EAV product collection count in store %s with group %d expected to be %d but is %d",
-            $storeCode, $customerGroupId, $expected->getProductCount(), count($collection)
-        );
-        $this->assertCount($expected->getProductCount(), $collection, $message);
-        $expectProductPresent = $expected->getProductPresent();
+        $expected = $this->expected("%s-%s", $storeCode, $customerGroupId)->getProductsPresent();
+        $actual = array_keys($collection->getItems());
+        sort($actual);
 
+        $message = sprintf(
+            "Product(s) to be present for group %d in store %s: [%s]. Products found: [%s]",
+            $customerGroupId, $storeCode, implode(', ', $expected), implode(', ', $actual)
+        );
+        $this->assertEquals($expected, $actual, $message);
+        /*
         foreach (array(1, 2, 3) as $productId) {
             $isProductPresent = null !== $collection->getItemById($productId);
-            $expectedPresent = $expectProductPresent['product' . $productId];
-            if ($expectedPresent) {
-                $message = "Product %d in store %s with customer group %d is expected to be loaded in collection but is not";
-            } else {
-                $message = "Product %d in store %s with customer group %d is expected to be not loaded in collection but is present)";
-            }
-            $this->assertEquals($expectedPresent, $isProductPresent, sprintf($message, $productId, $storeCode, $customerGroupId));
+            $expectedPresent = in_array($productId, $expected);
+            $this->assertEquals($expectedPresent, $isProductPresent, $message);
         }
+        */
     }
 }
