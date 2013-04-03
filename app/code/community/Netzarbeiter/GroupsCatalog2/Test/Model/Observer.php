@@ -16,7 +16,8 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Observer extends EcomDev_PHPUnit_Te
     /**
      * Prepare grouscatalog2 index tables
      */
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass()
+    {
         // Fix SET @SQL_MODE='NO_AUTO_VALUE_ON_ZERO' bugs from shared fixture files
         // With the merge of https://github.com/IvanChepurnyi/EcomDev_PHPUnit/pull/93 this hack isn't required any more
         /** @var $db Varien_Db_Adapter_Interface */
@@ -38,8 +39,8 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Observer extends EcomDev_PHPUnit_Te
     {
         // Mock customer session
         $mockSession = $this->getModelMockBuilder('customer/session')
-                    ->disableOriginalConstructor()
-                    ->getMock();
+                ->disableOriginalConstructor()
+                ->getMock();
 
         $registryKey = '_singleton/customer/session';
         if (Mage::registry($registryKey)) {
@@ -82,8 +83,8 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Observer extends EcomDev_PHPUnit_Te
         /* @var $session PHPUnit_Framework_MockObject_MockObject Stub */
         $mockSession = Mage::getSingleton('customer/session');
         $mockSession->expects($this->atLeastOnce())
-            ->method('getCustomerGroupId')
-            ->will($this->returnValue($customerGroupId));
+                ->method('getCustomerGroupId')
+                ->will($this->returnValue($customerGroupId));
 
 
         // Instantiate and load collection

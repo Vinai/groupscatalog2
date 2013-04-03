@@ -19,7 +19,8 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Catalog_CategoryCollection
     /**
      * Prepare category flat index table
      */
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass()
+    {
         Mage::getModel('index/indexer')->getProcessByCode('catalog_category_flat')->reindexEverything();
     }
 
@@ -33,8 +34,8 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Catalog_CategoryCollection
 
         // Mock customer session
         $mockSession = $this->getModelMockBuilder('customer/session')
-                    ->disableOriginalConstructor()
-                    ->getMock();
+                ->disableOriginalConstructor()
+                ->getMock();
 
         $registryKey = '_singleton/customer/session';
         if (Mage::registry($registryKey)) {

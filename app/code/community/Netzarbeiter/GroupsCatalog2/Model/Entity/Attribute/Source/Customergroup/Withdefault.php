@@ -21,80 +21,70 @@
  */
 
 class Netzarbeiter_GroupsCatalog2_Model_Entity_Attribute_Source_Customergroup_Withdefault
-	extends Mage_Eav_Model_Entity_Attribute_Source_Abstract
+    extends Mage_Eav_Model_Entity_Attribute_Source_Abstract
 {
-	/**
-	 * Return all options for the customergroups_groups attributes, i.e. a list of all
-	 * customer groups with the additional options USE DEFAULT and NONE
-	 *
-	 * @return array
-	 */
-	public function getAllOptions()
-	{
-		if (is_null($this->_options))
-		{
-			$this->_options = array(
-				array(
-					'value' => Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT,
-					'label' => Mage::helper('netzarbeiter_groupscatalog2')->__('[ USE DEFAULT ]')
-				),
-				array(
-					'value' => Netzarbeiter_GroupsCatalog2_Helper_Data::USE_NONE,
-					'label' => Mage::helper('netzarbeiter_groupscatalog2')->__('[ NONE ]')
-				)
-			);
-			foreach (Mage::helper('netzarbeiter_groupscatalog2')->getGroups() as $group)
-			{
-				/* @var $group Mage_Customer_Model_Group */
-				$this->_options[] = array(
-					'value' => $group->getId(),
-					'label' => $group->getCode(),
-				);
-			}
-		}
-		return $this->_options;
-	}
+    /**
+     * Return all options for the customergroups_groups attributes, i.e. a list of all
+     * customer groups with the additional options USE DEFAULT and NONE
+     *
+     * @return array
+     */
+    public function getAllOptions()
+    {
+        if (is_null($this->_options)) {
+            $this->_options = array(
+                array(
+                    'value' => Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT,
+                    'label' => Mage::helper('netzarbeiter_groupscatalog2')->__('[ USE DEFAULT ]')
+                ),
+                array(
+                    'value' => Netzarbeiter_GroupsCatalog2_Helper_Data::USE_NONE,
+                    'label' => Mage::helper('netzarbeiter_groupscatalog2')->__('[ NONE ]')
+                )
+            );
+            foreach (Mage::helper('netzarbeiter_groupscatalog2')->getGroups() as $group) {
+                /* @var $group Mage_Customer_Model_Group */
+                $this->_options[] = array(
+                    'value' => $group->getId(),
+                    'label' => $group->getCode(),
+                );
+            }
+        }
+        return $this->_options;
+    }
 
-	/**
-	 * Get the label for an option value. If the value is a comma
-	 * separated string or an array, return an array of matching
-	 * option labels.
-	 *
-	 * @param string|integer $value
-	 * @return string|array
-	 */
-	public function getOptionText($value)
-	{
-		$options = $this->getAllOptions();
+    /**
+     * Get the label for an option value. If the value is a comma
+     * separated string or an array, return an array of matching
+     * option labels.
+     *
+     * @param string|integer $value
+     * @return string|array
+     */
+    public function getOptionText($value)
+    {
+        $options = $this->getAllOptions();
 
-		if (is_scalar($value) && strpos($value, ','))
-		{
-			$value = explode(',', $value);
-		}
-		if (is_array($value))
-		{
-			$values = array();
-			foreach ($options as $item)
-			{
-				if (in_array($item['value'], $value))
-				{
-					$values[] = $item['label'];
-				}
-			}
-			return $values;
-		}
-		else
-		{
-			foreach ($options as $item)
-			{
-				if ($item['value'] == $value)
-				{
-					return $item['label'];
-				}
-			}
-		}
-		return false;
-	}
+        if (is_scalar($value) && strpos($value, ',')) {
+            $value = explode(',', $value);
+        }
+        if (is_array($value)) {
+            $values = array();
+            foreach ($options as $item) {
+                if (in_array($item['value'], $value)) {
+                    $values[] = $item['label'];
+                }
+            }
+            return $values;
+        } else {
+            foreach ($options as $item) {
+                if ($item['value'] == $value) {
+                    return $item['label'];
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * Return the matching option value(s) for the passed option label(s)
@@ -117,7 +107,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Entity_Attribute_Source_Customergroup_Wi
         }
 
         foreach ($this->getAllOptions() as $option) {
-            if (strcasecmp($option['label'], $value)==0 || $option['value'] == $value) {
+            if (strcasecmp($option['label'], $value) == 0 || $option['value'] == $value) {
                 return $option['value'];
             }
         }

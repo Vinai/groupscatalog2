@@ -94,7 +94,6 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
     }
 
 
-
     /**
      * Set the html block cache to disabled/invalid when groupscatalog visibility settings
      * have changed because the top menu is cached.

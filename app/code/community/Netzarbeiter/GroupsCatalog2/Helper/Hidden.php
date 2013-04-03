@@ -189,6 +189,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Hidden extends Mage_Core_Helper_Abstrac
      * Check if the current request matches the passed route.
      *
      * @param string $targetRoute
+     * @return bool
      */
     protected function _isCurrentRoute($targetRoute)
     {
@@ -227,7 +228,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Hidden extends Mage_Core_Helper_Abstrac
             if (mb_strlen($message, 'UTF-8') > 0) {
                 /* @var $session Mage_Core_Model_Session */
                 $session = Mage::getSingleton('core/session');
-                if (! $this->_messageExistsInSession($session, $message)) {
+                if (!$this->_messageExistsInSession($session, $message)) {
                     $session->addError($message);
                 }
             }

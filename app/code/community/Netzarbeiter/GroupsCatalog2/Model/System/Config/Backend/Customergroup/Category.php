@@ -19,18 +19,18 @@
  * @copyright  Copyright (c) 2012 Vinai Kopp http://netzarbeiter.com
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
- 
+
 class Netzarbeiter_GroupsCatalog2_Model_System_Config_Backend_Customergroup_Category
-	extends Netzarbeiter_GroupsCatalog2_Model_System_Config_Backend_Customergroup_Abstract
+    extends Netzarbeiter_GroupsCatalog2_Model_System_Config_Backend_Customergroup_Abstract
 {
-	/**
-	 * Return the indexer code
-	 *
-	 * @return string
-	 * @see Netzarbeiter_GroupsCatalog2_Model_System_Config_Backend_Customergroup_Abstract::_afterSave()
-	 */
-	protected function _getIndexerCode()
-	{
-		return 'groupscatalog2_category';
-	}
+    /**
+     * Return the indexer code
+     *
+     * @return string
+     * @see Netzarbeiter_GroupsCatalog2_Model_System_Config_Backend_Customergroup_Abstract::_afterSave()
+     */
+    protected function _getIndexerCode()
+    {
+        return 'groupscatalog2_category';
+    }
 }

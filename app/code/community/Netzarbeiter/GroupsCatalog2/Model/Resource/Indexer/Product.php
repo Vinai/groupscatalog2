@@ -19,53 +19,53 @@
  * @copyright  Copyright (c) 2012 Vinai Kopp http://netzarbeiter.com
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
- 
+
 class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Product
-	extends Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract
+    extends Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract
 {
-	/**
-	 * Initialize with table name and id field
-	 * 
-	 * @return void
-	 */
-	protected function _construct()
-	{
-		$this->_init('netzarbeiter_groupscatalog2/product_index', 'id');
-	}
+    /**
+     * Initialize with table name and id field
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+        $this->_init('netzarbeiter_groupscatalog2/product_index', 'id');
+    }
 
-	/**
-	 * Handle reindexing of single entity save events
-	 *
-	 * @param Mage_Index_Model_Event $event
-	 * @return Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Product
-	 * @see Netzarbeiter_GroupsCatalog2_Model_Indexer_Abstract::_processEvent()
-	 */
-	public function catalogProductSave(Mage_Index_Model_Event $event)
-	{
-		$this->_reindexEntity($event);
-		return $this;
-	}
+    /**
+     * Handle reindexing of single entity save events
+     *
+     * @param Mage_Index_Model_Event $event
+     * @return Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Product
+     * @see Netzarbeiter_GroupsCatalog2_Model_Indexer_Abstract::_processEvent()
+     */
+    public function catalogProductSave(Mage_Index_Model_Event $event)
+    {
+        $this->_reindexEntity($event);
+        return $this;
+    }
 
-	/**
-	 * Handle reindexing of entity mass action events
-	 *
-	 * @param Mage_Index_Model_Event $event
-	 * @return Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Product
-	 * @see Netzarbeiter_GroupsCatalog2_Model_Indexer_Abstract::_processEvent()
-	 */
-	public function catalogProductMassAction(Mage_Index_Model_Event $event)
-	{
-		$this->_reindexEntity($event);
-		return $this;
-	}
+    /**
+     * Handle reindexing of entity mass action events
+     *
+     * @param Mage_Index_Model_Event $event
+     * @return Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Product
+     * @see Netzarbeiter_GroupsCatalog2_Model_Indexer_Abstract::_processEvent()
+     */
+    public function catalogProductMassAction(Mage_Index_Model_Event $event)
+    {
+        $this->_reindexEntity($event);
+        return $this;
+    }
 
-	/**
-	 * Return this indexers entity type code
-	 *
-	 * @return string
-	 */
-	protected function _getEntityTypeCode()
-	{
-		return Mage_Catalog_Model_Product::ENTITY;
-	}
+    /**
+     * Return this indexers entity type code
+     *
+     * @return string
+     */
+    protected function _getEntityTypeCode()
+    {
+        return Mage_Catalog_Model_Product::ENTITY;
+    }
 }

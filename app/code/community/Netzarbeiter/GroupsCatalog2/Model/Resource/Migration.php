@@ -56,7 +56,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Migration
 
         // Copy old attribute values to the new attribute
         $selectFields = array('entity_type_id', new Zend_Db_Expr($newAttribute->getId()), 'store_id', 'entity_id', 'value');
-        $insertFields = array('entity_type_id', 'attribute_id',                           'store_id', 'entity_id', 'value');
+        $insertFields = array('entity_type_id', 'attribute_id', 'store_id', 'entity_id', 'value');
         $select->reset()
                 ->from($oldAttribute->getBackendTable(), $selectFields)
                 ->where('attribute_id=?', $oldAttribute->getId());
@@ -77,12 +77,9 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Migration
      */
     public function deleteDbConfigSettingsByPath($path, $like = true)
     {
-        if ($like)
-        {
+        if ($like) {
             $where = $this->_getWriteAdapter()->quoteInto('path LIKE ?', "{$path}%");
-        }
-        else
-        {
+        } else {
             $where = $this->_getWriteAdapter()->quoteInto('path IN(?)', $path);
         }
         $this->_getWriteAdapter()->delete($this->getTable('core/config_data'), $where);

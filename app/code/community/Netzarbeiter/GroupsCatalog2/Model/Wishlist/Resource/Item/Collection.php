@@ -19,21 +19,21 @@
  * @copyright  Copyright (c) 2012 Vinai Kopp http://netzarbeiter.com
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
- 
-class Netzarbeiter_GroupsCatalog2_Model_Wishlist_Resource_Item_Collection
-	extends Mage_Wishlist_Model_Resource_Item_Collection
-{
-	/**
-	 * Name prefix of events that are dispatched by model
-	 *
-	 * @var string
-	 */
-	protected $_eventPrefix = 'wishlist_item_collection';
 
-	/**
-	 * Name of event parameter
-	 *
-	 * @var string
-	 */
-	protected $_eventObject = 'collection';
+class Netzarbeiter_GroupsCatalog2_Model_Wishlist_Resource_Item_Collection
+    extends Mage_Wishlist_Model_Resource_Item_Collection
+{
+    /**
+     * Name prefix of events that are dispatched by model
+     *
+     * @var string
+     */
+    protected $_eventPrefix = 'wishlist_item_collection';
+
+    /**
+     * Name of event parameter
+     *
+     * @var string
+     */
+    protected $_eventObject = 'collection';
 }
