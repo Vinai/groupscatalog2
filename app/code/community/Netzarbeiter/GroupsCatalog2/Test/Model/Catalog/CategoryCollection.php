@@ -34,7 +34,7 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Catalog_CategoryCollection
     /**
      * @var Mage_Customer_Model_Session
      */
-    protected $originalCustomerSession;
+    protected $_originalCustomerSession;
 
     /**
      * Prepare category flat index table
@@ -59,7 +59,7 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Catalog_CategoryCollection
 
         $registryKey = '_singleton/customer/session';
         if (Mage::registry($registryKey)) {
-            $this->originalCustomerSession = Mage::registry($registryKey);
+            $this->_originalCustomerSession = Mage::registry($registryKey);
             Mage::unregister($registryKey);
         }
         Mage::register($registryKey, $mockSession);
@@ -74,9 +74,9 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Catalog_CategoryCollection
     {
         $registryKey = '_singleton/customer/session';
         Mage::unregister($registryKey);
-        if ($this->originalCustomerSession) {
-            Mage::register($registryKey, $this->originalCustomerSession);
-            $this->originalCustomerSession = null;
+        if ($this->_originalCustomerSession) {
+            Mage::register($registryKey, $this->_originalCustomerSession);
+            $this->_originalCustomerSession = null;
         }
         $this->setCurrentStore('admin');
     }

@@ -31,7 +31,7 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Observer extends EcomDev_PHPUnit_Te
     /**
      * @var Mage_Customer_Model_Session
      */
-    protected $originalCustomerSession;
+    protected $_originalCustomerSession;
 
     /**
      * Prepare grouscatalog2 index tables
@@ -64,7 +64,7 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Observer extends EcomDev_PHPUnit_Te
 
         $registryKey = '_singleton/customer/session';
         if (Mage::registry($registryKey)) {
-            $this->originalCustomerSession = Mage::registry($registryKey);
+            $this->_originalCustomerSession = Mage::registry($registryKey);
             Mage::unregister($registryKey);
         }
         Mage::register($registryKey, $mockSession);
@@ -79,9 +79,9 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Observer extends EcomDev_PHPUnit_Te
     {
         $registryKey = '_singleton/customer/session';
         Mage::unregister($registryKey);
-        if ($this->originalCustomerSession) {
-            Mage::register($registryKey, $this->originalCustomerSession);
-            $this->originalCustomerSession = null;
+        if ($this->_originalCustomerSession) {
+            Mage::register($registryKey, $this->_originalCustomerSession);
+            $this->_originalCustomerSession = null;
         }
         $this->setCurrentStore('admin');
     }
