@@ -223,8 +223,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	{
 		Varien_Profiler::start($this->_getProfilerName() . '::reindexEntity::insert');
 		$entityId = null;
-		$useConfigDefaultGroups = null;
-		$data = $storesHandled = $entityDefaultGroups = array();
+		$data = $storesHandled = $entityDefaultGroupsWithoutMode = array();
 		foreach ($result as $row)
 		{
 			$this->_prepareRow($row);
@@ -237,17 +236,18 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 				// We need to do this last because then $storesHandled is set completely for the $entityId
 				if (null !== $entityId)
 				{
-					$this->_addMissingStoreRecords($data, $entityId, $entityDefaultGroups, $storesHandled, $useConfigDefaultGroups);
+					$this->_addMissingStoreRecords($data, $entityId, $entityDefaultGroupsWithoutMode, $storesHandled);
 				}
 
 				// Set new entity as default
 				$entityId = $row['entity_id'];
-				// Set default groups for new entity (store id 0 is the first one for each entity in $result)
-				$entityDefaultGroups = $row['group_ids'];
+
+				// Set default groups for new entity (store id 0 is the first one for each entity in $result).
+				// List of raw attribute value group ids without the store mode settings applied.
+				$entityDefaultGroupsWithoutMode = $row['orig_group_ids'];
+
 				// Reset stores handled for new entity to empty list
 				$storesHandled = array();
-				// Flag if config settings or row value group ids be applied in _addMissingStoreRecords()
-				$useConfigDefaultGroups = Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT === $row['orig_group_ids'];
 				// We don't need an index entry for store id 0, simply use it as the default
 				continue;
 			}
@@ -273,7 +273,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 		// so we still need to insert these, too.
 
 		// Add missing store id records to the insert data array for the last $entityId
-		$this->_addMissingStoreRecords($data, $entityId, $entityDefaultGroups, $storesHandled, $useConfigDefaultGroups);
+		$this->_addMissingStoreRecords($data, $entityId, $entityDefaultGroupsWithoutMode, $storesHandled);
 
 		// Insert missing index records
 		$this->_insertIndexRecordsIfMinChunkSizeReached($data, 1);
@@ -335,32 +335,53 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 			$row['store_id'] = Mage::app()->getStore(Mage_Core_Model_Store::ADMIN_CODE)->getId();
 		}
 
-		// This is needed for the additional missing store record handling
-		// We need to know if it is USE_DEFAULT or a real setting for the entity
-		$row['orig_group_ids'] = $row['group_ids'];
-
 		if (Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT == $row['group_ids'])
 		{
+            // This is needed for the additional missing store record handling
+            // We need to know if it is USE_DEFAULT or a real setting for the entity
+            $row['orig_group_ids'] = Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT;
+
 			// Use store default ids if that is selected for the entity
 			$row['group_ids'] = $this->_getStoreDefaultGroups($row['store_id']);
 		}
 		else
-		{
-			// We need the list of group ids as an array
-			$row['group_ids'] = array_unique(explode(',', $row['group_ids']));
+        {
+            $row['group_ids'] = $this->_cleanGroupIdsAttributeValue($row['group_ids']);
 
-			// Check for invalid group ids. This might happen when a customer
-			// group is deleted but a category or product still references it
-			$row['group_ids'] = array_intersect($row['group_ids'], $this->_groupIds);
+            // This is needed for the additional missing store record handling
+            // We need the group id's without the config mode settings applied
+            $row['orig_group_ids'] = $row['group_ids'];
 
 			// Apply the hide/show configuration settings
 			$row['group_ids'] = $this->_helper()->applyConfigModeSettingByStore(
-				$row['group_ids'],
+                $row['group_ids'],
 				$this->_getEntityTypeCode(),
 				$row['store_id']
 			);
 		}
+
+        // NOTE: $row['group_ids'] is now either of the following
+        //   - string : Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT
+        //   - array : valid group ids without the store mode settings applied
 	}
+
+    /**
+     * Take the groupscatalog attribute value and return an array with valid group ids
+     *
+     * @param string $groupIds
+     * @return array
+     */
+    protected function _cleanGroupIdsAttributeValue($groupIds)
+    {
+        // We need the list of group ids as an array
+        $groupIds = array_unique(explode(',', $groupIds));
+
+        // Check for invalid group ids. This might happen when a customer
+        // group is deleted but a category or product still references it
+        $row['group_ids'] = array_intersect($groupIds, $this->_groupIds);
+
+        return $groupIds;
+    }
 
 	/**
 	 * Add unhandled store default index records.
@@ -370,22 +391,25 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 	 *
 	 * @param array $data
 	 * @param int $entityId
-	 * @param array $entityDefaultGroups
+	 * @param array|string $entityDefaultGroupsWithoutMode
 	 * @param array $storesHandled
-	 * @param bool $useConfigDefaultGroups
 	 * @return void
 	 */
-	protected function _addMissingStoreRecords(array &$data, $entityId, array $entityDefaultGroups, array $storesHandled, $useConfigDefaultGroups)
+	protected function _addMissingStoreRecords(array &$data, $entityId, $entityDefaultGroupsWithoutMode, array $storesHandled)
 	{
 		foreach (array_diff($this->_frontendStoreIds, $storesHandled) as $storeId)
 		{
-			if ($useConfigDefaultGroups)
+			if (Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT === $entityDefaultGroupsWithoutMode)
 			{
+                // Mode already applied
 				$groupIds = $this->_getStoreDefaultGroups($storeId);
 			}
 			else
 			{
-				$groupIds = $entityDefaultGroups;
+                // Apply the hide/show configuration settings
+                $groupIds = $this->_helper()->applyConfigModeSettingByStore(
+                    $entityDefaultGroupsWithoutMode, $this->_getEntityTypeCode(), $storeId
+                );
 			}
 			/* Handy debug code, keep around for now. Mage::log(array(
 				'catalog_entity_id' => $entityId,
@@ -394,6 +418,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 				'use config groups' => intval($useConfigDefaultGroups),
 				'using' => $groupIds
 			)); */
+
 			foreach ($groupIds as $groupId)
 			{
 				$data[] = array('catalog_entity_id' => $entityId, 'group_id' => $groupId, 'store_id' => $storeId);
