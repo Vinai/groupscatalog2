@@ -66,6 +66,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 		 * categories whether the flat tables enabled or not
 		 *
 		 * @var $entityType string
+         * @var $entity Mage_Catalog_Model_Abstract
 		 */
 		$entity = $collection->getNewEmptyItem();
 		$entityType = $helper->getEntityTypeCodeFromEntity($entity);
@@ -121,7 +122,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 
 		$select = $this->_getReadAdapter()->select()
 				->from($this->getMainTable(), 'id')
-				->where('entity_id=?', $entity->getId())
+				->where('catalog_entity_id=?', $entity->getId())
 				->where('group_id=?', $groupId)
 				->where('store_id=?', $entity->getStoreId());
 
@@ -150,8 +151,8 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 		$this->_init($helper->getIndexTableByEntityType($entityTypeCode), 'id');
 
 		$select = $this->_getReadAdapter()->select()
-				->from($this->getMainTable(), 'entity_id')
-				->where('entity_id IN(?)', $ids)
+				->from($this->getMainTable(), 'catalog_entity_id')
+				->where('catalog_entity_id IN(?)', $ids)
 				->where('group_id=?', $groupId)
 				->where('store_id=?', $storeId);
 
@@ -203,10 +204,10 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 	 * Join the specified groupscatalog index table to the passed select instance
 	 *
 	 * @param Zend_Db_Select $select
-	 * @param string $table
+	 * @param string $table The groupscatalog index table
 	 * @param int $groupId
 	 * @param int $storeId
-	 * @param string $entityField The table column where the product or category id is stored
+	 * @param string $entityField The entity table column where the product or category id is stored
 	 * @return void
 	 */
 	protected function _addGroupsCatalogFilterToSelect(Zend_Db_Select $select, $table, $groupId, $storeId, $entityField='e.entity_id')
@@ -219,7 +220,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 		/*
 		$collection->joinTable(
 			$helper->getIndexTableByEntityType($entityType), // table
-			"entity_id=entity_id", // primary bind
+			"catalog_entity_id=entity_id", // primary bind
 			array('group_id' => 'group_id', 'store_id' => 'store_id'), // alias to field mappings for the bind cond.
 			array( // additional bind conditions (see mappings above)
 				'group_id' => $groupId,
@@ -241,7 +242,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 
         $select->joinInner(
             $table,
-            "{$table}.entity_id={$entityField} AND " .
+            "{$table}.catalog_entity_id={$entityField} AND " .
                 $this->_getReadAdapter()->quoteInto("{$table}.group_id=? AND ", $groupId) .
                 $this->_getReadAdapter()->quoteInto("{$table}.store_id=?", $storeId),
             array()

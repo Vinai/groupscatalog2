@@ -206,7 +206,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 		{
 			$entityIds = $event->getData('entity_ids');
 			$select->where('e.entity_id IN (?)', $entityIds);
-			$this->_getWriteAdapter()->delete($this->_getIndexTable(), array('entity_id IN (?)' => $entityIds));
+			$this->_getWriteAdapter()->delete($this->_getIndexTable(), array('catalog_entity_id IN (?)' => $entityIds));
 		}
 		$result = $this->_getReadAdapter()->fetchAll($select);
 		$this->_insertIndexRecords($result);
@@ -260,7 +260,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 			// Add index record for each group id
 			foreach ($row['group_ids'] as $groupId)
 			{
-				$data[] = array('entity_id' => $row['entity_id'], 'group_id' => $groupId, 'store_id' => $row['store_id']);
+				$data[] = array('catalog_entity_id' => $row['entity_id'], 'group_id' => $groupId, 'store_id' => $row['store_id']);
 				$storesHandled[] = $row['store_id'];
 			}
 
@@ -388,7 +388,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 				$groupIds = $entityDefaultGroups;
 			}
 			/* Handy debug code, keep around for now. Mage::log(array(
-				'entity_id' => $entityId,
+				'catalog_entity_id' => $entityId,
 				'store_id' => $storeId,
 				'default group ids' => $entityDefaultGroups,
 				'use config groups' => intval($useConfigDefaultGroups),
@@ -396,7 +396,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 			)); */
 			foreach ($groupIds as $groupId)
 			{
-				$data[] = array('entity_id' => $entityId, 'group_id' => $groupId, 'store_id' => $storeId);
+				$data[] = array('catalog_entity_id' => $entityId, 'group_id' => $groupId, 'store_id' => $storeId);
 			}
 		}
 	}
