@@ -204,23 +204,23 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
             $select->where('e.entity_id IN (?)', $entityIds);
             $this->_getWriteAdapter()->delete($this->_getIndexTable(), array('catalog_entity_id IN (?)' => $entityIds));
         }
-        $result = $this->_getReadAdapter()->fetchAll($select);
-        $this->_insertIndexRecords($result);
+        $stmt = $this->_getReadAdapter()->query($select);
+        $this->_insertIndexRecords($stmt);
         Varien_Profiler::stop($this->_getProfilerName() . '::reindexEntity');
     }
 
     /**
      * Create the new index records for the indexer entity
      *
-     * @param array $result
+     * @param Zend_Db_Statement $stmt
      * @return void
      */
-    protected function _insertIndexRecords(array &$result)
+    protected function _insertIndexRecords(Zend_Db_Statement $stmt)
     {
         Varien_Profiler::start($this->_getProfilerName() . '::reindexEntity::insert');
         $entityId = null;
         $data = $storesHandled = $entityDefaultGroupsWithoutMode = array();
-        foreach ($result as $row) {
+        while ($row = $stmt->fetch()) {
             $this->_prepareRow($row);
 
             // A new entity is being handled
