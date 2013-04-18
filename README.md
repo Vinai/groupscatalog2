@@ -74,6 +74,10 @@ To uninstall this extension you need to run the following SQL after removing the
 ```sql
   DELETE FROM `eav_attribute` WHERE attribute_code = 'groupscatalog2_groups';
   DELETE FROM `core_resource` WHERE code = 'netzarbeiter_groupscatalog2_setup';
+  DELETE FROM `index_process` WHERE indexer_code = 'groupscatalog2_product';
+  DELETE FROM `index_process` WHERE indexer_code = 'groupscatalog2_category';
+  DROP TABLE IF EXISTS `groupscatalog_product_idx`;
+  DROP TABLE IF EXISTS `groupscatalog_category_idx`;
 ```
 
 Support
