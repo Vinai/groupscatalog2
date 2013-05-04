@@ -30,9 +30,9 @@ class Netzarbeiter_GroupsCatalog2_Test_Helper_Data extends EcomDev_PHPUnit_Test_
     protected $_configGroup = 'general';
     /** @var Netzarbeiter_GroupsCatalog2_Helper_Data */
     protected $_helper;
-    protected $_originalCustomerSession;
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass()
+    {
         // Fix SET @SQL_MODE='NO_AUTO_VALUE_ON_ZERO' bugs from shared fixture files
         /** @var $db Varien_Db_Adapter_Interface */
 
@@ -55,11 +55,16 @@ class Netzarbeiter_GroupsCatalog2_Test_Helper_Data extends EcomDev_PHPUnit_Test_
      */
     protected function getFrontendStore($code = null)
     {
+        /** @var $store Mage_Core_Model_Store */
         foreach (Mage::app()->getStores() as $store) {
             if (null === $code) {
-                if (! $store->isAdmin()) return $store;
+                if (! $store->isAdmin()) {
+                    return $store;
+                }
             } else {
-                if ($store->getCode() == $code) return $store;
+                if ($store->getCode() == $code) {
+                    return $store;
+                }
             }
         }
         $this->throwException(new Exception('Unable to find frontend store'));
@@ -124,10 +129,14 @@ class Netzarbeiter_GroupsCatalog2_Test_Helper_Data extends EcomDev_PHPUnit_Test_
         $this->assertEquals(true, $this->_helper->isModuleActive($store), 'Store config active');
 
         $this->_helper->setModuleActive(false);
-        $this->assertEquals(false, $this->_helper->isModuleActive($store), 'ModuleActive Flag should override store config');
+        $this->assertEquals(
+            false, $this->_helper->isModuleActive($store), 'ModuleActive Flag should override store config'
+        );
 
         $this->_helper->resetActivationState();
-        $this->assertEquals(true, $this->_helper->isModuleActive($store), 'resetActivationState() should revert to store config');
+        $this->assertEquals(
+            true, $this->_helper->isModuleActive($store), 'resetActivationState() should revert to store config'
+        );
 
         $store->setConfig($this->getConfigPrefix() . 'is_active', 0);
         $this->assertEquals(false, $this->_helper->isModuleActive($store), 'Store config inactive');
@@ -139,12 +148,18 @@ class Netzarbeiter_GroupsCatalog2_Test_Helper_Data extends EcomDev_PHPUnit_Test_
 
         $store->setConfig($this->getConfigPrefix() . 'is_active', 1);
         $this->assertEquals(false, $this->_helper->isModuleActive($store), 'Admin store is always inactive by default');
-        $this->assertEquals(true, $this->_helper->isModuleActive($store, false), 'Admin check disabled should return store setting');
+        $this->assertEquals(
+            true, $this->_helper->isModuleActive($store, false), 'Admin check disabled should return store setting'
+        );
 
         $store->setConfig($this->getConfigPrefix() . 'is_active', 0);
         $this->_helper->setModuleActive(true);
-        $this->assertEquals(false, $this->_helper->isModuleActive($store), 'Admin scope should ignore module state flag');
-        $this->assertEquals(true, $this->_helper->isModuleActive($store, false), 'Admin check disabled should return module state flag');
+        $this->assertEquals(
+            false, $this->_helper->isModuleActive($store), 'Admin scope should ignore module state flag'
+        );
+        $this->assertEquals(
+            true, $this->_helper->isModuleActive($store, false), 'Admin check disabled should return module state flag'
+        );
 
         $this->_helper->resetActivationState();
     }
