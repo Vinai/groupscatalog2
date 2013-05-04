@@ -29,11 +29,6 @@
 class Netzarbeiter_GroupsCatalog2_Test_Model_Observer extends EcomDev_PHPUnit_Test_Case
 {
     /**
-     * @var Mage_Customer_Model_Session
-     */
-    protected $_originalCustomerSession;
-
-    /**
      * Prepare grouscatalog2 index tables
      */
     public static function setUpBeforeClass()
@@ -62,27 +57,16 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Observer extends EcomDev_PHPUnit_Te
                 ->disableOriginalConstructor()
                 ->getMock();
 
-        $registryKey = '_singleton/customer/session';
-        if (Mage::registry($registryKey)) {
-            $this->_originalCustomerSession = Mage::registry($registryKey);
-            Mage::unregister($registryKey);
-        }
-        Mage::register($registryKey, $mockSession);
+        $this->replaceByMock('singleton', 'customer/session', $mockSession);
 
         $this->app()->loadAreaPart(Mage_Core_Model_App_Area::AREA_FRONTEND, Mage_Core_Model_App_Area::PART_EVENTS);
     }
 
     /**
-     * Clean up mocked customer session and revert to admin scope
+     * Revert to admin scope
      */
     protected function tearDown()
     {
-        $registryKey = '_singleton/customer/session';
-        Mage::unregister($registryKey);
-        if ($this->_originalCustomerSession) {
-            Mage::register($registryKey, $this->_originalCustomerSession);
-            $this->_originalCustomerSession = null;
-        }
         $this->setCurrentStore('admin');
     }
 
@@ -105,7 +89,6 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Observer extends EcomDev_PHPUnit_Te
         $mockSession->expects($this->atLeastOnce())
                 ->method('getCustomerGroupId')
                 ->will($this->returnValue($customerGroupId));
-
 
         // Instantiate and load collection
         /** @var $collection Mage_Catalog_Model_Resource_Product_Collection */
