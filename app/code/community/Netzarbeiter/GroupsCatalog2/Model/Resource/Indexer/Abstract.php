@@ -188,10 +188,14 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
             $this->_getEntityTypeCode(), Netzarbeiter_GroupsCatalog2_Helper_Data::HIDE_GROUPS_ATTRIBUTE
         );
         $select = $this->_getReadAdapter()->select()
-                ->from(array('e' => $this->getTable($entityType->getEntityTable())), array('entity_id' => 'e.entity_id'))
+                ->from(array('e' => $this->getTable(
+                    $entityType->getEntityTable())), array('entity_id' => 'e.entity_id')
+                )
                 ->joinLeft(
                     array('a' => $attribute->getBackend()->getTable()),
-                    $this->_getReadAdapter()->quoteInto('e.entity_id=a.entity_id AND a.attribute_id = ?', $attribute->getId()),
+                    $this->_getReadAdapter()->quoteInto(
+                        'e.entity_id=a.entity_id AND a.attribute_id = ?', $attribute->getId()
+                    ),
                     array('group_ids' => 'value', 'store_id' => 'store_id')
                 )
                 ->order('e.entity_id ASC')
@@ -252,7 +256,9 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 
             // Add index record for each group id
             foreach ($row['group_ids'] as $groupId) {
-                $data[] = array('catalog_entity_id' => $row['entity_id'], 'group_id' => $groupId, 'store_id' => $row['store_id']);
+                $data[] = array(
+                    'catalog_entity_id' => $row['entity_id'], 'group_id' => $groupId, 'store_id' => $row['store_id']
+                );
                 $storesHandled[] = $row['store_id'];
             }
 
@@ -261,14 +267,17 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
             $this->_insertIndexRecordsIfMinChunkSizeReached($data, self::INSERT_CHUNK_SIZE);
         }
 
-        // The last iterations over $result will probably not have hit the >= INSERT_CHUNK_SIZE mark,
-        // so we still need to insert these, too.
+        // Check if at least one entity record was found. If not, $entityId will be null
+        if ($entityId) {
+            // The last iterations over $result will probably not have hit the >= INSERT_CHUNK_SIZE mark,
+            // so we still need to insert these, too.
 
-        // Add missing store id records to the insert data array for the last $entityId
-        $this->_addMissingStoreRecords($data, $entityId, $entityDefaultGroupsWithoutMode, $storesHandled);
+            // Add missing store id records to the insert data array for the last $entityId
+            $this->_addMissingStoreRecords($data, $entityId, $entityDefaultGroupsWithoutMode, $storesHandled);
 
-        // Insert missing index records
-        $this->_insertIndexRecordsIfMinChunkSizeReached($data, 1);
+            // Insert missing index records
+            $this->_insertIndexRecordsIfMinChunkSizeReached($data, 1);
+        }
 
         Varien_Profiler::stop($this->_getProfilerName() . '::reindexEntity::insert');
     }
@@ -364,7 +373,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 
         // Check for invalid group ids. This might happen when a customer
         // group is deleted but a category or product still references it
-        $row['group_ids'] = array_intersect($groupIds, $this->_groupIds);
+        $groupIds = array_intersect($groupIds, $this->_groupIds);
 
         return $groupIds;
     }
