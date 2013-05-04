@@ -21,16 +21,15 @@
  */
 
 /**
+ * @see Netzarbeiter_GroupsCatalog2_Model_Indexer_Abstract
  * @see Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract
+ *
+ * @loadSharedFixture global.yaml
+ * @doNotIndexAll
  */
 class Netzarbeiter_GroupsCatalog2_Test_Model_Resource_Indexer extends EcomDev_PHPUnit_Test_Case
 {
     /**
-     * Run indexer with an event that will return zero entities.
-     *
-     * This test simulates running the indexer on an installation with
-     * no products or categories.
-     *
      * @test
      * @dataProvider indexerRunWithNoEntitiesProvider
      */
@@ -53,6 +52,11 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Resource_Indexer extends EcomDev_PH
             ->processEvent($event);
     }
 
+    /**
+     * DataProvider for indexerRunWithNoEntities test
+     *
+     * @return array
+     */
     public function indexerRunWithNoEntitiesProvider()
     {
         return array(
