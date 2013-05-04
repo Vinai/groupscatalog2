@@ -143,8 +143,8 @@ class Netzarbeiter_GroupsCatalog2_Helper_Hidden extends Mage_Core_Helper_Abstrac
         );
 
         // Cut off query string at the end if present
-        if (($p = strpos($currectUrl, '?')) !== false) {
-            $currectUrl = substr($currectUrl, 0, $p);
+        if (($pos = strpos($currectUrl, '?')) !== false) {
+            $currectUrl = substr($currectUrl, 0, $pos);
         }
 
         // Paranoid check - _getCurrentUrl() should always be within the current base URL ;)
@@ -155,7 +155,9 @@ class Netzarbeiter_GroupsCatalog2_Helper_Hidden extends Mage_Core_Helper_Abstrac
 
             if (strlen($path) > 0) {
                 // Only apply dirname() if there is a parent directory
-                if (($path = dirname($path)) === '.') $path = '';
+                if (($path = dirname($path)) === '.') {
+                    $path = '';
+                }
 
                 // Append configured category file suffix if this still isn't a top level request
                 if (strlen($path) > 0) {

@@ -35,9 +35,9 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Observer extends EcomDev_PHPUnit_Te
     {
         // Fix SET @SQL_MODE='NO_AUTO_VALUE_ON_ZERO' bugs from shared fixture files
         // With the merge of https://github.com/IvanChepurnyi/EcomDev_PHPUnit/pull/93 this hack isn't required any more
-        /** @var $db Varien_Db_Adapter_Interface */
-        $db = Mage::getSingleton('core/resource')->getConnection('customer_write');
-        $db->update(
+        /** @var $con Varien_Db_Adapter_Interface */
+        $con = Mage::getSingleton('core/resource')->getConnection('customer_write');
+        $con->update(
             Mage::getSingleton('core/resource')->getTableName('customer/customer_group'),
             array('customer_group_id' => 0),
             "customer_group_code='NOT LOGGED IN'"

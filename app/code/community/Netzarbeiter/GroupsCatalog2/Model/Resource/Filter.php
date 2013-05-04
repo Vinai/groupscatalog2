@@ -89,8 +89,9 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
      * @param int $storeId
      * @return void
      */
-    public function addGroupsCatalogFilterToWishlistItemCollection(Mage_Wishlist_Model_Resource_Item_Collection $collection, $groupId, $storeId)
-    {
+    public function addGroupsCatalogFilterToWishlistItemCollection(
+        Mage_Wishlist_Model_Resource_Item_Collection $collection, $groupId, $storeId
+    ) {
         /* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
         $helper = Mage::helper('netzarbeiter_groupscatalog2');
 
@@ -166,8 +167,9 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
      * @param int $groupId
      * @return void
      */
-    public function addGroupsCatalogFilterToProductCollectionCountSelect(Mage_Catalog_Model_Resource_Product_Collection $collection, $groupId)
-    {
+    public function addGroupsCatalogFilterToProductCollectionCountSelect(
+        Mage_Catalog_Model_Resource_Product_Collection $collection, $groupId
+    ) {
         /* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
         $helper = Mage::helper('netzarbeiter_groupscatalog2');
 
@@ -175,7 +177,9 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
         $this->_init($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY), 'id');
 
         $table = $this->getTable($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY));
-        $this->_addGroupsCatalogFilterToSelect($collection->getProductCountSelect(), $table, $groupId, $collection->getStoreId());
+        $this->_addGroupsCatalogFilterToSelect(
+            $collection->getProductCountSelect(), $table, $groupId, $collection->getStoreId()
+        );
     }
 
     /**
@@ -209,8 +213,9 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
      * @param string $entityField The entity table column where the product or category id is stored
      * @return void
      */
-    protected function _addGroupsCatalogFilterToSelect(Zend_Db_Select $select, $table, $groupId, $storeId, $entityField = 'e.entity_id')
-    {
+    protected function _addGroupsCatalogFilterToSelect(
+        Zend_Db_Select $select, $table, $groupId, $storeId, $entityField = 'e.entity_id'
+    ) {
         // NOTE to self:
         // Using joinTable() seems to trigger an exception for some users that I can't reproduce (so far).
         // It is related to the flat catalog (Mage_Catalog_Model_Resource_Category_Flat_Collection missing
@@ -234,9 +239,10 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
         // collections select objects persist. This is more reliable then setting
         // a flag on the collection object.
         foreach ($select->getPart(Zend_Db_Select::FROM) as $joinedTable) {
-            if ($joinedTable['tableName'] == $table)
+            if ($joinedTable['tableName'] == $table) {
                 // filter join already applied
                 return;
+            }
         }
 
         $select->joinInner(

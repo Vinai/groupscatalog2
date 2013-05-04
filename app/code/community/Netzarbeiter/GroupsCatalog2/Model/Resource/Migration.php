@@ -39,8 +39,9 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Migration
      * @param Mage_Eav_Model_Entity_Attribute $newAttribute
      * @return array Affected entity ids
      */
-    public function copyAttributeValues(Mage_Eav_Model_Entity_Attribute $oldAttribute, Mage_Eav_Model_Entity_Attribute $newAttribute)
-    {
+    public function copyAttributeValues(
+        Mage_Eav_Model_Entity_Attribute $oldAttribute, Mage_Eav_Model_Entity_Attribute $newAttribute
+    ) {
         $select = $this->_getReadAdapter()->select()
                 ->reset()
                 ->distinct(true)
@@ -55,7 +56,9 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Migration
         ));
 
         // Copy old attribute values to the new attribute
-        $selectFields = array('entity_type_id', new Zend_Db_Expr($newAttribute->getId()), 'store_id', 'entity_id', 'value');
+        $selectFields = array(
+            'entity_type_id', new Zend_Db_Expr($newAttribute->getId()), 'store_id', 'entity_id', 'value'
+        );
         $insertFields = array('entity_type_id', 'attribute_id', 'store_id', 'entity_id', 'value');
         $select->reset()
                 ->from($oldAttribute->getBackendTable(), $selectFields)

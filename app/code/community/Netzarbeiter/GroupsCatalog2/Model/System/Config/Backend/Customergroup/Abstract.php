@@ -33,7 +33,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_System_Config_Backend_Customerg
     /**
      * Sanitize settings and set the index to require reindex
      *
-     * @return void
+     * @return Mage_Core_Model_Abstract
      */
     protected function _beforeSave()
     {

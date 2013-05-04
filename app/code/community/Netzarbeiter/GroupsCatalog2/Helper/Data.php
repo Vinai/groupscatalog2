@@ -265,7 +265,8 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
         }
 
         if (!array_key_exists($storeId, $this->_visibilityByStore[$entityTypeCode])) {
-            $this->_visibilityByStore[$entityTypeCode][$storeId] = $this->_getEntityVisibleDefaultGroupIds($entityType, $store);
+            $this->_visibilityByStore[$entityTypeCode][$storeId] =
+                $this->_getEntityVisibleDefaultGroupIds($entityType, $store);
         }
         $groupIds = $this->_visibilityByStore[$entityTypeCode][$storeId];
         if ($applyMode) {

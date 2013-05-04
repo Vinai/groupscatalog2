@@ -133,7 +133,9 @@ class Netzarbeiter_GroupsCatalog2_Block_Adminhtml_System_Tools_Migration
     {
         if (!isset($this->_attributeModels[$entityCode])) {
             $this->_attributeModels[$entityCode] = Mage::getSingleton('eav/config')
-                    ->getAttribute($entityCode, Netzarbeiter_GroupsCatalog2_Helper_Migration::GROUPSCATALOG1_ATTRIBUTE_CODE);
+                    ->getAttribute(
+                        $entityCode, Netzarbeiter_GroupsCatalog2_Helper_Migration::GROUPSCATALOG1_ATTRIBUTE_CODE
+                    );
         }
         return $this->_attributeModels[$entityCode];
     }

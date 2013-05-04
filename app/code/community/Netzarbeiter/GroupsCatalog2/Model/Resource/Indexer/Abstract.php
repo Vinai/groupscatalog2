@@ -390,7 +390,9 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
      * @param array $storesHandled
      * @return void
      */
-    protected function _addMissingStoreRecords(array &$data, $entityId, $entityDefaultGroupsWithoutMode, array $storesHandled)
+    protected function _addMissingStoreRecords(
+        array &$data, $entityId, $entityDefaultGroupsWithoutMode, array $storesHandled
+    )
     {
         foreach (array_diff($this->_frontendStoreIds, $storesHandled) as $storeId) {
             if (Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT === $entityDefaultGroupsWithoutMode) {

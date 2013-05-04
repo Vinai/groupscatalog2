@@ -32,11 +32,6 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Catalog_CategoryCollection
     extends EcomDev_PHPUnit_Test_Case
 {
     /**
-     * @var Mage_Customer_Model_Session
-     */
-    protected $_originalCustomerSession;
-
-    /**
      * Prepare category flat index table
      */
     public static function setUpBeforeClass()
@@ -56,13 +51,7 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Catalog_CategoryCollection
         $mockSession = $this->getModelMockBuilder('customer/session')
                 ->disableOriginalConstructor()
                 ->getMock();
-
-        $registryKey = '_singleton/customer/session';
-        if (Mage::registry($registryKey)) {
-            $this->_originalCustomerSession = Mage::registry($registryKey);
-            Mage::unregister($registryKey);
-        }
-        Mage::register($registryKey, $mockSession);
+        $this->replaceByMock('singleton', 'customer/session', $mockSession);
 
         $this->app()->loadAreaPart(Mage_Core_Model_App_Area::AREA_FRONTEND, Mage_Core_Model_App_Area::PART_EVENTS);
     }
@@ -72,12 +61,6 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Catalog_CategoryCollection
      */
     protected function tearDown()
     {
-        $registryKey = '_singleton/customer/session';
-        Mage::unregister($registryKey);
-        if ($this->_originalCustomerSession) {
-            Mage::register($registryKey, $this->_originalCustomerSession);
-            $this->_originalCustomerSession = null;
-        }
         $this->setCurrentStore('admin');
     }
 

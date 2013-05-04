@@ -79,7 +79,8 @@ class Netzarbeiter_GroupsCatalog2_Helper_Migration
         if (in_array(strval($xml->modules->Netzarbeiter_GroupsCatalog->active), array('true', '1'), true)) {
             if (!is_writable($file)) {
                 $message = Mage::helper('netzarbeiter_groupscatalog2')->__(
-                    'The file app/etc/modules/Netzarbeiter_GroupsCatalog.xml is not writable.<br/>Please fix it and flush the configuration cache, or deactivate the module manually in that file.'
+                    'The file app/etc/modules/Netzarbeiter_GroupsCatalog.xml is not writable.<br/>' .
+                    'Please fix it and flush the configuration cache, or deactivate the module manually in that file.'
                 );
                 Mage::throwException($message);
             }
@@ -125,10 +126,14 @@ class Netzarbeiter_GroupsCatalog2_Helper_Migration
             $isActive = !(bool)$this->_getConfigValueWithDefault($store, 'catalog/groupscatalog/disable_ext', '0');
             $settings['netzarbeiter_groupscatalog2/general/is_active'] = $isActive;
 
-            $hideFromGroups = $this->_getConfigValueWithDefault($store, 'catalog/groupscatalog/default_product_groups', $useNone);
+            $hideFromGroups = $this->_getConfigValueWithDefault(
+                $store, 'catalog/groupscatalog/default_product_groups', $useNone
+            );
             $settings['netzarbeiter_groupscatalog2/general/product_default_hide'] = $hideFromGroups;
 
-            $hideFromGroups = $this->_getConfigValueWithDefault($store, 'catalog/groupscatalog/default_category_groups', $useNone);
+            $hideFromGroups = $this->_getConfigValueWithDefault(
+                $store, 'catalog/groupscatalog/default_category_groups', $useNone
+            );
             $settings['netzarbeiter_groupscatalog2/general/category_default_hide'] = $hideFromGroups;
 
             $this->_updateConfigStoreScope($config, $scope, $scopeId, $settings, $defaults);
@@ -148,14 +153,30 @@ class Netzarbeiter_GroupsCatalog2_Helper_Migration
 
         // Remove any website scope setting
         foreach (Mage::app()->getWebsites() as $website) {
-            $config->deleteConfig('netzarbeiter_groupscatalog2/general/product_mode', 'websites', $website->getId());
-            $config->deleteConfig('netzarbeiter_groupscatalog2/general/category_mode', 'websites', $website->getId());
-            $config->deleteConfig('netzarbeiter_groupscatalog2/general/product_default_show', 'websites', $website->getId());
-            $config->deleteConfig('netzarbeiter_groupscatalog2/general/category_default_show', 'websites', $website->getId());
-            $config->deleteConfig('netzarbeiter_groupscatalog2/general/product_default_hide', 'websites', $website->getId());
-            $config->deleteConfig('netzarbeiter_groupscatalog2/general/category_default_hide', 'websites', $website->getId());
-            $config->deleteConfig('netzarbeiter_groupscatalog2/general/product_mode', 'websites', $website->getId());
-            $config->deleteConfig('netzarbeiter_groupscatalog2/general/category_mode', 'websites', $website->getId());
+            $config->deleteConfig(
+                'netzarbeiter_groupscatalog2/general/product_mode', 'websites', $website->getId()
+            );
+            $config->deleteConfig(
+                'netzarbeiter_groupscatalog2/general/category_mode', 'websites', $website->getId()
+            );
+            $config->deleteConfig(
+                'netzarbeiter_groupscatalog2/general/product_default_show', 'websites', $website->getId()
+            );
+            $config->deleteConfig(
+                'netzarbeiter_groupscatalog2/general/category_default_show', 'websites', $website->getId()
+            );
+            $config->deleteConfig(
+                'netzarbeiter_groupscatalog2/general/product_default_hide', 'websites', $website->getId()
+            );
+            $config->deleteConfig(
+                'netzarbeiter_groupscatalog2/general/category_default_hide', 'websites', $website->getId()
+            );
+            $config->deleteConfig(
+                'netzarbeiter_groupscatalog2/general/product_mode', 'websites', $website->getId()
+            );
+            $config->deleteConfig(
+                'netzarbeiter_groupscatalog2/general/category_mode', 'websites', $website->getId()
+            );
         }
     }
 
@@ -206,7 +227,9 @@ class Netzarbeiter_GroupsCatalog2_Helper_Migration
         $oldAttribute = Mage::getSingleton('eav/config')
                 ->getAttribute(Mage_Catalog_Model_Product::ENTITY, self::GROUPSCATALOG1_ATTRIBUTE_CODE);
         $newAttribute = Mage::getSingleton('eav/config')
-                ->getAttribute(Mage_Catalog_Model_Product::ENTITY, Netzarbeiter_GroupsCatalog2_Helper_Data::HIDE_GROUPS_ATTRIBUTE);
+                ->getAttribute(
+                    Mage_Catalog_Model_Product::ENTITY, Netzarbeiter_GroupsCatalog2_Helper_Data::HIDE_GROUPS_ATTRIBUTE
+                );
 
         $productIds = $this->_getResource()->copyAttributeValues($oldAttribute, $newAttribute);
 
@@ -226,7 +249,9 @@ class Netzarbeiter_GroupsCatalog2_Helper_Migration
         $oldAttribute = Mage::getSingleton('eav/config')
                 ->getAttribute(Mage_Catalog_Model_Category::ENTITY, self::GROUPSCATALOG1_ATTRIBUTE_CODE);
         $newAttribute = Mage::getSingleton('eav/config')
-                ->getAttribute(Mage_Catalog_Model_Category::ENTITY, Netzarbeiter_GroupsCatalog2_Helper_Data::HIDE_GROUPS_ATTRIBUTE);
+                ->getAttribute(
+                    Mage_Catalog_Model_Category::ENTITY, Netzarbeiter_GroupsCatalog2_Helper_Data::HIDE_GROUPS_ATTRIBUTE
+                );
 
         $categoryIds = $this->_getResource()->copyAttributeValues($oldAttribute, $newAttribute);
 
@@ -268,14 +293,16 @@ class Netzarbeiter_GroupsCatalog2_Helper_Migration
 
     protected function _removeFiles()
     {
-        $message = $this->__('Remove the following files and directories to complete the uninstall:<br/>%s', implode('<br/>', array(
-            'app/etc/modules/Netzarbeiter_GroupsCatalog.xml',
-            'app/code/community/Netzarbeiter/GroupsCatalog/',
-            'app/locale/de_DE/Netzarbeiter_GroupsCatalog.csv',
-            'app/locale/en_US/Netzarbeiter_GroupsCatalog.csv',
-            'app/locale/fr_FR/Netzarbeiter_GroupsCatalog.csv',
-            'app/locale/nl_NL/Netzarbeiter_GroupsCatalog.csv'
-        )));
+        $message = $this->__('Remove the following files and directories to complete the uninstall:<br/>%s',
+            implode('<br/>', array(
+                'app/etc/modules/Netzarbeiter_GroupsCatalog.xml',
+                'app/code/community/Netzarbeiter/GroupsCatalog/',
+                'app/locale/de_DE/Netzarbeiter_GroupsCatalog.csv',
+                'app/locale/en_US/Netzarbeiter_GroupsCatalog.csv',
+                'app/locale/fr_FR/Netzarbeiter_GroupsCatalog.csv',
+                'app/locale/nl_NL/Netzarbeiter_GroupsCatalog.csv'
+            )
+        ));
         Mage::throwException($message);
     }
 }

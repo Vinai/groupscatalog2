@@ -94,7 +94,10 @@ class Netzarbeiter_GroupsCatalog2_Model_Entity_Attribute_Source_Customergroup_Wi
      */
     public function getOptionId($value)
     {
-        if ($this->getAttribute()->getFrontendInput() === 'multiselect' && (is_array($value) || strpos($value, ',') !== false)) {
+        if (
+            $this->getAttribute()->getFrontendInput() === 'multiselect' &&
+            (is_array($value) || strpos($value, ',') !== false)
+        ) {
             if (is_scalar($value)) {
                 $value = explode(',', $value);
             }
