@@ -24,10 +24,9 @@
  * @see Netzarbeiter_GroupsCatalog2_Model_Indexer_Abstract
  * @see Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract
  *
- * @loadSharedFixture global.yaml
  * @doNotIndexAll
  */
-class Netzarbeiter_GroupsCatalog2_Test_Model_Resource_Indexer extends EcomDev_PHPUnit_Test_Case
+class Netzarbeiter_GroupsCatalog2_Test_Model_Indexer extends EcomDev_PHPUnit_Test_Case
 {
     /**
      * @test
@@ -50,6 +49,8 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Resource_Indexer extends EcomDev_PH
         Mage::getModel('netzarbeiter_groupscatalog2/indexer_' . $indexerSuffix)
             ->register($event)
             ->processEvent($event);
+
+        // No exception is what we are asserting
     }
 
     /**
