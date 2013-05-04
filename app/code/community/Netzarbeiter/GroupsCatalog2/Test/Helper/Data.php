@@ -90,24 +90,9 @@ class Netzarbeiter_GroupsCatalog2_Test_Helper_Data extends EcomDev_PHPUnit_Test_
                     ->disableOriginalConstructor()
                     ->getMock();
 
-        $registryKey = '_singleton/customer/session';
-        if (Mage::registry($registryKey)) {
-            $this->_originalCustomerSession = Mage::registry($registryKey);
-            Mage::unregister($registryKey);
-        }
-        Mage::register($registryKey, $mockSession);
+        $this->replaceByMock('singleton', 'customer/session', $mockSession);
     }
 
-    protected function tearDown()
-    {
-        // Get rid of mocked customer session
-        $registryKey = '_singleton/customer/session';
-        Mage::unregister($registryKey);
-        if ($this->_originalCustomerSession) {
-            Mage::register($registryKey, $this->_originalCustomerSession);
-            $this->_originalCustomerSession = null;
-        }
-    }
 
     // Tests #######
 
