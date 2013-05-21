@@ -234,6 +234,10 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
                 // We need to do this last because then $storesHandled is set completely for the $entityId
                 if (null !== $entityId) {
                     $this->_addMissingStoreRecords($data, $entityId, $entityDefaultGroupsWithoutMode, $storesHandled);
+
+                    // Insert INSERT_CHUNK_SIZE records at a time.
+                    // If INSERT_CHUNK_SIZE records exist in $data then it is reset to an empty array afterwards
+                    $this->_insertIndexRecordsIfMinChunkSizeReached($data, self::INSERT_CHUNK_SIZE);
                 }
 
                 // Set new entity as default
@@ -261,10 +265,6 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
                 );
                 $storesHandled[] = $row['store_id'];
             }
-
-            // Insert INSERT_CHUNK_SIZE records at a time.
-            // If INSERT_CHUNK_SIZE records exist in $data then it is reset to an empty array afterwards
-            $this->_insertIndexRecordsIfMinChunkSizeReached($data, self::INSERT_CHUNK_SIZE);
         }
 
         // Check if at least one entity record was found. If not, $entityId will be null
