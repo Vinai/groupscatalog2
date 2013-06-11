@@ -183,52 +183,23 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
     }
 
     /**
-     * Update the quote items quantities, in case one of the quote item products has been hidden.
-     * If we don't do that the sidebar cart item qty might be wrong.
-     *
-     * There might be a better way to do this but so far this is the best way I could think of.
-     * This is a very rare case that probably won't come into effect at all, only when a product
-     * that a customer has in the cart becomes hidden (may be a customer group change or a product
-     * setting change). Maybe this can go if the overhead is too large. Leave for now.
+     * Remove products that are in the cart that where not hidden while logged out
+     * but are hidden to the customer once logged in.
      *
      * @param Varien_Event_Observer $observer
-     * @return void
-     * @see Mage_Sales_Model_Quote::collectTotals()
      */
-    public function salesQuoteLoadAfter(Varien_Event_Observer $observer)
+    public function salesQuoteMergeBefore(Varien_Event_Observer $observer)
     {
-        /* @var $quote Mage_Sales_Model_Quote */
-        $quote = $observer->getQuote();
+        /** @var Mage_Sales_Model_Quote $guestQuote */
+        $guestQuote = $observer->getSource();
 
-        /*
-         * This is an excerpt from Mage_Sales_Model_Quote::collectTotals(). We don't need to
-         * recalculate all totals here, we just need to make sure the item quantities are correct.
-         */
-        if ($this->_getHelper()->isModuleActive($quote->getStore()) &&
-                $quote->getItemsQty() > 0 && !$this->_isApiRequest()
-        ) {
-            $itemsCount = $itemsQty = $virtualItemsQty = 0;
-            foreach ($quote->getAllVisibleItems() as $item) {
-                if ($item->getParentItem()) {
-                    continue;
-                }
-                $children = $item->getChildren();
-                if ($children && $item->isShipSeparately()) {
-                    foreach ($children as $child) {
-                        if ($child->getProduct()->getIsVirtual()) {
-                            $virtualItemsQty += $child->getQty() * $item->getQty();
-                        }
-                    }
-                }
-                if ($item->getProduct()->getIsVirtual()) {
-                    $virtualItemsQty += $item->getQty();
-                }
-                $itemsCount += 1;
-                $itemsQty += (float)$item->getQty();
+        // If a hidden product is loaded, it's entity_id is set to null.
+        // So all we need to do here is set the deleted property to true,
+        // and then they will not be merged into the customer quote.
+        foreach ($guestQuote->getItemsCollection() as $quoteItem) {
+            if (! $quoteItem->getProductId()) {
+                $quoteItem->isDeleted(true);
             }
-            $quote->setVirtualItemsQty($virtualItemsQty)
-                    ->setItemsCount($itemsCount)
-                    ->setItemsQty($itemsQty);
         }
     }
 
