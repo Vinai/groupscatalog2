@@ -28,7 +28,7 @@
  *
  * @loadSharedFixture global.yaml
  */
-class Netzarbeiter_GroupsCatalog2_Test_Model_Catalog_CategoryCollection
+class Netzarbeiter_GroupsCatalog2_Test_Model_Catalog_CategoryCollectionTest
     extends EcomDev_PHPUnit_Test_Case
 {
     /**

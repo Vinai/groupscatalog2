@@ -26,7 +26,7 @@
  *
  * @doNotIndexAll
  */
-class Netzarbeiter_GroupsCatalog2_Test_Model_Indexer extends EcomDev_PHPUnit_Test_Case
+class Netzarbeiter_GroupsCatalog2_Test_Model_IndexerTest extends EcomDev_PHPUnit_Test_Case
 {
     /**
      * @test

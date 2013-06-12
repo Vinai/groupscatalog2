@@ -24,7 +24,7 @@
  * @loadSharedFixture global.yaml
  * @doNotIndexAll
  */
-class Netzarbeiter_GroupsCatalog2_Test_Helper_Data extends EcomDev_PHPUnit_Test_Case
+class Netzarbeiter_GroupsCatalog2_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
 {
     protected $_configSection = 'netzarbeiter_groupscatalog2';
     protected $_configGroup = 'general';
