@@ -95,10 +95,6 @@ $table = $installer->getConnection()->newTable($tableName)
         'default' => '0',
     ), 'Store ID')
 
-    ->addIndex($installer->getIdxName($tableName, array('catalog_entity_id', 'group_id', 'store_id')),
-        array('catalog_entity_id', 'group_id', 'store_id'),
-        array('type' => Varien_Db_Adapter_Interface::INDEX_TYPE_UNIQUE))
-
     ->addForeignKey(
         $installer->getFkName($tableName, 'catalog_entity_id', 'catalog/product', 'entity_id'),
         'catalog_entity_id', $installer->getTable('catalog/product'), 'entity_id',
@@ -147,10 +143,6 @@ $table = $installer->getConnection()->newTable($tableName)
         'nullable' => false,
         'default' => '0',
     ), 'Store ID')
-
-    ->addIndex($installer->getIdxName($tableName, array('catalog_entity_id', 'group_id', 'store_id')),
-        array('catalog_entity_id', 'group_id', 'store_id'),
-        array('type' => Varien_Db_Adapter_Interface::INDEX_TYPE_UNIQUE))
 
     ->addForeignKey(
         $installer->getFkName($tableName, 'catalog_entity_id', 'catalog/category', 'entity_id'),
