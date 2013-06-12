@@ -33,6 +33,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
     const XML_CONFIG_CATEGORY_DEFAULT_PREFIX = 'netzarbeiter_groupscatalog2/general/category_default_';
 
     const HIDE_GROUPS_ATTRIBUTE = 'groupscatalog2_groups';
+    const HIDE_GROUPS_ATTRIBUTE_STATE_CACHE = 'groupscatalog2_groups_state_cache';
 
     /**
      * Customer group collection instance
@@ -133,6 +134,12 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
             return true;
         }
 
+        $cachedState = $entity->getData(self::HIDE_GROUPS_ATTRIBUTE_STATE_CACHE);
+        if (! is_null($cachedState)) {
+            return $cachedState;
+        }
+
+
         // Default to the current customer group id
         if (is_null($customerGroupId)) {
             $customerGroupId = $this->getCustomerGroupId();
@@ -142,8 +149,10 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 
         if (!is_array($groupIds) && !is_string($groupIds)) {
             // If the value isn't set on the entity mode fall back to querying the db index table
-            return Mage::getResourceSingleton('netzarbeiter_groupscatalog2/filter')
+            $visibility = Mage::getResourceSingleton('netzarbeiter_groupscatalog2/filter')
                     ->isEntityVisible($entity, $customerGroupId);
+            $entity->setData(self::HIDE_GROUPS_ATTRIBUTE_STATE_CACHE, $visibility);
+            return $visibility;
         }
 
         /* @var $entityType string The entity type code for the specified entity */
@@ -170,7 +179,9 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
         // If the configured mode is 'show' the list of group ids must be inverse
         $groupIds = $this->applyConfigModeSettingByStore($groupIds, $entityType, $entity->getStore());
 
-        return in_array($customerGroupId, $groupIds);
+        $visibility = in_array($customerGroupId, $groupIds);
+        $entity->setData(self::HIDE_GROUPS_ATTRIBUTE_STATE_CACHE, $visibility);
+        return $visibility;
     }
 
     /**
@@ -182,7 +193,6 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
     public function getIndexTableByEntityType($entityType)
     {
         $entityType = Mage::getSingleton('eav/config')->getEntityType($entityType);
-        $table = '';
         switch ($entityType->getEntityTypeCode()) {
             default:
             case Mage_Catalog_Model_Product::ENTITY:
