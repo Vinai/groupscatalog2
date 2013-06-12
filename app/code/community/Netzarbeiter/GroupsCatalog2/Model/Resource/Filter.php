@@ -121,7 +121,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
         $this->_init($helper->getIndexTableByEntityType($entityType), 'id');
 
         $select = $this->_getReadAdapter()->select()
-                ->from($this->getMainTable(), 'id')
+                ->from($this->getMainTable(), 'catalog_entity_id')
                 ->where('catalog_entity_id=?', $entity->getId())
                 ->where('group_id=?', $groupId)
                 ->where('store_id=?', $entity->getStoreId());
