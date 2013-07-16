@@ -31,6 +31,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
     const XML_CONFIG_CATEGORY_MODE = 'netzarbeiter_groupscatalog2/general/category_mode';
     const XML_CONFIG_PRODUCT_DEFAULT_PREFIX = 'netzarbeiter_groupscatalog2/general/product_default_';
     const XML_CONFIG_CATEGORY_DEFAULT_PREFIX = 'netzarbeiter_groupscatalog2/general/category_default_';
+    const XML_CONFIG_DISABLED_ROUTES = 'global/netzarbeiter_groupscatalog2/disabled_on_routes';
 
     const HIDE_GROUPS_ATTRIBUTE = 'groupscatalog2_groups';
     const HIDE_GROUPS_ATTRIBUTE_STATE_CACHE = 'groupscatalog2_groups_state_cache';
@@ -62,6 +63,14 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
      * @var bool|null
      */
     protected $_moduleActive = null;
+
+    /**
+     * On these routes the module is inactive.
+     * This is important for IPN notifications and API requests to succeed
+     *
+     * @var array
+     */
+    protected $_disabledOnRoutes;
 
     /**
      * Return a configuration setting from within the netzarbeiter_groupscatalog2/general section.
@@ -423,5 +432,20 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
     public function getModuleActiveFlag()
     {
         return $this->_moduleActive;
+    }
+
+    /**
+     * Return the route names on which the module should be inactive
+     *
+     * @return array
+     */
+    public function getDisabledOnRoutes()
+    {
+        if (null == $this->_disabledOnRoutes) {
+            $this->_disabledOnRoutes = array_keys(
+                Mage::getConfig()->getNode(self::XML_CONFIG_DISABLED_ROUTES)->asArray()
+            );
+        }
+        return $this->_disabledOnRoutes;
     }
 }
