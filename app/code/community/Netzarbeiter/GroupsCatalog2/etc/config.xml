@@ -92,6 +92,14 @@
                 </groupscatalog2_category>
             </indexer>
         </index>
+        <netzarbeiter_groupscatalog2>
+            <disabled_on_routes>
+                <api/>
+                <paypal/>
+                <paypaluk/>
+                <authorizenet/>
+            </disabled_on_routes>
+        </netzarbeiter_groupscatalog2>
     </global>
     <frontend>
         <events>
