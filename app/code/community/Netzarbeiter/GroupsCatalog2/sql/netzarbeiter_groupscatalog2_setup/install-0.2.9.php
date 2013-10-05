@@ -25,7 +25,7 @@ $installer = $this;
 
 $installer->startSetup();
 
-// Just to be sure the latest version off the attributes is installed
+// Just to be sure the latest version of the attributes is installed
 $installer->deleteTableRow(
     'eav/attribute', 'attribute_code', Netzarbeiter_GroupsCatalog2_Helper_Data::HIDE_GROUPS_ATTRIBUTE
 );
