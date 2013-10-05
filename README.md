@@ -1,5 +1,5 @@
 Groups Catalog 2
-========================
+================
 This Magento extension enables you to hide categories and products from customers depending on their customer group.
 (It is a rewrite of the extension Netzarbeiter_GroupsCatalog for Magento 1.6 and newer.)
 
@@ -9,7 +9,8 @@ Facts
 - extension key: Netzarbeiter_GroupsCatalog2
 - [extension on Magento Connect](http://www.magentocommerce.com/magento-connect/customer-groups-catalog2-4585.html)
 - Magento Connect 1.0 extension key: - none -
-- Magento Connect 2.0 extension key: http://connect20.magentocommerce.com/community/Netzarbeiter_GroupsCatalog2
+- Magento Connect 2.0 extension key:  
+  http://connect20.magentocommerce.com/community/Netzarbeiter_GroupsCatalog2
 - [extension on GitHub](https://github.com/Vinai/groupscatalog2)
 - [direct download link](https://github.com/Vinai/groupscatalog2/zipball/master)
 
@@ -56,9 +57,12 @@ Compatibility
 
 Installation Instructions
 -------------------------
+If you are using the Magento compiler, disable compilation before the installation, and after the module is installed, you need to run the compiler again.
+
 1. Install the extension via Magento Connect with the key shown above or copy all the files into your document root.
 2. Clear the cache, logout from the admin panel and then login again.
 3. Configure and activate the extension under System - Configuration - Netzarbeiter Extensions - Groups Catalog 2
+4. Go to the "Manage Indexes" page and rebuild the two GroupsCatalog indexs. Without this step all products will be hidden on the frontend!
 
 Upgrade from Magento 1.5
 ------------------------
@@ -91,9 +95,9 @@ Any contributions are highly appreciated. The best way to contribute code is to 
 
 Developer
 ---------
-Vinai Kopp
-[http://www.netzarbeiter.com](http://www.netzarbeiter.com)
-[@VinaiKopp](https://twitter.com/VinaiKopp)
+| Vinai Kopp
+| [http://www.netzarbeiter.com](http://www.netzarbeiter.com)
+| [\@VinaiKopp](https://twitter.com/VinaiKopp)
 
 Licence
 -------
@@ -101,4 +105,4 @@ Licence
 
 Copyright
 ---------
-(c) 2013 Vinai Kopp
+\(c) 2013 Vinai Kopp
