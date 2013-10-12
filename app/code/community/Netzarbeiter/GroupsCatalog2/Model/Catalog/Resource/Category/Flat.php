@@ -30,7 +30,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Catalog_Resource_Category_Flat
      * @param null $parentNode
      * @param int $recursionLevel
      * @param int $storeId
-     * @return array|Mage_Catalog_Model_Resource_Category_Flat
+     * @return Mage_Catalog_Model_Resource_Category_Flat
      */
     protected function _loadNodes($parentNode = null, $recursionLevel = 0, $storeId = 0)
     {
