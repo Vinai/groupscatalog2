@@ -24,7 +24,7 @@
 <config>
     <modules>
         <Netzarbeiter_GroupsCatalog2>
-            <version>0.3.0</version>
+            <version>0.3.1</version>
         </Netzarbeiter_GroupsCatalog2>
     </modules>
     <global>
@@ -100,6 +100,17 @@
                 <authorizenet/>
             </disabled_on_routes>
         </netzarbeiter_groupscatalog2>
+        <events>
+            <controller_front_init_before>
+                <observers>
+                    <netzarbeiter_groupscatalog2>
+                        <type>singleton</type>
+                        <class>netzarbeiter_groupscatalog2/observer</class>
+                        <method>controllerFrontInitBefore</method>
+                    </netzarbeiter_groupscatalog2>
+                </observers>
+            </controller_front_init_before>
+        </events>
     </global>
     <frontend>
         <events>

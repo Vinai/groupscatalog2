@@ -20,25 +20,24 @@
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-class Netzarbeiter_GroupsCatalog2_Model_Catalog_Resource_Category_Flat
+class Netzarbeiter_GroupsCatalog2_Model_Catalog_Resource_Category_Flat17
     extends Mage_Catalog_Model_Resource_Category_Flat
 {
     /**
      * We need to rewrite this class to be able to filter hidden categories if the
      * flat catalog category is enabled.
      * 
-     * This is the version of the rewrite for Magento 1.8 and newer.
+     * This is the version of the rewrite for Magento 1.6 and 1.7.
      * In Magento 1.8 the method signature changed.
      *
      * @param Mage_Catalog_Model_Category|int $parentNode
      * @param integer $recursionLevel
      * @param integer $storeId
-     * @param bool $onlyActive
      * @return Mage_Catalog_Model_Resource_Category_Flat
      */
-    protected function _loadNodes($parentNode = null, $recursionLevel = 0, $storeId = 0, $onlyActive = true)
+    protected function _loadNodes($parentNode = null, $recursionLevel = 0, $storeId = 0)
     {
-        $nodes = parent::_loadNodes($parentNode, $recursionLevel, $storeId, $onlyActive);
+        $nodes = parent::_loadNodes($parentNode, $recursionLevel, $storeId);
 
         /* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
         $helper = Mage::helper('netzarbeiter_groupscatalog2');

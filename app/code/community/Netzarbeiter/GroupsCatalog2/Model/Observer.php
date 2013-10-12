@@ -23,6 +23,24 @@
 class Netzarbeiter_GroupsCatalog2_Model_Observer
 {
     /**
+     * Change rewrite depending on Magento version
+     * 
+     * In Magento 1.8 the method signature changed for 
+     * Mage_Catalog_Model_Resource_Category_Flat::_loadNodes()
+     * 
+     * @param Varien_Event_Observer $observer
+     */
+    public function controllerFrontInitBefore(Varien_Event_Observer $observer)
+    {
+        if (version_compare(Mage::getVersion(), '1.8', '<')) {
+            Mage::getConfig()->setNode(
+                'global/models/catalog_resource/rewrite/category_flat',
+                'Netzarbeiter_GroupsCatalog2_Model_Catalog_Resource_Category_Flat17'
+            );
+        }
+    }
+    
+    /**
      * Add the groupscatalog filter sql to product collections
      *
      * @param Varien_Event_Observer $observer
