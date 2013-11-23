@@ -140,15 +140,18 @@
 								<category_mode>hide</category_mode>
 							</depends>
 						</category_default_show>
-						<entity_hidden_behaviour_guest translate="label" module="netzarbeiter_groupscatalog2">
-							<label>How to handle guests accessing a hidden entity</label>
-							<frontend_type>select</frontend_type>
-							<source_model>netzarbeiter_groupscatalog2/system_config_source_hiddenEntityHandling</source_model>
-							<sort_order>60</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-						</entity_hidden_behaviour_guest>
+                        <entity_hidden_behaviour_guest translate="label" module="netzarbeiter_groupscatalog2">
+                            <label>How to handle guests accessing a hidden entity</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>netzarbeiter_groupscatalog2/system_config_source_hiddenEntityHandling</source_model>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <is_active>1</is_active>
+                            </depends>
+                        </entity_hidden_behaviour_guest>
 						<entity_hidden_redirect_guest translate="label comment" module="netzarbeiter_groupscatalog2">
 							<label>Redirect route for guests</label>
 							<comment><![CDATA[Format: [route]/[controller]/[action]]]></comment>
@@ -157,18 +160,22 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 							<depends>
+                                <is_active>1</is_active>
 								<entity_hidden_behaviour_guest>302</entity_hidden_behaviour_guest>
 							</depends>
 						</entity_hidden_redirect_guest>
-						<entity_hidden_behaviour_customer translate="label" module="netzarbeiter_groupscatalog2">
-							<label>How to handle logged in customers accessing a hidden entity</label>
-							<frontend_type>select</frontend_type>
-							<source_model>netzarbeiter_groupscatalog2/system_config_source_hiddenEntityHandling</source_model>
-							<sort_order>80</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-						</entity_hidden_behaviour_customer>
+                        <entity_hidden_behaviour_customer translate="label" module="netzarbeiter_groupscatalog2">
+                            <label>How to handle logged in customers accessing a hidden entity</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>netzarbeiter_groupscatalog2/system_config_source_hiddenEntityHandling</source_model>
+                            <sort_order>80</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <is_active>1</is_active>
+                            </depends>
+                        </entity_hidden_behaviour_customer>
 						<entity_hidden_redirect_customer translate="label comment" module="netzarbeiter_groupscatalog2">
 							<label>Redirect route for logged in customers</label>
 							<comment><![CDATA[Format: [route]/[controller]/[action]]]></comment>
@@ -177,18 +184,22 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 							<depends>
+                                <is_active>1</is_active>
 								<entity_hidden_behaviour_customer>302</entity_hidden_behaviour_customer>
 							</depends>
 						</entity_hidden_redirect_customer>
-						<display_entity_hidden_msg>
-							<label>Display a message when a hidden entity is accessed?</label>
-							<frontend_type>select</frontend_type>
-							<source_model>adminhtml/system_config_source_yesno</source_model>
-							<sort_order>100</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-						</display_entity_hidden_msg>
+                        <display_entity_hidden_msg>
+                            <label>Display a message when a hidden entity is accessed?</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <is_active>1</is_active>
+                            </depends>
+                        </display_entity_hidden_msg>
 						<entity_hidden_msg_guest translate="label" module="netzarbeiter_groupscatalog2">
 							<label>Message for guests</label>
 							<sort_order>110</sort_order>
@@ -196,6 +207,7 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 							<depends>
+                                <is_active>1</is_active>
 								<display_entity_hidden_msg>1</display_entity_hidden_msg>
 							</depends>
 						</entity_hidden_msg_guest>
@@ -206,6 +218,7 @@
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
 							<depends>
+                                <is_active>1</is_active>
 								<display_entity_hidden_msg>1</display_entity_hidden_msg>
 							</depends>
 						</entity_hidden_msg_customer>
