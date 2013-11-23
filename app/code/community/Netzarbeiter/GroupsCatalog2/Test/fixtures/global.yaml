@@ -106,7 +106,7 @@ config:
   default/netzarbeiter_groupscatalog2/general/is_active: 1
   default/netzarbeiter_groupscatalog2/general/product_mode: show
   default/netzarbeiter_groupscatalog2/general/category_mode: show
-  default/netzarbeiter_groupscatalog2/general/product_default_hide: -1
+  default/netzarbeiter_groupscatalog2/general/product_default_hide: -1 # none
   stores/germany2/netzarbeiter_groupscatalog2/general/is_active: 0 # deactivate in german2 store view scope
   stores/germany2/netzarbeiter_groupscatalog2/general/category_mode: hide # set default mode for categories to hide
   stores/usa2/netzarbeiter_groupscatalog2/general/product_mode: hide # set default mode for products to hide on store scope
@@ -207,3 +207,28 @@ eav:
       status: 1 # Enabled
       visibility: 4 # Visible in Catalog & Search
       # groupscatalog2_groups: not set
+
+    # Product 4 has groupscatalog attribute set to NONE, which means show to no groups
+    - entity_id: 4
+      type_id: simple
+      sku: product4
+      name: Product Four
+      short_description: Yet another test product
+      description: Yet another great test product
+      url_key: product_four
+      stock:
+        qty: 1000.00
+        is_in_stock: 1
+      website_ids:
+        - usa_website
+        - canada_website
+        - german_website
+      category_ids:
+        - 2 # Default Category
+      price: 12.99
+      tax_class_id: 2 # Taxable Goods
+      status: 1 # Enabled
+      visibility: 4 # Visible in Catalog & Search
+      /stores:
+        usa2:
+          groupscatalog2_groups: '[ NONE ]'

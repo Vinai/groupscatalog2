@@ -24,33 +24,35 @@
 #
 
 all_products_present: &allProductsPresent
-  products_present: [1, 2, 3]
+  products_present: [1, 2, 3, 4]
 
 #
 # Test case expectations
 #
 
+# usa scope: module active, show by default, hide from '[ NONE ]'
 usa-0: # Group NOT LOGGED IN
   # Product 1 hidden from group in global scope
-  products_present: [2, 3]
+  products_present: [2, 3, 4]
 
 usa-1: # Group General
   # Product 1 hidden from group in global scope
-  products_present: [2, 3]
+  products_present: [2, 3, 4]
 
 usa-2: # Group Wholesale
   # Product 2 hidden from group in website scope
-  products_present: [1, 3]
+  products_present: [1, 3, 4]
 
 usa-3: *allProductsPresent # Group Retail
 
 
+# usa2 scope: module active, hide by default 
 usa2-0: # Group NOT LOGGED IN
-  # Mode reversend to hide in store scope config
+  # Mode reversed to hide in store scope config
   products_present: [1]
 
 usa2-1: # Group General
-  # Mode reversend to hide in store scope config
+  # Mode reversed to hide in store scope config
   products_present: [1]
 
 usa2-2: # Group Wholesale
@@ -58,7 +60,7 @@ usa2-2: # Group Wholesale
   products_present: [2]
 
 usa2-3: # Group Retail
-  # Use defaut, default scope is hide mode on store view scope
+  # Use default, default scope is hide mode on store view scope
   products_present: []
 
 
@@ -68,14 +70,14 @@ canada-1: *allProductsPresent
 canada-2: *allProductsPresent
 canada-3: *allProductsPresent
 
-
+# germany scope: module active, show by default
 germany-0: # Group NOT LOGGED IN
   # Product 1 hidden from grp on global scope
-  products_present: [2, 3]
+  products_present: [2, 3, 4]
 
 germany-1: # Group General
    # Product 1 hidden on global scope, product 2 on store scope
-  products_present: [3]
+  products_present: [3, 4]
 
 germany-2: *allProductsPresent
 germany-3: *allProductsPresent
