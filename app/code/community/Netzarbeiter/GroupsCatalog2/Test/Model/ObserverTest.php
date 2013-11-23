@@ -103,12 +103,5 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_ObserverTest extends EcomDev_PHPUni
             $customerGroupId, $storeCode, implode(', ', $expected), implode(', ', $actual)
         );
         $this->assertEquals($expected, $actual, $message);
-        /*
-        foreach (array(1, 2, 3) as $productId) {
-            $isProductPresent = null !== $collection->getItemById($productId);
-            $expectedPresent = in_array($productId, $expected);
-            $this->assertEquals($expectedPresent, $isProductPresent, $message);
-        }
-        */
     }
 }
