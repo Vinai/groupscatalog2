@@ -32,7 +32,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
      *
      * array(
      *     storeId1 => array(
-     *           group1-id,
+     *         group1-id,
      *         group2-id,
      *     ),
      *     ...
@@ -341,7 +341,12 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
             // Use store default ids if that is selected for the entity
             $row['group_ids'] = $this->_getStoreDefaultGroups($row['store_id']);
         } else {
+            
             $row['group_ids'] = $this->_cleanGroupIdsAttributeValue($row['group_ids']);
+
+            if (in_array(Netzarbeiter_GroupsCatalog2_Helper_Data::USE_NONE, $row['group_ids'])) {
+                $row['group_ids'] = array();
+            }
 
             // This is needed for the additional missing store record handling
             // We need the group id's without the config mode settings applied
