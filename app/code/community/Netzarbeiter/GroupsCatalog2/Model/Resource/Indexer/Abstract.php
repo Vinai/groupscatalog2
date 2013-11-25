@@ -165,6 +165,50 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
     }
 
     /**
+     * @return Netzarbeiter_GroupsCatalog2_Model_Resource_Setup
+     */
+    protected function _getSetupModel()
+    {
+        return Mage::getResourceModel(
+            'netzarbeiter_groupscatalog2_resource/setup',
+            'netzarbeiter_groupscatalog2_setup'
+        );
+    }
+
+    /**
+     * If the index table does not exist, create it.
+     */
+    protected function _checkIndexTable()
+    {
+        static $tableChecked = false;
+        if (! $tableChecked) {
+            $tableChecked = true;
+            if (! $this->_getReadAdapter()->isTableExists($this->_getIndexTable())) {
+                $this->_getSetupModel()->createIndexTable($this->_getEntityTypeCode());
+            }
+        }
+    }
+
+    /**
+     * If the EAV attribute does not exist, add it
+     */
+    protected function _checkAttribute()
+    {
+        static $attributeChecked = false;
+        if (! $attributeChecked) {
+            $attributeChecked = true;
+            
+            $select = $this->_getReadAdapter()->select()
+                ->from($this->getTable('eav/attribute', 'attributue_id'))
+                ->where('attribute_code=?', Netzarbeiter_GroupsCatalog2_Helper_Data::HIDE_GROUPS_ATTRIBUTE);
+            
+            if (! $this->_getReadAdapter()->fetchOne($select)) {
+                $this->_getSetupModel()->addGroupsCatalogAttribute($this->_getEntityTypeCode());
+            }
+        }
+    }
+
+    /**
      * Handle reindex all calls
      *
      * @return void
@@ -183,6 +227,10 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
     protected function _reindexEntity($event = null)
     {
         Varien_Profiler::start($this->_getProfilerName() . '::reindexEntity');
+        
+        $this->_checkIndexTable();
+        $this->_checkAttribute();
+        
         $entityType = Mage::getSingleton('eav/config')->getEntityType($this->_getEntityTypeCode());
         $attribute = Mage::getSingleton('eav/config')->getAttribute(
             $this->_getEntityTypeCode(), Netzarbeiter_GroupsCatalog2_Helper_Data::HIDE_GROUPS_ATTRIBUTE
