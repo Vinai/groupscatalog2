@@ -77,7 +77,7 @@
             <netzarbeiter_groupscatalog2_setup>
                 <setup>
                     <module>Netzarbeiter_GroupsCatalog2</module>
-                    <class>Mage_Catalog_Model_Resource_Setup</class>
+                    <class>Netzarbeiter_GroupsCatalog2_Model_Resource_Setup</class>
                 </setup>
             </netzarbeiter_groupscatalog2_setup>
         </resources>

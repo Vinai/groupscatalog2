@@ -49,6 +49,18 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
     }
 
     /**
+     * Check if the index table has been created yet.
+     * 
+     * This method can only be executed *after* _init() has been called.
+     * 
+     * @return bool
+     */
+    protected function _doesIndexExists()
+    {
+        return $this->_getReadAdapter()->isTableExists($this->getMainTable());
+    }
+
+    /**
      * Inner join the groupscatalog index table to hide entities not visible to the specified customer group id
      *
      * @param Varien_Data_Collection_Db $collection
@@ -71,13 +83,15 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
         $entityType = $helper->getEntityTypeCodeFromEntity($entity);
 
         $this->_init($helper->getIndexTableByEntityType($entityType), 'id');
-
-        $filterTable = $collection->getResource()->getTable($helper->getIndexTableByEntityType($entityType));
-        $entityIdField = "{$this->_getCollectionTableAlias($collection)}.entity_id";
-
-        $this->_addGroupsCatalogFilterToSelect(
-            $collection->getSelect(), $filterTable, $groupId, $collection->getStoreId(), $entityIdField
-        );
+        
+        if ($this->_doesIndexExists()) {
+            $filterTable = $collection->getResource()->getTable($helper->getIndexTableByEntityType($entityType));
+            $entityIdField = "{$this->_getCollectionTableAlias($collection)}.entity_id";
+    
+            $this->_addGroupsCatalogFilterToSelect(
+                $collection->getSelect(), $filterTable, $groupId, $collection->getStoreId(), $entityIdField
+            );
+        }
     }
 
     /**
@@ -98,10 +112,12 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
         // Switch index table depending on the specified entity
         $this->_init($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY), 'id');
 
-        $table = $this->getTable($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY));
-        $this->_addGroupsCatalogFilterToSelect(
-            $collection->getSelect(), $table, $groupId, $storeId, 'main_table.product_id'
-        );
+        if ($this->_doesIndexExists()) {
+            $table = $this->getTable($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY));
+            $this->_addGroupsCatalogFilterToSelect(
+                $collection->getSelect(), $table, $groupId, $storeId, 'main_table.product_id'
+            );
+        }
     }
 
     /**
@@ -119,6 +135,12 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 
         // Switch index table depending on the specified entity
         $this->_init($helper->getIndexTableByEntityType($entityType), 'id');
+        
+        if (! $this->_doesIndexExists()) {
+            // If the index hasn't been created yet. Default to entity 
+            // is visible to minimize the number of support requests.
+            return true;
+        }
 
         $select = $this->_getReadAdapter()->select()
                 ->from($this->getMainTable(), 'catalog_entity_id')
@@ -150,6 +172,12 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
         // Switch index table depending on the specified entity
         $this->_init($helper->getIndexTableByEntityType($entityTypeCode), 'id');
 
+        if (! $this->_doesIndexExists()) {
+            // If the index hasn't been created yet, default to all entities
+            // are visible to minimize the number of support requests
+            return $ids;
+        }
+        
         $select = $this->_getReadAdapter()->select()
                 ->from($this->getMainTable(), 'catalog_entity_id')
                 ->where('catalog_entity_id IN(?)', $ids)
@@ -176,10 +204,12 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
         // Switch index table depending on the specified entity
         $this->_init($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY), 'id');
 
-        $table = $this->getTable($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY));
-        $this->_addGroupsCatalogFilterToSelect(
-            $collection->getProductCountSelect(), $table, $groupId, $collection->getStoreId()
-        );
+        if ($this->_doesIndexExists()) {
+            $table = $this->getTable($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY));
+            $this->_addGroupsCatalogFilterToSelect(
+                $collection->getProductCountSelect(), $table, $groupId, $collection->getStoreId()
+            );
+        }
     }
 
     /**
@@ -198,9 +228,11 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 
         // Switch index table depending on the specified entity
         $this->_init($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY), 'id');
-        $table = $this->getTable($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY));
 
-        $this->_addGroupsCatalogFilterToSelect($select, $table, $groupId, $storeId);
+        if ($this->_doesIndexExists()) {
+            $table = $this->getTable($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY));
+            $this->_addGroupsCatalogFilterToSelect($select, $table, $groupId, $storeId);
+        }
     }
 
     /**
