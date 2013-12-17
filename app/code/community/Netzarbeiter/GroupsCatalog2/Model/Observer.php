@@ -233,6 +233,10 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
      * the customer group option list.
      * This makes sense for stores with a large number of customer groups who manage the
      * assignment via an product import mechanism.
+     * Prohibit loading of the customer groups using this hackish approach and not in the
+     * attribute source model, because that is also used during importing and it needs to
+     * always return the full list of options, regardless of the "show_multiselect_field"
+     * setting.
      * 
      * @param Varien_Event_Observer $observer
      */

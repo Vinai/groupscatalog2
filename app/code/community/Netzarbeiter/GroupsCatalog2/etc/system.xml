@@ -70,6 +70,7 @@
 						<product_default_hide translate="label comment" module="netzarbeiter_groupscatalog2">
 							<label>Hide Products from</label>
 							<frontend_type>multiselect</frontend_type>
+                            <frontend_model>netzarbeiter_groupscatalog2/adminhtml_system_config_renderer_customergroup</frontend_model>
 							<source_model>netzarbeiter_groupscatalog2/system_config_source_customergroup</source_model>
 							<backend_model>netzarbeiter_groupscatalog2/system_config_backend_customergroup_product</backend_model>
 							<sort_order>30</sort_order>
@@ -85,6 +86,7 @@
 						<product_default_show translate="label comment" module="netzarbeiter_groupscatalog2">
 							<label>Show Products to</label>
 							<frontend_type>multiselect</frontend_type>
+                            <frontend_model>netzarbeiter_groupscatalog2/adminhtml_system_config_renderer_customergroup</frontend_model>
 							<source_model>netzarbeiter_groupscatalog2/system_config_source_customergroup</source_model>
 							<backend_model>netzarbeiter_groupscatalog2/system_config_backend_customergroup_product</backend_model>
 							<sort_order>30</sort_order>
@@ -113,6 +115,7 @@
 						<category_default_hide translate="label comment" module="netzarbeiter_groupscatalog2">
 							<label>Hide Categories from</label>
 							<frontend_type>multiselect</frontend_type>
+                            <frontend_model>netzarbeiter_groupscatalog2/adminhtml_system_config_renderer_customergroup</frontend_model>
 							<source_model>netzarbeiter_groupscatalog2/system_config_source_customergroup</source_model>
 							<backend_model>netzarbeiter_groupscatalog2/system_config_backend_customergroup_category</backend_model>
 							<sort_order>50</sort_order>
@@ -128,6 +131,7 @@
 						<category_default_show translate="label comment" module="netzarbeiter_groupscatalog2">
 							<label>Show Categories to</label>
 							<frontend_type>multiselect</frontend_type>
+                            <frontend_model>netzarbeiter_groupscatalog2/adminhtml_system_config_renderer_customergroup</frontend_model>
 							<source_model>netzarbeiter_groupscatalog2/system_config_source_customergroup</source_model>
 							<backend_model>netzarbeiter_groupscatalog2/system_config_backend_customergroup_category</backend_model>
 							<sort_order>50</sort_order>

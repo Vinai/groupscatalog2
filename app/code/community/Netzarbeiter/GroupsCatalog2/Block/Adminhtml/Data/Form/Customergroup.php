@@ -74,32 +74,7 @@ class Netzarbeiter_GroupsCatalog2_Block_Adminhtml_Data_Form_Customergroup
     public function getValueAsString()
     {
         $value = $this->getValue();
-        $list = array();
-
-        // For translation, this isn't really a block, its a form element
         $helper = Mage::helper('netzarbeiter_groupscatalog2');
-
-        $key = array_search(Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT, $value);
-        if (false !== $key) {
-            $list[] = $helper->__(Netzarbeiter_GroupsCatalog2_Helper_Data::LABEL_DEFAULT);
-            unset($value[$key]);
-        }
-        $key = array_search(Netzarbeiter_GroupsCatalog2_Helper_Data::USE_NONE, $value);
-        if (false !== $key) {
-            $list[] = $helper->__(Netzarbeiter_GroupsCatalog2_Helper_Data::LABEL_NONE);
-            unset($value[$key]);
-        }
-        if (count($value)) {
-            /** @var Mage_Customer_Model_Resource_Group_Collection $groups */
-            $groups = Mage::getResourceModel('customer/group_collection');
-            $groups->addFieldToFilter('customer_group_id', array('in' => $value));
-            $groups->initCache(Mage::app()->getCache(), 'groupscatalog2', array(
-                Netzarbeiter_GroupsCatalog2_Helper_Data::CUSTOMER_GROUP_CACHE_TAG
-            ));
-            foreach ($groups as $group) {
-                $list[] = $group->getCustomerGroupCode();
-            }
-        }
-        return implode(', ', $list);
+        return $helper->getGroupNamesAsString($value);
     }
 }

@@ -35,18 +35,20 @@ class Netzarbeiter_GroupsCatalog2_Model_System_Config_Source_Customergroup
     public function toOptionArray()
     {
         if (is_null($this->_options)) {
-            $this->_options = array(
-                array(
-                    'value' => Netzarbeiter_GroupsCatalog2_Helper_Data::USE_NONE,
-                    'label' => Mage::helper('netzarbeiter_groupscatalog2')->__('[ NONE ]')
-                )
-            );
-            foreach (Mage::helper('netzarbeiter_groupscatalog2')->getGroups() as $group) {
-                /* @var $group Mage_Customer_Model_Group */
+            $this->_options = array();
+            $helper = Mage::helper('netzarbeiter_groupscatalog2');
+            if ($helper->getConfig('show_multiselect_field')) {
                 $this->_options[] = array(
-                    'value' => $group->getId(),
-                    'label' => $group->getCode(),
+                    'value' => Netzarbeiter_GroupsCatalog2_Helper_Data::USE_NONE,
+                    'label' => $helper->__('[ NONE ]')
                 );
+                foreach (Mage::helper('netzarbeiter_groupscatalog2')->getGroups() as $group) {
+                    /* @var $group Mage_Customer_Model_Group */
+                    $this->_options[] = array(
+                        'value' => $group->getId(),
+                        'label' => $group->getCode(),
+                    );
+                }
             }
         }
         return $this->_options;
