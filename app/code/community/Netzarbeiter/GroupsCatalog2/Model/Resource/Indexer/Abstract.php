@@ -199,7 +199,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
             $attributeChecked = true;
             
             $select = $this->_getReadAdapter()->select()
-                ->from($this->getTable('eav/attribute', 'attributue_id'))
+                ->from($this->getTable('eav/attribute', 'attribute_id'))
                 ->where('attribute_code=?', Netzarbeiter_GroupsCatalog2_Helper_Data::HIDE_GROUPS_ATTRIBUTE);
             
             if (! $this->_getReadAdapter()->fetchOne($select)) {
