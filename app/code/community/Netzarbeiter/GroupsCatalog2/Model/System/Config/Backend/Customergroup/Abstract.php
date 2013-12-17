@@ -31,6 +31,20 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_System_Config_Backend_Customerg
     abstract protected function _getIndexerCode();
 
     /**
+     * Disable saving if multiselect fields are disabled
+     * 
+     * @return $this|Mage_Core_Model_Abstract
+     */
+    public function save()
+    {
+        $helper = Mage::helper('netzarbeiter_groupscatalog2');
+        if ($helper->getConfig('show_multiselect_field')) {
+            parent::save();
+        }
+        return $this;
+    }
+    
+    /**
      * Sanitize settings and set the index to require reindex
      *
      * @return Mage_Core_Model_Abstract

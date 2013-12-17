@@ -40,5 +40,7 @@
 "Auto refresh CATEGORY cache","Kategorie-Cache automatisch aktualisieren"
 "Automatically refresh the CATEGORY BLOCK HTML cache to update the category navigation when the visibility setting for a category is changed.","Den CATEGORY BLOCK HTML Cache automatisch aktualisieren wenn die Sichtbarkeits-Einstellungen einer Kategorie geändert werden um die Navigation aktuell zu halten."
 "Format: [route]/[controller]/[action]","Format: [route]/[controller]/[action]"
-
+"Show multiselect customer group fields","Kundengruppen Multiselect Felder im Backend anzeigen"
+"Disable only if there is a very large number of customer groups and if the product and category settings are done using some import mechanism instead of the admin panel.","Nur deaktivieren wenn es sehr viele Kundengruppen gibt und die Produkt- und Kategorie-Einstellungen mittels eines Import Mechanismus gesetzt werden anstelle des Admin-Interfaces."
+"This field is read-only.<br/>(change the ""Show multiselect customer group fields"" option further down to enable this field)","Dieses Feld kann nur gelesen werden.<br/>(ändern Sie ""Kundengruppen Multiselect Felder im Backend anzeigen"" um es zu aktivieren)"
 

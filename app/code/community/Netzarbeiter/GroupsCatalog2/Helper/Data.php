@@ -26,6 +26,8 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
     const MODE_SHOW_BY_DEFAULT = 'show';
     const USE_DEFAULT = -2;
     const USE_NONE = -1;
+    const LABEL_DEFAULT = '[ USE DEFAULT ]';
+    const LABEL_NONE = '[ NONE ]';
 
     const XML_CONFIG_PRODUCT_MODE = 'netzarbeiter_groupscatalog2/general/product_mode';
     const XML_CONFIG_CATEGORY_MODE = 'netzarbeiter_groupscatalog2/general/category_mode';
@@ -35,6 +37,7 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
 
     const HIDE_GROUPS_ATTRIBUTE = 'groupscatalog2_groups';
     const HIDE_GROUPS_ATTRIBUTE_STATE_CACHE = 'groupscatalog2_groups_state_cache';
+    const CUSTOMER_GROUP_CACHE_TAG = 'groupscatalog2_customer_group';
 
     /**
      * Customer group collection instance
@@ -447,5 +450,51 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
             );
         }
         return $this->_disabledOnRoutes;
+    }
+
+    /**
+     * Return the groupscatalog attribute model
+     * 
+     * @param string $entityType
+     * @return Mage_Eav_Model_Entity_Attribute
+     */
+    public function getGroupsCatalogAttribute($entityType)
+    {
+        return Mage::getSingleton('eav/config')->getAttribute($entityType, self::HIDE_GROUPS_ATTRIBUTE);
+    }
+
+    /**
+     * Return a string of comma separated customer group names.
+     * Used when rendering of multiselect fields in the admin interface is turned off.
+     * 
+     * @param array $value List of customer group ids
+     * @return string
+     */
+    public function getGroupNamesAsString(array $value)
+    {
+        $list = array();
+
+        $key = array_search(Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT, $value);
+        if (false !== $key) {
+            $list[] = $this->__(Netzarbeiter_GroupsCatalog2_Helper_Data::LABEL_DEFAULT);
+            unset($value[$key]);
+        }
+        $key = array_search(Netzarbeiter_GroupsCatalog2_Helper_Data::USE_NONE, $value);
+        if (false !== $key) {
+            $list[] = $this->__(Netzarbeiter_GroupsCatalog2_Helper_Data::LABEL_NONE);
+            unset($value[$key]);
+        }
+        if (count($value)) {
+            /** @var Mage_Customer_Model_Resource_Group_Collection $groups */
+            $groups = Mage::getResourceModel('customer/group_collection');
+            $groups->addFieldToFilter('customer_group_id', array('in' => $value));
+            $groups->initCache(Mage::app()->getCache(), 'groupscatalog2', array(
+                self::CUSTOMER_GROUP_CACHE_TAG
+            ));
+            foreach ($groups as $group) {
+                $list[] = $group->getCustomerGroupCode();
+            }
+        }
+        return implode(', ', $list);
     }
 }
