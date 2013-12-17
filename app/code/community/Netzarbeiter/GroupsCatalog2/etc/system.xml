@@ -22,128 +22,128 @@
  */
 -->
 <config>
-	<tabs>
-		<netzarbeiter translate="label" module="netzarbeiter_groupscatalog2">
-			<label>Netzarbeiter Extensions</label>
-			<sort_order>505</sort_order>
-		</netzarbeiter>
-	</tabs>
-	<sections>
-		<netzarbeiter_groupscatalog2 translate="label" module="netzarbeiter_groupscatalog2">
-			<label>Groups Catalog 2</label>
-			<tab>netzarbeiter</tab>
-			<sort_order>120</sort_order>
-			<show_in_default>1</show_in_default>
-			<show_in_website>1</show_in_website>
-			<show_in_store>1</show_in_store>
-			<groups>
-				<general translate="label" module="netzarbeiter_groupscatalog2">
-					<label>General</label>
-					<sort_order>10</sort_order>
-					<show_in_default>1</show_in_default>
-					<show_in_website>1</show_in_website>
-					<show_in_store>1</show_in_store>
-					<fields>
-						<is_active translate="label" module="netzarbeiter_groupscatalog2">
-							<label>Enable Module</label>
-							<frontend_type>select</frontend_type>
-							<source_model>adminhtml/system_config_source_enabledisable</source_model>
-							<backend_model>netzarbeiter_groupscatalog2/system_config_backend_reindex_both</backend_model>
-							<sort_order>10</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-						</is_active>
-						<product_mode translate="label" module="netzarbeiter_groupscatalog2">
-							<label>Product Mode</label>
-							<frontend_type>select</frontend_type>
-							<source_model>netzarbeiter_groupscatalog2/system_config_source_mode_product</source_model>
-							<backend_model>netzarbeiter_groupscatalog2/system_config_backend_reindex_product</backend_model>
-							<sort_order>20</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<depends>
-								<is_active>1</is_active>
-							</depends>
-						</product_mode>
-						<product_default_hide translate="label comment" module="netzarbeiter_groupscatalog2">
-							<label>Hide Products from</label>
-							<frontend_type>multiselect</frontend_type>
+    <tabs>
+        <netzarbeiter translate="label" module="netzarbeiter_groupscatalog2">
+            <label>Netzarbeiter Extensions</label>
+            <sort_order>505</sort_order>
+        </netzarbeiter>
+    </tabs>
+    <sections>
+        <netzarbeiter_groupscatalog2 translate="label" module="netzarbeiter_groupscatalog2">
+            <label>Groups Catalog 2</label>
+            <tab>netzarbeiter</tab>
+            <sort_order>120</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label" module="netzarbeiter_groupscatalog2">
+                    <label>General</label>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <is_active translate="label" module="netzarbeiter_groupscatalog2">
+                            <label>Enable Module</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_enabledisable</source_model>
+                            <backend_model>netzarbeiter_groupscatalog2/system_config_backend_reindex_both</backend_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </is_active>
+                        <product_mode translate="label" module="netzarbeiter_groupscatalog2">
+                            <label>Product Mode</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>netzarbeiter_groupscatalog2/system_config_source_mode_product</source_model>
+                            <backend_model>netzarbeiter_groupscatalog2/system_config_backend_reindex_product</backend_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <is_active>1</is_active>
+                            </depends>
+                        </product_mode>
+                        <product_default_hide translate="label comment" module="netzarbeiter_groupscatalog2">
+                            <label>Hide Products from</label>
+                            <frontend_type>multiselect</frontend_type>
                             <frontend_model>netzarbeiter_groupscatalog2/adminhtml_system_config_renderer_customergroup</frontend_model>
-							<source_model>netzarbeiter_groupscatalog2/system_config_source_customergroup</source_model>
-							<backend_model>netzarbeiter_groupscatalog2/system_config_backend_customergroup_product</backend_model>
-							<sort_order>30</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<comment><![CDATA[Hide products from these selected groups by default and show them to all others.]]></comment>
-							<depends>
-								<is_active>1</is_active>
-								<product_mode>show</product_mode>
-							</depends>
-						</product_default_hide>
-						<product_default_show translate="label comment" module="netzarbeiter_groupscatalog2">
-							<label>Show Products to</label>
-							<frontend_type>multiselect</frontend_type>
+                            <source_model>netzarbeiter_groupscatalog2/system_config_source_customergroup</source_model>
+                            <backend_model>netzarbeiter_groupscatalog2/system_config_backend_customergroup_product</backend_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[Hide products from these selected groups by default and show them to all others.]]></comment>
+                            <depends>
+                                <is_active>1</is_active>
+                                <product_mode>show</product_mode>
+                            </depends>
+                        </product_default_hide>
+                        <product_default_show translate="label comment" module="netzarbeiter_groupscatalog2">
+                            <label>Show Products to</label>
+                            <frontend_type>multiselect</frontend_type>
                             <frontend_model>netzarbeiter_groupscatalog2/adminhtml_system_config_renderer_customergroup</frontend_model>
-							<source_model>netzarbeiter_groupscatalog2/system_config_source_customergroup</source_model>
-							<backend_model>netzarbeiter_groupscatalog2/system_config_backend_customergroup_product</backend_model>
-							<sort_order>30</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<comment><![CDATA[Show products to these selected groups by default and hide them from all others.]]></comment>
-							<depends>
-								<is_active>1</is_active>
-								<product_mode>hide</product_mode>
-							</depends>
-						</product_default_show>
-						<category_mode translate="label" module="netzarbeiter_groupscatalog2">
-							<label>Category Mode</label>
-							<frontend_type>select</frontend_type>
-							<source_model>netzarbeiter_groupscatalog2/system_config_source_mode_category</source_model>
-							<backend_model>netzarbeiter_groupscatalog2/system_config_backend_reindex_category</backend_model>
-							<sort_order>40</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<depends>
-								<is_active>1</is_active>
-							</depends>
-						</category_mode>
-						<category_default_hide translate="label comment" module="netzarbeiter_groupscatalog2">
-							<label>Hide Categories from</label>
-							<frontend_type>multiselect</frontend_type>
+                            <source_model>netzarbeiter_groupscatalog2/system_config_source_customergroup</source_model>
+                            <backend_model>netzarbeiter_groupscatalog2/system_config_backend_customergroup_product</backend_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[Show products to these selected groups by default and hide them from all others.]]></comment>
+                            <depends>
+                                <is_active>1</is_active>
+                                <product_mode>hide</product_mode>
+                            </depends>
+                        </product_default_show>
+                        <category_mode translate="label" module="netzarbeiter_groupscatalog2">
+                            <label>Category Mode</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>netzarbeiter_groupscatalog2/system_config_source_mode_category</source_model>
+                            <backend_model>netzarbeiter_groupscatalog2/system_config_backend_reindex_category</backend_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <is_active>1</is_active>
+                            </depends>
+                        </category_mode>
+                        <category_default_hide translate="label comment" module="netzarbeiter_groupscatalog2">
+                            <label>Hide Categories from</label>
+                            <frontend_type>multiselect</frontend_type>
                             <frontend_model>netzarbeiter_groupscatalog2/adminhtml_system_config_renderer_customergroup</frontend_model>
-							<source_model>netzarbeiter_groupscatalog2/system_config_source_customergroup</source_model>
-							<backend_model>netzarbeiter_groupscatalog2/system_config_backend_customergroup_category</backend_model>
-							<sort_order>50</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<comment><![CDATA[Hide categories from these selected groups by default and show them to all others.]]></comment>
-							<depends>
-								<is_active>1</is_active>
-								<category_mode>show</category_mode>
-							</depends>
-						</category_default_hide>
-						<category_default_show translate="label comment" module="netzarbeiter_groupscatalog2">
-							<label>Show Categories to</label>
-							<frontend_type>multiselect</frontend_type>
+                            <source_model>netzarbeiter_groupscatalog2/system_config_source_customergroup</source_model>
+                            <backend_model>netzarbeiter_groupscatalog2/system_config_backend_customergroup_category</backend_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[Hide categories from these selected groups by default and show them to all others.]]></comment>
+                            <depends>
+                                <is_active>1</is_active>
+                                <category_mode>show</category_mode>
+                            </depends>
+                        </category_default_hide>
+                        <category_default_show translate="label comment" module="netzarbeiter_groupscatalog2">
+                            <label>Show Categories to</label>
+                            <frontend_type>multiselect</frontend_type>
                             <frontend_model>netzarbeiter_groupscatalog2/adminhtml_system_config_renderer_customergroup</frontend_model>
-							<source_model>netzarbeiter_groupscatalog2/system_config_source_customergroup</source_model>
-							<backend_model>netzarbeiter_groupscatalog2/system_config_backend_customergroup_category</backend_model>
-							<sort_order>50</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<comment><![CDATA[Show categories to these selected groups by default and hide them from all others.]]></comment>
-							<depends>
-								<is_active>1</is_active>
-								<category_mode>hide</category_mode>
-							</depends>
-						</category_default_show>
+                            <source_model>netzarbeiter_groupscatalog2/system_config_source_customergroup</source_model>
+                            <backend_model>netzarbeiter_groupscatalog2/system_config_backend_customergroup_category</backend_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[Show categories to these selected groups by default and hide them from all others.]]></comment>
+                            <depends>
+                                <is_active>1</is_active>
+                                <category_mode>hide</category_mode>
+                            </depends>
+                        </category_default_show>
                         <entity_hidden_behaviour_guest translate="label" module="netzarbeiter_groupscatalog2">
                             <label>How to handle guests accessing a hidden entity</label>
                             <frontend_type>select</frontend_type>
@@ -156,18 +156,18 @@
                                 <is_active>1</is_active>
                             </depends>
                         </entity_hidden_behaviour_guest>
-						<entity_hidden_redirect_guest translate="label comment" module="netzarbeiter_groupscatalog2">
-							<label>Redirect route for guests</label>
-							<comment><![CDATA[Format: [route]/[controller]/[action]]]></comment>
-							<sort_order>70</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<depends>
+                        <entity_hidden_redirect_guest translate="label comment" module="netzarbeiter_groupscatalog2">
+                            <label>Redirect route for guests</label>
+                            <comment><![CDATA[Format: [route]/[controller]/[action]]]></comment>
+                            <sort_order>70</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
                                 <is_active>1</is_active>
-								<entity_hidden_behaviour_guest>302</entity_hidden_behaviour_guest>
-							</depends>
-						</entity_hidden_redirect_guest>
+                                <entity_hidden_behaviour_guest>302</entity_hidden_behaviour_guest>
+                            </depends>
+                        </entity_hidden_redirect_guest>
                         <entity_hidden_behaviour_customer translate="label" module="netzarbeiter_groupscatalog2">
                             <label>How to handle logged in customers accessing a hidden entity</label>
                             <frontend_type>select</frontend_type>
@@ -180,18 +180,18 @@
                                 <is_active>1</is_active>
                             </depends>
                         </entity_hidden_behaviour_customer>
-						<entity_hidden_redirect_customer translate="label comment" module="netzarbeiter_groupscatalog2">
-							<label>Redirect route for logged in customers</label>
-							<comment><![CDATA[Format: [route]/[controller]/[action]]]></comment>
-							<sort_order>90</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<depends>
+                        <entity_hidden_redirect_customer translate="label comment" module="netzarbeiter_groupscatalog2">
+                            <label>Redirect route for logged in customers</label>
+                            <comment><![CDATA[Format: [route]/[controller]/[action]]]></comment>
+                            <sort_order>90</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
                                 <is_active>1</is_active>
-								<entity_hidden_behaviour_customer>302</entity_hidden_behaviour_customer>
-							</depends>
-						</entity_hidden_redirect_customer>
+                                <entity_hidden_behaviour_customer>302</entity_hidden_behaviour_customer>
+                            </depends>
+                        </entity_hidden_redirect_customer>
                         <display_entity_hidden_msg>
                             <label>Display a message when a hidden entity is accessed?</label>
                             <frontend_type>select</frontend_type>
@@ -204,42 +204,42 @@
                                 <is_active>1</is_active>
                             </depends>
                         </display_entity_hidden_msg>
-						<entity_hidden_msg_guest translate="label" module="netzarbeiter_groupscatalog2">
-							<label>Message for guests</label>
-							<sort_order>110</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<depends>
+                        <entity_hidden_msg_guest translate="label" module="netzarbeiter_groupscatalog2">
+                            <label>Message for guests</label>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
                                 <is_active>1</is_active>
-								<display_entity_hidden_msg>1</display_entity_hidden_msg>
-							</depends>
-						</entity_hidden_msg_guest>
-						<entity_hidden_msg_customer translate="label" module="netzarbeiter_groupscatalog2">
-							<label>Message for logged in customers</label>
-							<sort_order>120</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<depends>
+                                <display_entity_hidden_msg>1</display_entity_hidden_msg>
+                            </depends>
+                        </entity_hidden_msg_guest>
+                        <entity_hidden_msg_customer translate="label" module="netzarbeiter_groupscatalog2">
+                            <label>Message for logged in customers</label>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
                                 <is_active>1</is_active>
-								<display_entity_hidden_msg>1</display_entity_hidden_msg>
-							</depends>
-						</entity_hidden_msg_customer>
-						<auto_refresh_block_cache translate="label comment" module="netzarbeiter_groupscatalog2">
-							<label>Auto refresh CATEGORY cache</label>
-							<frontend_type>select</frontend_type>
-							<source_model>adminhtml/system_config_source_yesno</source_model>
-							<sort_order>130</sort_order>
-							<!-- only settable in global scope because that is where categories are saved -->
-							<show_in_default>1</show_in_default>
-							<show_in_website>0</show_in_website>
-							<show_in_store>0</show_in_store>
-							<comment><![CDATA[Automatically refresh the CATEGORY BLOCK HTML cache to update the category navigation when the visibility setting for a category is changed.]]></comment>
-							<depends>
-								<is_active>1</is_active>
-							</depends>
-						</auto_refresh_block_cache>
+                                <display_entity_hidden_msg>1</display_entity_hidden_msg>
+                            </depends>
+                        </entity_hidden_msg_customer>
+                        <auto_refresh_block_cache translate="label comment" module="netzarbeiter_groupscatalog2">
+                            <label>Auto refresh CATEGORY cache</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>130</sort_order>
+                            <!-- only settable in global scope because that is where categories are saved -->
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Automatically refresh the CATEGORY BLOCK HTML cache to update the category navigation when the visibility setting for a category is changed.]]></comment>
+                            <depends>
+                                <is_active>1</is_active>
+                            </depends>
+                        </auto_refresh_block_cache>
                         <show_multiselect_field translate="label comment" module="netzarbeiter_groupscatalog2">
                             <label>Show multiselect customer group fields</label>
                             <frontend_type>select</frontend_type>
@@ -254,9 +254,9 @@
                                 <is_active>1</is_active>
                             </depends>
                         </show_multiselect_field>
-					</fields>
-				</general>
-			</groups>
-		</netzarbeiter_groupscatalog2>
-	</sections>
+                    </fields>
+                </general>
+            </groups>
+        </netzarbeiter_groupscatalog2>
+    </sections>
 </config>
