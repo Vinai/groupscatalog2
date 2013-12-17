@@ -239,7 +239,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
     public function controllerActionPredispatchAdminhtmlCatalogProductEdit(Varien_Event_Observer $observer)
     {
         $helper = $this->_getHelper();
-        if ($helper->getConfig('no_select_field')) {
+        if (! $helper->getConfig('show_multiselect_field')) {
             $entityType = Mage_Catalog_Model_Product::ENTITY;
             $attribute = $helper->getGroupsCatalogAttribute($entityType);
             $attribute->setFrontendInput('label');
@@ -255,7 +255,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
     public function controllerActionPredispatchAdminhtmlCatalogCategoryEdit(Varien_Event_Observer $observer)
     {
         $helper = $this->_getHelper();
-        if ($helper->getConfig('no_select_field')) {
+        if (! $helper->getConfig('show_multiselect_field')) {
             $entityType = Mage_Catalog_Model_Category::ENTITY;
             $attribute = $helper->getGroupsCatalogAttribute($entityType);
             $attribute->setFrontendInput('label');

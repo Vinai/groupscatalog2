@@ -45,7 +45,7 @@ class Netzarbeiter_GroupsCatalog2_Block_Adminhtml_Data_Form_Customergroup
     }
 
     /**
-     * Depending on the "no_select_field" config value, either
+     * Depending on the "show_multiselect_field" config value, either
      * return the multiselect element output or use a label
      * element instead.
      * 
@@ -54,7 +54,7 @@ class Netzarbeiter_GroupsCatalog2_Block_Adminhtml_Data_Form_Customergroup
     public function getElementHtml()
     {
         $helper = Mage::helper('netzarbeiter_groupscatalog2');
-        if ($helper->getConfig('no_select_field')) {
+        if (! $helper->getConfig('show_multiselect_field')) {
             $element = new Varien_Data_Form_Element_Label($this->getData());
             $element->setValue($this->getValueAsString());
             $html = $element->getElementHtml();

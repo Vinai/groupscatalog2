@@ -236,6 +236,20 @@
 								<is_active>1</is_active>
 							</depends>
 						</auto_refresh_block_cache>
+                        <show_multiselect_field translate="label comment" module="netzarbeiter_groupscatalog2">
+                            <label>Show multiselect customer group fields</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>140</sort_order>
+                            <!-- Only settable in global scope because it only effects the admin interface -->
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Disable only if there is a very large number of customer groups and if the product and category settings are done using some import mechanism instead of the admin panel.]]></comment>
+                            <depends>
+                                <is_active>1</is_active>
+                            </depends>
+                        </show_multiselect_field>
 					</fields>
 				</general>
 			</groups>
