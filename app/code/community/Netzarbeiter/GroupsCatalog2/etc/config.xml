@@ -199,6 +199,24 @@
                     </netzarbeiter_groupscatalog2>
                 </observers>
             </customer_group_save_after>
+            <controller_action_predispatch_adminhtml_catalog_product_edit>
+                <observers>
+                    <netzarbeiter_groupscatalog>
+                        <type>model</type>
+                        <class>netzarbeiter_groupscatalog2/observer</class>
+                        <method>controllerActionPredispatchAdminhtmlCatalogProductEdit</method>
+                    </netzarbeiter_groupscatalog>
+                </observers>
+            </controller_action_predispatch_adminhtml_catalog_product_edit>
+            <controller_action_predispatch_adminhtml_catalog_category_edit>
+                <observers>
+                    <netzarbeiter_groupscatalog>
+                        <type>model</type>
+                        <class>netzarbeiter_groupscatalog2/observer</class>
+                        <method>controllerActionPredispatchAdminhtmlCatalogCategoryEdit</method>
+                    </netzarbeiter_groupscatalog>
+                </observers>
+            </controller_action_predispatch_adminhtml_catalog_category_edit>
         </events>
         <translate>
             <modules>
@@ -246,6 +264,7 @@
                 <display_entity_hidden_msg>0</display_entity_hidden_msg>
                 <entity_hidden_msg_guest>Please register an account and log in.</entity_hidden_msg_guest>
                 <entity_hidden_msg_customer>Please contact us to request further access privileges.</entity_hidden_msg_customer>
+                <no_select_field>0</no_select_field>
             </general>
         </netzarbeiter_groupscatalog2>
     </default>

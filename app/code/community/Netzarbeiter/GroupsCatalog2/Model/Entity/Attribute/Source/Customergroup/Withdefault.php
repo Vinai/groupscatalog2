@@ -22,7 +22,7 @@
 
 class Netzarbeiter_GroupsCatalog2_Model_Entity_Attribute_Source_Customergroup_Withdefault
     extends Mage_Eav_Model_Entity_Attribute_Source_Abstract
-{
+{   
     /**
      * Return all options for the customergroups_groups attributes, i.e. a list of all
      * customer groups with the additional options USE DEFAULT and NONE
@@ -35,11 +35,15 @@ class Netzarbeiter_GroupsCatalog2_Model_Entity_Attribute_Source_Customergroup_Wi
             $this->_options = array(
                 array(
                     'value' => Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT,
-                    'label' => Mage::helper('netzarbeiter_groupscatalog2')->__('[ USE DEFAULT ]')
+                    'label' => Mage::helper('netzarbeiter_groupscatalog2')->__(
+                        Netzarbeiter_GroupsCatalog2_Helper_Data::LABEL_DEFAULT
+                    )
                 ),
                 array(
                     'value' => Netzarbeiter_GroupsCatalog2_Helper_Data::USE_NONE,
-                    'label' => Mage::helper('netzarbeiter_groupscatalog2')->__('[ NONE ]')
+                    'label' => Mage::helper('netzarbeiter_groupscatalog2')->__(
+                        Netzarbeiter_GroupsCatalog2_Helper_Data::LABEL_NONE
+                    )
                 )
             );
             foreach (Mage::helper('netzarbeiter_groupscatalog2')->getGroups() as $group) {

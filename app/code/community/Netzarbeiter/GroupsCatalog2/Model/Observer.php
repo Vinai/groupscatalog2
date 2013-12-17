@@ -143,6 +143,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 
     /**
      * Add a notice to rebuild the groupscatalog indexer whenever a new customer group is created.
+     * Also clear the group collection cache.
      *
      * @param Varien_Event_Observer $observer
      */
@@ -156,6 +157,12 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
                 $process->changeStatus(Mage_Index_Model_Process::STATUS_REQUIRE_REINDEX);
             }
         }
+        
+        // Clean the collection cache used when the input type of the attributes
+        // is switched to label via the system configuration.
+        Mage::app()->cleanCache(array(
+            Netzarbeiter_GroupsCatalog2_Helper_Data::CUSTOMER_GROUP_CACHE_TAG
+        ));
     }
 
     /**
@@ -218,6 +225,40 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
             if (! $quoteItem->getProductId()) {
                 $quoteItem->isDeleted(true);
             }
+        }
+    }
+
+    /**
+     * Switch groupscatalog attribute input to display only if configured to avoid loading
+     * the customer group option list.
+     * This makes sense for stores with a large number of customer groups who manage the
+     * assignment via an product import mechanism.
+     * 
+     * @param Varien_Event_Observer $observer
+     */
+    public function controllerActionPredispatchAdminhtmlCatalogProductEdit(Varien_Event_Observer $observer)
+    {
+        $helper = $this->_getHelper();
+        if ($helper->getConfig('no_select_field')) {
+            $entityType = Mage_Catalog_Model_Product::ENTITY;
+            $attribute = $helper->getGroupsCatalogAttribute($entityType);
+            $attribute->setFrontendInput('label');
+        }
+    }
+
+    /**
+     * Switch groupscatalog attribute input to display only if configured
+     * 
+     * @see self::controllerActionPredispatchAdminhtmlCatalogProductEdit
+     * @param Varien_Event_Observer $observer
+     */
+    public function controllerActionPredispatchAdminhtmlCatalogCategoryEdit(Varien_Event_Observer $observer)
+    {
+        $helper = $this->_getHelper();
+        if ($helper->getConfig('no_select_field')) {
+            $entityType = Mage_Catalog_Model_Category::ENTITY;
+            $attribute = $helper->getGroupsCatalogAttribute($entityType);
+            $attribute->setFrontendInput('label');
         }
     }
 

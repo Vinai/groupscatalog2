@@ -33,6 +33,7 @@ class Netzarbeiter_GroupsCatalog2_Block_Adminhtml_Data_Form_Customergroup
     {
         // Don't use parent::getValue(); since some PHP versions don't map that to __call()
         $value = $this->getData('value');
+        
         if (!is_null($value) && !is_array($value)) {
             $value = explode(',', (string)$value);
         }
@@ -41,5 +42,64 @@ class Netzarbeiter_GroupsCatalog2_Block_Adminhtml_Data_Form_Customergroup
         }
 
         return $value;
+    }
+
+    /**
+     * Depending on the "no_select_field" config value, either
+     * return the multiselect element output or use a label
+     * element instead.
+     * 
+     * @return string
+     */
+    public function getElementHtml()
+    {
+        $helper = Mage::helper('netzarbeiter_groupscatalog2');
+        if ($helper->getConfig('no_select_field')) {
+            $element = new Varien_Data_Form_Element_Label($this->getData());
+            $element->setValue($this->getValueAsString());
+            $html = $element->getElementHtml();
+        } else {
+            $html = parent::getElementHtml();
+        }
+        return $html;
+    }
+
+    /**
+     * Return the groups as a string of comma separated names.
+     * This is used if the element is displayed as a label element
+     * instead of a multiselect element.
+     * 
+     * @return string
+     */
+    public function getValueAsString()
+    {
+        $value = $this->getValue();
+        $list = array();
+
+        // For translation, this isn't really a block, its a form element
+        $helper = Mage::helper('netzarbeiter_groupscatalog2');
+
+        $key = array_search(Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT, $value);
+        if (false !== $key) {
+            $list[] = $helper->__(Netzarbeiter_GroupsCatalog2_Helper_Data::LABEL_DEFAULT);
+            unset($value[$key]);
+        }
+        $key = array_search(Netzarbeiter_GroupsCatalog2_Helper_Data::USE_NONE, $value);
+        if (false !== $key) {
+            $list[] = $helper->__(Netzarbeiter_GroupsCatalog2_Helper_Data::LABEL_NONE);
+            unset($value[$key]);
+        }
+        if (count($value)) {
+            /** @var Mage_Customer_Model_Resource_Group_Collection $groups */
+            $groups = Mage::getResourceModel('customer/group_collection');
+            $groups->addFieldToFilter('customer_group_id', array('in' => $value));
+            $groups->initCache(Mage::app()->getCache(), 'groupscatalog2', array(
+                Netzarbeiter_GroupsCatalog2_Helper_Data::CUSTOMER_GROUP_CACHE_TAG
+            ));
+            foreach ($groups as $group) {
+                $list[] = $group->getCustomerGroupCode();
+            }
+        }
+        return implode(', ', $list);
     }
 }
