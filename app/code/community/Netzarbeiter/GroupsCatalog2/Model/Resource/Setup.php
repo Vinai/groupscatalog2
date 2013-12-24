@@ -35,6 +35,9 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Setup extends Mage_Catalog_Mode
         $tableAlias = Mage::helper('netzarbeiter_groupscatalog2')
             ->getIndexTableByEntityType($entityType);
         $tableName = $this->getTable($tableAlias);
+        $entityTable = Mage::getSingleton('eav/config')
+            ->getEntityType($entityType)
+            ->getEntityTable();
 
         $table = $this->getConnection()->newTable($tableName)
 
@@ -58,8 +61,8 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Setup extends Mage_Catalog_Mode
             ), 'Store ID')
 
             ->addForeignKey(
-                $this->getFkName($tableName, 'catalog_entity_id', 'catalog/' . $entityType, 'entity_id'),
-                'catalog_entity_id', $this->getTable('catalog/' . $entityType), 'entity_id',
+                $this->getFkName($tableName, 'catalog_entity_id', $entityTable, 'entity_id'),
+                'catalog_entity_id', $this->getTable($entityTable), 'entity_id',
                 Varien_Db_Ddl_Table::ACTION_CASCADE, Varien_Db_Ddl_Table::ACTION_CASCADE)
 
             ->addForeignKey(
