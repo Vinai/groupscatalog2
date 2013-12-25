@@ -50,15 +50,19 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Resource_SetupTest extends EcomDev_
     protected function _getMockDdlTable()
     {
         $ddlTable = $this->getMock('Varien_Db_Ddl_Table');
-        $ddlTable->expects($this->any())
+        $ddlTable->expects($this->atLeastOnce())
             ->method('addColumn')
-            ->will($this->returnValue($ddlTable));
+            ->will($this->returnSelf());
         $ddlTable->expects($this->any())
             ->method('addForeignKey')
-            ->will($this->returnValue($ddlTable));
-        $ddlTable->expects($this->any())
+            ->will($this->returnSelf());
+        $ddlTable->expects($this->atLeastOnce())
             ->method('setComment')
-            ->will($this->returnValue($ddlTable));
+            ->will($this->returnSelf());
+        $ddlTable->expects($this->any())
+            ->method('addIndex')
+            ->will($this->returnSelf());
+
         return $ddlTable;
     }
 
@@ -92,7 +96,8 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Resource_SetupTest extends EcomDev_
 
         $conn->expects($this->once())
             ->method('dropTable')
-            ->with($this->equalTo($table));
+            ->with($this->equalTo($table))
+            ->will($this->returnValue(true));
         
         $setup = Mage::getResourceModel('netzarbeiter_groupscatalog2/setup', 'netzarbeiter_groupscatalog2_setup');
         $this->_setConnectionOnInstaller($setup, $conn);
