@@ -123,6 +123,19 @@
                     </netzarbeiter_groupscatalog2>
                 </observers>
             </catalog_product_collection_load_before>
+            
+            <!-- fix for https://github.com/Vinai/groupscatalog2/issues/76 -->
+            <!-- still need to add regression test -->
+            <catalog_product_collection_apply_limitations_after>
+                <observers>
+                    <netzarbeiter_groupscatalog2>
+                        <type>singleton</type>
+                        <model>netzarbeiter_groupscatalog2/observer</model>
+                        <method>catalogProductCollectionLoadBefore</method>
+                    </netzarbeiter_groupscatalog2>
+                </observers>
+            </catalog_product_collection_apply_limitations_after>
+            
             <catalog_category_collection_load_before>
                 <observers>
                     <netzarbeiter_groupscatalog2>
