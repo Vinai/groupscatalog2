@@ -105,4 +105,4 @@ Licence
 
 Copyright
 ---------
-(c) 2013 Vinai Kopp
+(c) 2014 Vinai Kopp
