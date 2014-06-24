@@ -155,7 +155,8 @@ class Netzarbeiter_GroupsCatalog2_Helper_Hidden extends Mage_Core_Helper_Abstrac
 
             if (strlen($path) > 0) {
                 // Only apply dirname() if there is a parent directory
-                if (($path = dirname($path)) === '.') {
+                $io = new Varien_Io_File;
+                if (($path = $io->dirname($path)) === '.') {
                     $path = '';
                 }
 
