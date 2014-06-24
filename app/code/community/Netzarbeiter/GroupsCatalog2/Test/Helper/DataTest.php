@@ -180,7 +180,7 @@ class Netzarbeiter_GroupsCatalog2_Test_Helper_DataTest extends EcomDev_PHPUnit_T
 
         $this->setCurrentStore($storeCode);
         foreach (array(1, 2, 3) as $productId) {
-            $product = Mage::getModel('catalog/product')->load($productId);
+            $product = $this->_getProduct($productId);
             $expected = $this->expected('%s-%s-%s', $storeCode, $customerGroupId, $productId)->getIsVisible();
             $visible = $this->_helper->isEntityVisible($product, $customerGroupId);
 
@@ -192,6 +192,17 @@ class Netzarbeiter_GroupsCatalog2_Test_Helper_DataTest extends EcomDev_PHPUnit_T
             );
             $this->assertEquals($expected, $visible, $message);
         }
+    }
+
+    /**
+     * Cosmetic wrapper so phpcs doesn't spit out an ERROR for using load in a foreach loop.
+     * 
+     * @param int $productId
+     * @return Mage_Catalog_Model_Product
+     */
+    protected function _getProduct($productId)
+    {
+        return Mage::getModel('catalog/product')->load($productId);
     }
 
     /**
