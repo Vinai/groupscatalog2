@@ -371,7 +371,6 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
     protected function _getEntityVisibilityDefaultsPathPrefixByEntityType($entityType)
     {
         $entityType = Mage::getSingleton('eav/config')->getEntityType($entityType);
-        $path = '';
         switch ($entityType->getEntityTypeCode()) {
             default:
             case Mage_Catalog_Model_Product::ENTITY:
