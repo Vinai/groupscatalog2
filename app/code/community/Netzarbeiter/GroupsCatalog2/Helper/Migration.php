@@ -69,15 +69,16 @@ class Netzarbeiter_GroupsCatalog2_Helper_Migration
     protected function _deactivateModule()
     {
         $file = Mage::getBaseDir('etc') . DS . 'modules' . DS . 'Netzarbeiter_GroupsCatalog.xml';
-        if (!file_exists($file)) {
+        $io = new Varien_Io_File();
+        if (!$io->fileExists($file)) {
             $message = Mage::helper('netzarbeiter_groupscatalog2')->__(
                 "The file app/etc/modules/Netzarbeiter_GroupsCatalog.xml doesn't exist."
             );
             Mage::throwException($message);
         }
         $xml = simplexml_load_file($file);
-        if (in_array(strval($xml->modules->Netzarbeiter_GroupsCatalog->active), array('true', '1'), true)) {
-            if (!is_writable($file)) {
+        if (in_array((string) $xml->modules->Netzarbeiter_GroupsCatalog->active, array('true', '1'), true)) {
+            if (!$io->isWriteable($file)) {
                 $message = Mage::helper('netzarbeiter_groupscatalog2')->__(
                     'The file app/etc/modules/Netzarbeiter_GroupsCatalog.xml is not writable.<br/>' .
                     'Please fix it and flush the configuration cache, or deactivate the module manually in that file.'
