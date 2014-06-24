@@ -85,7 +85,7 @@ class Netzarbeiter_GroupsCatalog2_Block_Adminhtml_System_Tools_Migration
             $config = Mage::getConfig()->getNode('modules/Netzarbeiter_GroupsCatalog');
             if ($config) {
                 $this->_groupsCatalogInstallationStatus |= self::STATUS_INSTALLED;
-                if ($config->active && in_array(strval($config->active), array('1', 'true'), true)) {
+                if ($config->active && in_array((string) $config->active, array('1', 'true'), true)) {
                     $this->_groupsCatalogInstallationStatus |= self::STATUS_INSTALLED_ACTIVE;
                 }
             }
