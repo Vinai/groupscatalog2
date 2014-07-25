@@ -63,14 +63,7 @@ If you are using the Magento compiler, disable compilation before the installati
 2. Clear the cache, logout from the admin panel and then login again.
 3. Configure and activate the extension under System - Configuration - Netzarbeiter Extensions - Groups Catalog 2
 4. Go to the "Manage Indexes" page and rebuild the two GroupsCatalog indexs. Without this step all products will be hidden on the frontend!
-
-Upgrade from Magento 1.5
-------------------------
-To upgrade, first create a backup (file system and database).
-Then install the GroupsCatalog 2 module, and visit the admin page at
-System - Tools - Groups Catalog 2 Migration
-There you will find a step-by-step wizard assisting you to migrate all settings for the system configuration,
-all products and all categories.
+5. If you use the Magento compiler tool, recompile after installation
 
 Uninstallation
 --------------
@@ -83,6 +76,37 @@ To uninstall this extension you need to run the following SQL after removing the
   DROP TABLE IF EXISTS `groupscatalog_product_idx`;
   DROP TABLE IF EXISTS `groupscatalog_category_idx`;
 ```
+
+Payment Service Provider Notification Requests
+----------------------------------------------
+Many payment service providers notify Magento about a payment success or failure by sending a request from their server to a Magento URL.
+In those cases, the GroupsCatalog2 extension might interfere with that process since the PSP request might be running with a different
+Customer Group (e.g. General) then the customer who placed the order.  
+The right way to handle such cases is to disable the GroupsCatalog2 extension on the routes of such a payment module.  
+This can be achieved by adding the modules route name to the config section `global/netzarbeiter_groupscatalog2/disabled_on_routes`.  
+For example: 
+
+```xml
+    <global>
+        <netzarbeiter_groupscatalog2>
+            <disabled_on_routes>
+                <paypal/>
+                <authorizenet/>
+            </disabled_on_routes>
+        </netzarbeiter_groupscatalog2>
+    </global>
+```
+
+The PSP route name can be looked up within the payment modules *etc/config.xml* file.
+On requests to routes listed under that node the extension will be inactive.
+
+Upgrade from Magento 1.5
+------------------------
+To upgrade, first create a backup (file system and database).
+Then install the GroupsCatalog 2 module, and visit the admin page at
+System - Tools - Groups Catalog 2 Migration
+There you will find a step-by-step wizard assisting you to migrate all settings for the system configuration,
+all products and all categories.
 
 Support
 -------
