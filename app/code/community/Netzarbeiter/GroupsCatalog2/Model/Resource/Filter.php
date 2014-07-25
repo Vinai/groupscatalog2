@@ -106,18 +106,9 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
     public function addGroupsCatalogFilterToWishlistItemCollection(
         Mage_Wishlist_Model_Resource_Item_Collection $collection, $groupId, $storeId
     ) {
-        /* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
-        $helper = Mage::helper('netzarbeiter_groupscatalog2');
-
-        // Switch index table depending on the specified entity
-        $this->_init($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY), 'id');
-
-        if ($this->_doesIndexExists()) {
-            $table = $this->getTable($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY));
-            $this->_addGroupsCatalogFilterToSelect(
-                $collection->getSelect(), $table, $groupId, $storeId, 'main_table.product_id'
-            );
-        }
+        $select = $collection->getSelect();
+        $entityField = 'main_table.product_id';
+        $this->addGroupsCatalogProductFilterToSelect($select, $groupId, $storeId, $entityField);
     }
 
     /**
@@ -198,18 +189,9 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
     public function addGroupsCatalogFilterToProductCollectionCountSelect(
         Mage_Catalog_Model_Resource_Product_Collection $collection, $groupId
     ) {
-        /* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
-        $helper = Mage::helper('netzarbeiter_groupscatalog2');
-
-        // Switch index table depending on the specified entity
-        $this->_init($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY), 'id');
-
-        if ($this->_doesIndexExists()) {
-            $table = $this->getTable($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY));
-            $this->_addGroupsCatalogFilterToSelect(
-                $collection->getProductCountSelect(), $table, $groupId, $collection->getStoreId()
-            );
-        }
+        $select = $collection->getProductCountSelect();
+        $storeId = $collection->getStoreId();
+        $this->addGroupsCatalogProductFilterToSelect($select, $groupId, $storeId);
     }
 
     /**
@@ -223,15 +205,65 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
      */
     public function addGroupsCatalogFilterToSelectCountSql(Zend_Db_Select $select, $groupId, $storeId)
     {
+        $this->addGroupsCatalogProductFilterToSelect($select, $groupId, $storeId);
+    }
+
+    /**
+     * Add the groupscatalog filter to a product collection select instance.
+     * 
+     * @param Zend_Db_Select $select
+     * @param int $groupId
+     * @param int $storeId
+     * @param string $entityField This is passed straight through to _addGroupsCatalogFilterToSelect()
+     * @return void
+     */
+    public function addGroupsCatalogProductFilterToSelect(
+        Zend_Db_Select $select, $groupId, $storeId, $entityField = null
+    ) {
+        $this->_addGroupsCatalogEntityFilterToSelect(
+            Mage_Catalog_Model_Product::ENTITY, $select, $groupId, $storeId, $entityField
+        );
+    }
+
+    /**
+     * Add the groupscatalog filter to a category collection select instance.
+     * 
+     * @param Zend_Db_Select $select
+     * @param int $groupId
+     * @param int $storeId
+     * @param string $entityField This is passed straight through to _addGroupsCatalogFilterToSelect()
+     * @return void
+     */
+    public function addGroupsCatalogCategoryFilterToSelect(
+        Zend_Db_Select $select, $groupId, $storeId, $entityField = null
+    ) {
+        $this->_addGroupsCatalogEntityFilterToSelect(
+            Mage_Catalog_Model_Category::ENTITY, $select, $groupId, $storeId, $entityField
+        );
+    }
+
+    /**
+     * Add the groupscatalog filter to a product or category collection select instance.
+     * 
+     * @param string $entityType
+     * @param Zend_Db_Select $select
+     * @param int $groupId
+     * @param int $storeId
+     * @param string $entityField This is passed straight through to _addGroupsCatalogFilterToSelect()
+     * @return void
+     */
+    protected function _addGroupsCatalogEntityFilterToSelect(
+        $entityType, Zend_Db_Select $select, $groupId, $storeId, $entityField = null
+    ) {
         /* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
         $helper = Mage::helper('netzarbeiter_groupscatalog2');
 
         // Switch index table depending on the specified entity
-        $this->_init($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY), 'id');
+        $this->_init($helper->getIndexTableByEntityType($entityType), 'id');
 
         if ($this->_doesIndexExists()) {
-            $table = $this->getTable($helper->getIndexTableByEntityType(Mage_Catalog_Model_Product::ENTITY));
-            $this->_addGroupsCatalogFilterToSelect($select, $table, $groupId, $storeId);
+            $table = $this->getTable($helper->getIndexTableByEntityType($entityType));
+            $this->_addGroupsCatalogFilterToSelect($select, $table, $groupId, $storeId, $entityField);
         }
     }
 
@@ -242,17 +274,21 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
      * @param string $table The groupscatalog index table
      * @param int $groupId
      * @param int $storeId
-     * @param string $entityField The entity table column where the product or category id is stored
+     * @param null $entityField The entity table column where the product or category id is stored
      * @return void
      */
     protected function _addGroupsCatalogFilterToSelect(
-        Zend_Db_Select $select, $table, $groupId, $storeId, $entityField = 'e.entity_id'
+        Zend_Db_Select $select, $table, $groupId, $storeId, $entityField = null
     ) {
+        if (! $entityField) {
+            $entityField = 'e.entity_id';
+        }
+        
         // NOTE to self:
         // Using joinTable() seems to trigger an exception for some users that I can't reproduce (so far).
         // It is related to the flat catalog (Mage_Catalog_Model_Resource_Category_Flat_Collection missing
         // joinTable()). Using getSelect()->joinInner() to work around this issue.
-
+        
         /*
         $collection->joinTable(
             $helper->getIndexTableByEntityType($entityType), // table

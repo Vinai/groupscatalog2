@@ -67,6 +67,12 @@
                     <item_collection>Netzarbeiter_GroupsCatalog2_Model_Wishlist_Resource_Item_Collection</item_collection>
                 </rewrite>
             </wishlist_resource>
+            <sitemap_resource>
+                <rewrite>
+                    <catalog_category>Netzarbeiter_GroupsCatalog2_Model_Sitemap_Resource_Catalog_Category</catalog_category>
+                    <catalog_product>Netzarbeiter_GroupsCatalog2_Model_Sitemap_Resource_Catalog_Product</catalog_product>
+                </rewrite>
+            </sitemap_resource>
         </models>
         <helpers>
             <netzarbeiter_groupscatalog2>
