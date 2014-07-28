@@ -16,22 +16,12 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Sitemap_Resource_ProductTest
         return $instance;
     }
     
-    private function getStubHelper($moduleActive = true)
+    private function getMockBehavior()
     {
-        $stubHelper = $this->getMock('Netzarbeiter_GroupsCatalog2_Helper_Data');
-        $stubHelper->expects($this->any())
-            ->method('isModuleActive')
-            ->will($this->returnValue($moduleActive));
-        return $stubHelper;
-    }
-    
-    private function getMockFilter()
-    {
-        $mockFilter = $this->getMockBuilder('Netzarbeiter_GroupsCatalog2_Model_Resource_Filter')
-            ->disableOriginalConstructor()
+        $mockBehavior = $this->getMockBuilder('Netzarbeiter_GroupsCatalog2_Model_Sitemap_Resource_Catalog_Behavior_FilterSitemapProduct')
             ->getMock();
         
-        return $mockFilter;
+        return $mockBehavior;
     }
     
     public function testItIsRewritten()
@@ -42,6 +32,8 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Sitemap_Resource_ProductTest
     
     public function testItExists()
     {
+        $class = $this->class;
+        $exists = class_exists($this->class, true);
         $this->assertTrue(class_exists($this->class, true), "Class {$this->class} does not exist or can't be found by the autoloader");
     }
     
@@ -52,22 +44,20 @@ class Netzarbeiter_GroupsCatalog2_Test_Model_Sitemap_Resource_ProductTest
         $this->assertInstanceOf('Mage_Sitemap_Model_Resource_Catalog_Product', $instance);
     }
     
-    public function testItAddsTheSelectFilterWhenLoadingEntitiesIfModuleActive()
+    public function testItDelegatesToFilterBehavior()
     {
         $instance = $this->getInstance();
         
         $storeId = $this->app()->getDefaultStoreView()->getId();
         
-        $instance->setGroupsCatalogHelper($this->getStubHelper());
-        $filter = $this->getMockFilter();
-        $filter->expects($this->exactly(1))
-            ->method('addGroupsCatalogProductFilterToSelect')
-            ->with(
-                $this->isInstanceOf('Varien_Db_Select'),
-                Mage_Customer_Model_Group::NOT_LOGGED_IN_ID,
-                $storeId
-            );
-        $instance->setGroupsCatalogResourceFilter($filter);
+        $mockBehavor = $this->getMockBehavior();
+        $mockBehavor->expects($this->once())
+            ->method('setStoreId')
+            ->with($storeId);
+        $mockBehavor->expects($this->once())
+            ->method('addNotLoggedInGroupFilter')
+            ->with($this->isInstanceOf('Varien_Db_Select'));
+        $instance->setAddFilterBehavior($mockBehavor);
         
         $result = $instance->getCollection($storeId);
         
