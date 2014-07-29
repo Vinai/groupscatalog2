@@ -34,7 +34,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Sitemap_Resource_Catalog_Category
     private function _getNotLoggedInBehavior()
     {
         if (! $this->_notLoggedInBehavior) {
-            $this->_notLoggedInBehavior = Mage::getResourceModel('netzarbeiter_groupscatalog2/sitemap_resource_catalog_behavior_filterSitemapCategory');
+            $this->_notLoggedInBehavior = Mage::getModel('netzarbeiter_groupscatalog2/sitemap_resource_catalog_behavior_filterSitemapCategory');
         }
         return $this->_notLoggedInBehavior;
     }
