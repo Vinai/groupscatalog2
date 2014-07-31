@@ -41,7 +41,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Catalog_Resource_Category_Flat17
 
         /* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
         $helper = Mage::helper('netzarbeiter_groupscatalog2');
-        if ($helper->isModuleActive()) {
+        if ($helper->isModuleActive() && !$helper->isDisabledOnCurrentRoute()) {
             // Filter out hidden nodes
             if (count($nodes) > 0) {
                 $nodeIds = array_keys($nodes);

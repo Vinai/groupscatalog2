@@ -32,8 +32,9 @@ class Netzarbeiter_GroupsCatalog2_Model_CatalogSearch_Resource_Fulltext_Collecti
     public function getSelectCountSql()
     {
         $select = parent::getSelectCountSql();
-        if (Mage::helper('netzarbeiter_groupscatalog2')->isModuleActive()) {
-            $customerGroupId = Mage::helper('netzarbeiter_groupscatalog2')->getCustomerGroupId();
+        $helper = Mage::helper('netzarbeiter_groupscatalog2');
+        if ($helper->isModuleActive() && !$helper->isDisabledOnCurrentRoute()) {
+            $customerGroupId = $helper->getCustomerGroupId();
             Mage::getResourceSingleton('netzarbeiter_groupscatalog2/filter')
                     ->addGroupsCatalogFilterToSelectCountSql($select, $customerGroupId, $this->getStoreId());
         }

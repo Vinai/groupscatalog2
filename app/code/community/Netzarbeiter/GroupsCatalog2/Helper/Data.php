@@ -452,6 +452,17 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Return true if the request is made via the api or one of the other disabled routes
+     *
+     * @return boolean
+     */
+    public function isDisabledOnCurrentRoute()
+    {
+        $currentRoute = Mage::app()->getRequest()->getModuleName();
+        return $currentRoute && in_array($currentRoute, $this->getDisabledOnRoutes());
+    }
+
+    /**
      * Return the groupscatalog attribute model
      * 
      * @param string $entityType

@@ -101,7 +101,8 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
      */
     protected function _applyHiddenEntityHandling($entityTypeCode)
     {
-        if ($this->_getHelper()->isModuleActive() && !$this->_isDisabledOnRequest()) {
+        $helper = $this->_getHelper();
+        if ($helper->isModuleActive() && !$helper->isDisabledOnCurrentRoute()) {
             // Do not apply redirects and messages to customer module (order history and dashboard for example).
             // Otherwise products that where previously purchased by the customer and now are hidden from him
             // would make the customer account inaccessible.
@@ -129,7 +130,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
         $helper = $this->_getHelper();
 
         // If the module isn't disabled on a global scale
-        if ($helper->isModuleActive($category->getStore(), false) && !$this->_isDisabledOnRequest()) {
+        if ($helper->isModuleActive($category->getStore(), false) && !$helper->isDisabledOnCurrentRoute()) {
             if ($category->dataHasChangedFor(Netzarbeiter_GroupsCatalog2_Helper_Data::HIDE_GROUPS_ATTRIBUTE)) {
                 if ($helper->getConfig('auto_refresh_block_cache')) {
                     // Only refresh the category block cache: Mage_Catalog_Model_Category::CACHE_TAG
@@ -179,7 +180,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
         /* @var $collection Mage_Wishlist_Model_Resource_Item_Collection */
         $collection = $observer->getCollection();
         $helper = $this->_getHelper();
-        if ($helper->isModuleActive() && !$this->_isDisabledOnRequest()) {
+        if ($helper->isModuleActive() && !$helper->isDisabledOnCurrentRoute()) {
             $customerGroupId = $helper->getCustomerGroupId();
 
             $storeId = Mage::app()->getStore()->getId();
@@ -200,7 +201,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
         /* @var $collection Mage_Catalog_Model_Resource_Product_Collection */
         $collection = $observer->getCollection();
         $helper = $this->_getHelper();
-        if ($helper->isModuleActive($collection->getStoreId()) && !$this->_isDisabledOnRequest()) {
+        if ($helper->isModuleActive($collection->getStoreId()) && !$helper->isDisabledOnCurrentRoute()) {
             $customerGroupId = $helper->getCustomerGroupId();
             $this->_getResource()
                     ->addGroupsCatalogFilterToProductCollectionCountSelect($collection, $customerGroupId);
@@ -275,7 +276,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
     protected function _applyGroupsCatalogSettingsToEntity(Mage_Catalog_Model_Abstract $entity)
     {
         $helper = $this->_getHelper();
-        if ($helper->isModuleActive() && !$this->_isDisabledOnRequest()) {
+        if ($helper->isModuleActive() && !$helper->isDisabledOnCurrentRoute()) {
             if (!$helper->isEntityVisible($entity)) {
                 $entity->setData(null)->setId(null);
                 // Set flag to make it easier to implement a redirect if needed (or debug)
@@ -293,23 +294,12 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
     protected function _addGroupsCatalogFilterToCollection(Varien_Data_Collection_Db $collection)
     {
         $helper = $this->_getHelper();
-        if ($helper->isModuleActive() && !$this->_isDisabledOnRequest()) {
+        if ($helper->isModuleActive() && !$helper->isDisabledOnCurrentRoute()) {
             $customerGroupId = $helper->getCustomerGroupId();
 
             $this->_getResource()
                     ->addGroupsCatalogFilterToCollection($collection, $customerGroupId);
         }
-    }
-
-    /**
-     * Return true if the request is made via the api or one of the other disabled routes
-     *
-     * @return boolean
-     */
-    protected function _isDisabledOnRequest()
-    {
-        $currentRoute = Mage::app()->getRequest()->getModuleName();
-        return in_array($currentRoute, $this->_getHelper()->getDisabledOnRoutes());
     }
 
     /**

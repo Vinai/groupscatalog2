@@ -82,7 +82,8 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Sitemap_Resource_Catalog_Behavi
      */
     public function addNotLoggedInGroupFilter(Varien_Db_Select $select)
     {
-        if ($this->_getGroupsCatalogHelper()->isModuleActive($this->_storeId)) {
+        $helper = $this->_getGroupsCatalogHelper();
+        if ($helper->isModuleActive($this->_storeId)) {
             $groupId = Mage_Customer_Model_Group::NOT_LOGGED_IN_ID;
             $this->_addFilter($select, $groupId, $this->_storeId);
         }
