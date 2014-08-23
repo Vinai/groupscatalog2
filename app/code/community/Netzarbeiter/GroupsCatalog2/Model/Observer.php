@@ -143,22 +143,12 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
     }
 
     /**
-     * Add a notice to rebuild the groupscatalog indexer whenever a new customer group is created.
-     * Also clear the group collection cache.
+     * Clear the group collection cache.
      *
      * @param Varien_Event_Observer $observer
      */
     public function customerGroupSaveAfter(Varien_Event_Observer $observer)
     {
-        /** @var $group Mage_Customer_Model_Group */
-        $group = $observer->getObject();
-        if ($group->isObjectNew()) {
-            foreach (array('groupscatalog2_category', 'groupscatalog2_product') as $indexerCode) {
-                $process = Mage::getModel('index/indexer')->getProcessByCode($indexerCode);
-                $process->changeStatus(Mage_Index_Model_Process::STATUS_REQUIRE_REINDEX);
-            }
-        }
-        
         // Clean the collection cache used when the input type of the attributes
         // is switched to label via the system configuration.
         Mage::app()->cleanCache(array(

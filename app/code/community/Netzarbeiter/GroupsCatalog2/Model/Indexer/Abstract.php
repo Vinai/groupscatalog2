@@ -32,19 +32,37 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Indexer_Abstract extends Mage_I
      */
     abstract protected function _getEntityIdsFromEntity(Varien_Object $entity);
 
+    public function __construct()
+    {
+        /**
+         * Add the customer groups as a matched entity in addition to category or product entity.
+         */
+        $this->_matchedEntities[Mage_Customer_Model_Group::ENTITY] = array(
+            Mage_Index_Model_Event::TYPE_SAVE
+        );
+        parent::__construct();
+    }
+
+
     /**
      * @param Mage_Index_Model_Event $event
      * @return void
      */
     protected function _registerEvent(Mage_Index_Model_Event $event)
     {
-        /* @var $entity Varien_Object */
+        /* @var $entity Mage_Core_Model_Abstract|Varien_Object */
         $entity = $event->getDataObject(); // could be a catalog/product or catalog/category entity, too
         $eventType = $event->getType();
         $attrCode = Netzarbeiter_GroupsCatalog2_Helper_Data::HIDE_GROUPS_ATTRIBUTE;
 
         if ($eventType == Mage_Index_Model_Event::TYPE_SAVE) {
-            if ($entity->dataHasChangedFor($attrCode)) {
+            if ($entity instanceof Mage_Customer_Model_Group) {
+                // only trigger reindex for new customer group
+                if ($entity->isObjectNew()) {
+                    $event->setData('entity_ids', array($entity->getId()));
+                }
+            }
+            elseif ($entity->dataHasChangedFor($attrCode)) {
                 $event->setData('entity_ids', array($entity->getId()));
             }
         } elseif ($eventType == Mage_Index_Model_Event::TYPE_MASS_ACTION) {

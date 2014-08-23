@@ -219,12 +219,27 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
     }
 
     /**
+     * Only reindex records for the given customer group ids.
+     * 
+     * @param Mage_Index_Model_Event $event
+     * @return $this
+     */
+    public function customerGroupSave(Mage_Index_Model_Event $event)
+    {
+        $limitToGroupIds = $event->getData('entity_ids');
+        $event->unsetData('entity_ids');
+        $this->_reindexEntity($event, $limitToGroupIds);
+        return $this;
+    }
+
+    /**
      * Update or rebuild the index.
      *
      * @param Mage_Index_Model_Event $event
+     * @param array $limitToGroupIds Only add the specified group ids to the index
      * @return void
      */
-    protected function _reindexEntity($event = null)
+    protected function _reindexEntity($event = null, array $limitToGroupIds = null)
     {
         Varien_Profiler::start($this->_getProfilerName() . '::reindexEntity');
         
@@ -249,25 +264,50 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
                 ->order('e.entity_id ASC')
                 ->order('a.store_id ASC');
 
-        if (is_null($event)) {
-            $this->_getWriteAdapter()->truncateTable($this->_getIndexTable());
-        } else {
+        $entityIds = array();
+        if ($event && $event->hasData('entity_ids')) {
             $entityIds = $event->getData('entity_ids');
             $select->where('e.entity_id IN (?)', $entityIds);
-            $this->_getWriteAdapter()->delete($this->_getIndexTable(), array('catalog_entity_id IN (?)' => $entityIds));
         }
+        
+        $this->_clearRecordsForReindex($entityIds, $limitToGroupIds);
+
         $stmt = $this->_getReadAdapter()->query($select);
-        $this->_insertIndexRecords($stmt);
+        $this->_insertIndexRecords($stmt, $limitToGroupIds);
         Varien_Profiler::stop($this->_getProfilerName() . '::reindexEntity');
+    }
+
+    /**
+     * Remove all existing records from the index that will be effected by the reindex.
+     * 
+     * @param array $entityIds
+     * @param array $groupIds
+     */
+    protected function _clearRecordsForReindex(
+        array $entityIds = null, array $groupIds = null
+    ) {
+        if (is_null($entityIds) && is_null($groupIds)) {
+            $this->_getWriteAdapter()->truncateTable($this->_getIndexTable());
+        } else {
+            $condition = array();
+            if ($entityIds) {
+                $condition['catalog_entity_id IN (?)'] = $entityIds;
+            }
+            if ($groupIds) {
+                $condition['group_id IN (?)'] = $groupIds;
+            }
+            $this->_getWriteAdapter()->delete($this->_getIndexTable(), $condition);
+        }
     }
 
     /**
      * Create the new index records for the indexer entity
      *
      * @param Zend_Db_Statement $stmt
+     * @param array $limitToGroupIds Only add records for these group ids
      * @return void
      */
-    protected function _insertIndexRecords(Zend_Db_Statement $stmt)
+    protected function _insertIndexRecords(Zend_Db_Statement $stmt, array $limitToGroupIds = null)
     {
         Varien_Profiler::start($this->_getProfilerName() . '::reindexEntity::insert');
         $entityId = null;
@@ -281,7 +321,9 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
                 // That is why we skip this condition on the first iteration.
                 // We need to do this last because then $storesHandled is set completely for the $entityId
                 if (null !== $entityId) {
-                    $this->_addMissingStoreRecords($data, $entityId, $entityDefaultGroupsWithoutMode, $storesHandled);
+                    $this->_addMissingStoreRecords(
+                        $data, $entityId, $entityDefaultGroupsWithoutMode, $storesHandled, $limitToGroupIds
+                    );
 
                     // Insert INSERT_CHUNK_SIZE records at a time.
                     // If INSERT_CHUNK_SIZE records exist in $data then it is reset to an empty array afterwards
@@ -308,9 +350,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
 
             // Add index record for each group id
             foreach ($row['group_ids'] as $groupId) {
-                $data[] = array(
-                    'catalog_entity_id' => $row['entity_id'], 'group_id' => $groupId, 'store_id' => $row['store_id']
-                );
+                $this->_addDataRow($data, $row['entity_id'], $groupId, $row['store_id'], $limitToGroupIds);
                 $storesHandled[] = $row['store_id'];
             }
         }
@@ -321,13 +361,33 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
             // so we still need to insert these, too.
 
             // Add missing store id records to the insert data array for the last $entityId
-            $this->_addMissingStoreRecords($data, $entityId, $entityDefaultGroupsWithoutMode, $storesHandled);
+            $this->_addMissingStoreRecords(
+                $data, $entityId, $entityDefaultGroupsWithoutMode, $storesHandled, $limitToGroupIds
+            );
 
             // Insert missing index records
             $this->_insertIndexRecordsIfMinChunkSizeReached($data, 1);
         }
 
         Varien_Profiler::stop($this->_getProfilerName() . '::reindexEntity::insert');
+    }
+
+    /**
+     * Add a record to the data array if the group Id was not excluded by $limitToGroupIds
+     * 
+     * @param array $data Insert data
+     * @param int $entityId Category or product id
+     * @param int $groupId
+     * @param int $storeId
+     * @param array $limitToGroupIds
+     */
+    protected function _addDataRow(array &$data, $entityId, $groupId, $storeId, $limitToGroupIds)
+    {
+        if (! $limitToGroupIds || in_array($groupId, $limitToGroupIds)) {
+            $data[] = array(
+                'catalog_entity_id' => $entityId, 'group_id' => $groupId, 'store_id' => $storeId
+            );;
+        }
     }
 
     /**
@@ -408,9 +468,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
             );
         }
 
-        // NOTE: $row['group_ids'] is now either of the following
-        //   - string : Netzarbeiter_GroupsCatalog2_Helper_Data::USE_DEFAULT
-        //   - array : valid group ids without the store mode settings applied
+        // NOTE: $row['group_ids'] is now an array with valid group ids with the store mode settings applied
     }
 
     /**
@@ -441,10 +499,11 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
      * @param int $entityId
      * @param array|string $entityDefaultGroupsWithoutMode
      * @param array $storesHandled
+     * @param array $limitToGroupIds
      * @return void
      */
     protected function _addMissingStoreRecords(
-        array &$data, $entityId, $entityDefaultGroupsWithoutMode, array $storesHandled
+        array &$data, $entityId, $entityDefaultGroupsWithoutMode, array $storesHandled, array $limitToGroupIds = null
     )
     {
         foreach (array_diff($this->_frontendStoreIds, $storesHandled) as $storeId) {
@@ -465,7 +524,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
             )); */
 
             foreach ($groupIds as $groupId) {
-                $data[] = array('catalog_entity_id' => $entityId, 'group_id' => $groupId, 'store_id' => $storeId);
+                $this->_addDataRow($data, $entityId, $groupId, $storeId, $limitToGroupIds);
             }
         }
     }
