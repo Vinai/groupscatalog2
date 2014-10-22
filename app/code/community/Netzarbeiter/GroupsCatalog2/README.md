@@ -7,10 +7,9 @@ Facts
 -----
 - version: check the [config.xml](https://github.com/Vinai/groupscatalog2/blob/master/app/code/community/Netzarbeiter/GroupsCatalog2/etc/config.xml)
 - extension key: Netzarbeiter_GroupsCatalog2
-- [extension on Magento Connect](http://www.magentocommerce.com/magento-connect/customer-groups-catalog2-4585.html)
-- Magento Connect 1.0 extension key: - none -
-- Magento Connect 2.0 extension key:  
-  http://connect20.magentocommerce.com/community/Netzarbeiter_GroupsCatalog2
+- extension on Magento Connect: -
+- Magento Connect 1.0 extension key: -
+- Magento Connect 2.0 extension key: -
 - [extension on GitHub](https://github.com/Vinai/groupscatalog2)
 - [direct download link](https://github.com/Vinai/groupscatalog2/zipball/master)
 
@@ -19,12 +18,7 @@ Description
 This Magento extension enables you to hide categories and products from customers depending on their customer group.
 It is a rewrite of the extension Netzarbeiter_GroupsCatalog for Magento 1.6 and newer.
 
-If you use Magento 1.5 or 1.4 please refer to the older extension which is linked
-to from this modules page on [Magento Connect][mc]. Older versions of Magento are no
-longer supported (the old module might work, though, but I don't test at all).
-
-[mc]: http://www.magentocommerce.com/magento-connect/vinai/extension/635/netzarbeiter_groupscatalog "The GroupsCatalog Extension on Magento Connect"
-
+If you use Magento 1.5 or 1.4 please DO NOT use this extension.
 
 This rewrite not only cleans up the code base, it also adds several new features and improvements:
 
