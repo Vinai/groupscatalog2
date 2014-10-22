@@ -104,6 +104,7 @@
                 <paypal/>
                 <paypaluk/>
                 <authorizenet/>
+                <buckaroo3extended/>
             </disabled_on_routes>
         </netzarbeiter_groupscatalog2>
         <events>
