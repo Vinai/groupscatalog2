@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Netzarbeiter
  *
@@ -19,7 +20,6 @@
  * @copyright  Copyright (c) 2014 Vinai Kopp http://netzarbeiter.com
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
-
 class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
     extends Mage_Core_Model_Resource_Db_Abstract
 {
@@ -50,9 +50,9 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 
     /**
      * Check if the index table has been created yet.
-     * 
+     *
      * This method can only be executed *after* _init() has been called.
-     * 
+     *
      * @return bool
      */
     protected function _doesIndexExists()
@@ -83,11 +83,11 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
         $entityType = $helper->getEntityTypeCodeFromEntity($entity);
 
         $this->_init($helper->getIndexTableByEntityType($entityType), 'id');
-        
+
         if ($this->_doesIndexExists()) {
             $filterTable = $collection->getResource()->getTable($helper->getIndexTableByEntityType($entityType));
             $entityIdField = "{$this->_getCollectionTableAlias($collection)}.entity_id";
-    
+
             $this->_addGroupsCatalogFilterToSelect(
                 $collection->getSelect(), $filterTable, $groupId, $collection->getStoreId(), $entityIdField
             );
@@ -105,7 +105,8 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
      */
     public function addGroupsCatalogFilterToWishlistItemCollection(
         Mage_Wishlist_Model_Resource_Item_Collection $collection, $groupId, $storeId
-    ) {
+    )
+    {
         $select = $collection->getSelect();
         $entityField = 'main_table.product_id';
         $this->addGroupsCatalogProductFilterToSelect($select, $groupId, $storeId, $entityField);
@@ -126,18 +127,18 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 
         // Switch index table depending on the specified entity
         $this->_init($helper->getIndexTableByEntityType($entityType), 'id');
-        
-        if (! $this->_doesIndexExists()) {
+
+        if (!$this->_doesIndexExists()) {
             // If the index hasn't been created yet. Default to entity 
             // is visible to minimize the number of support requests.
             return true;
         }
 
         $select = $this->_getReadAdapter()->select()
-                ->from($this->getMainTable(), 'catalog_entity_id')
-                ->where('catalog_entity_id=?', $entity->getId())
-                ->where('group_id=?', $groupId)
-                ->where('store_id=?', $entity->getStoreId());
+            ->from($this->getMainTable(), 'catalog_entity_id')
+            ->where('catalog_entity_id=?', $entity->getId())
+            ->where('group_id=?', $groupId)
+            ->where('store_id=?', $entity->getStoreId());
 
         // If a matching record is found the entity is visible
         return (bool)$this->_getReadAdapter()->fetchOne($select);
@@ -163,17 +164,17 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
         // Switch index table depending on the specified entity
         $this->_init($helper->getIndexTableByEntityType($entityTypeCode), 'id');
 
-        if (! $this->_doesIndexExists()) {
+        if (!$this->_doesIndexExists()) {
             // If the index hasn't been created yet, default to all entities
             // are visible to minimize the number of support requests
             return $ids;
         }
-        
+
         $select = $this->_getReadAdapter()->select()
-                ->from($this->getMainTable(), 'catalog_entity_id')
-                ->where('catalog_entity_id IN(?)', $ids)
-                ->where('group_id=?', $groupId)
-                ->where('store_id=?', $storeId);
+            ->from($this->getMainTable(), 'catalog_entity_id')
+            ->where('catalog_entity_id IN(?)', $ids)
+            ->where('group_id=?', $groupId)
+            ->where('store_id=?', $storeId);
 
         return $this->_getReadAdapter()->fetchCol($select);
     }
@@ -188,7 +189,8 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
      */
     public function addGroupsCatalogFilterToProductCollectionCountSelect(
         Mage_Catalog_Model_Resource_Product_Collection $collection, $groupId
-    ) {
+    )
+    {
         $select = $collection->getProductCountSelect();
         $storeId = $collection->getStoreId();
         $this->addGroupsCatalogProductFilterToSelect($select, $groupId, $storeId);
@@ -210,7 +212,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 
     /**
      * Add the groupscatalog filter to a product collection select instance.
-     * 
+     *
      * @param Zend_Db_Select $select
      * @param int $groupId
      * @param int $storeId
@@ -219,7 +221,8 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
      */
     public function addGroupsCatalogProductFilterToSelect(
         Zend_Db_Select $select, $groupId, $storeId, $entityField = null
-    ) {
+    )
+    {
         $this->_addGroupsCatalogEntityFilterToSelect(
             Mage_Catalog_Model_Product::ENTITY, $select, $groupId, $storeId, $entityField
         );
@@ -227,7 +230,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 
     /**
      * Add the groupscatalog filter to a category collection select instance.
-     * 
+     *
      * @param Zend_Db_Select $select
      * @param int $groupId
      * @param int $storeId
@@ -236,7 +239,8 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
      */
     public function addGroupsCatalogCategoryFilterToSelect(
         Zend_Db_Select $select, $groupId, $storeId, $entityField = null
-    ) {
+    )
+    {
         $this->_addGroupsCatalogEntityFilterToSelect(
             Mage_Catalog_Model_Category::ENTITY, $select, $groupId, $storeId, $entityField
         );
@@ -244,7 +248,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 
     /**
      * Add the groupscatalog filter to a product or category collection select instance.
-     * 
+     *
      * @param string $entityType
      * @param Zend_Db_Select $select
      * @param int $groupId
@@ -254,7 +258,8 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
      */
     protected function _addGroupsCatalogEntityFilterToSelect(
         $entityType, Zend_Db_Select $select, $groupId, $storeId, $entityField = null
-    ) {
+    )
+    {
         /* @var $helper Netzarbeiter_GroupsCatalog2_Helper_Data */
         $helper = Mage::helper('netzarbeiter_groupscatalog2');
 
@@ -279,16 +284,18 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
      */
     protected function _addGroupsCatalogFilterToSelect(
         Zend_Db_Select $select, $table, $groupId, $storeId, $entityField = null
-    ) {
-        if (! $entityField) {
-            $entityField = 'e.entity_id';
+    )
+    {
+        if (!$entityField) {
+            $mainTableSqlAlias = $this->_getMainTableAliasFromSelect($select);
+            $entityField =  $mainTableSqlAlias . '.entity_id';
         }
-        
+
         // NOTE to self:
         // Using joinTable() seems to trigger an exception for some users that I can't reproduce (so far).
         // It is related to the flat catalog (Mage_Catalog_Model_Resource_Category_Flat_Collection missing
         // joinTable()). Using getSelect()->joinInner() to work around this issue.
-        
+
         /*
         $collection->joinTable(
             $helper->getIndexTableByEntityType($entityType), // table
@@ -315,10 +322,20 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Filter
 
         $select->joinInner(
             $table,
-                "{$table}.catalog_entity_id={$entityField} AND " .
-                        $this->_getReadAdapter()->quoteInto("{$table}.group_id=? AND ", $groupId) .
-                        $this->_getReadAdapter()->quoteInto("{$table}.store_id=?", $storeId),
+            "{$table}.catalog_entity_id={$entityField} AND " .
+            $this->_getReadAdapter()->quoteInto("{$table}.group_id=? AND ", $groupId) .
+            $this->_getReadAdapter()->quoteInto("{$table}.store_id=?", $storeId),
             array()
         );
+    }
+
+    /**
+     * @param Zend_Db_Select $select
+     * @return string
+     */
+    protected function _getMainTableAliasFromSelect(Zend_Db_Select $select)
+    {
+        $tables = $select->getPart(Zend_Db_Select::FROM);
+        return array_key_exists('main_table', $tables) ? 'main_table' : 'e';
     }
 }
