@@ -170,7 +170,7 @@ abstract class Netzarbeiter_GroupsCatalog2_Model_Resource_Indexer_Abstract exten
     protected function _getSetupModel()
     {
         return Mage::getResourceModel(
-            'netzarbeiter_groupscatalog2_resource/setup',
+            'netzarbeiter_groupscatalog2/setup',
             'netzarbeiter_groupscatalog2_setup'
         );
     }
