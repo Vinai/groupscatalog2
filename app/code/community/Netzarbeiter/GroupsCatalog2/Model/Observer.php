@@ -88,9 +88,11 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
     public function catalogProductLoadAfter(Varien_Event_Observer $observer)
     {
         $product = $observer->getProduct();
-        $this->_applyGroupsCatalogSettingsToEntity($product);
-        if ($product->getData('forbidden_by_groupscatalog2')) {
-            $this->_applyHiddenEntityHandling(Mage_Catalog_Model_Product::ENTITY);
+        if(trim($product->getId()) != ''){
+            $this->_applyGroupsCatalogSettingsToEntity($product);
+            if ($product->getData('forbidden_by_groupscatalog2')) {
+                $this->_applyHiddenEntityHandling(Mage_Catalog_Model_Product::ENTITY);
+            }
         }
     }
 
