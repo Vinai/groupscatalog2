@@ -145,7 +145,11 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
         if (!$this->isModuleActive($entity->getStoreId())) {
             return true;
         }
-
+        // Fix for infinity redirect loop
+        if (!$entity->getId()) {
+            return true;
+        }
+        
         $cachedState = $entity->getData(self::HIDE_GROUPS_ATTRIBUTE_STATE_CACHE);
         if (! is_null($cachedState)) {
             return $cachedState;
