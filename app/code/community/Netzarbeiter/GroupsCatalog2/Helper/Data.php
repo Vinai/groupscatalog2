@@ -162,28 +162,31 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
         }
 
         $groupIds = $entity->getData(self::HIDE_GROUPS_ATTRIBUTE);
-
-        if (!is_array($groupIds) && !is_string($groupIds)) {
-            // If the value isn't set on the entity mode fall back to querying the db index table
-            $visibility = Mage::getResourceSingleton('netzarbeiter_groupscatalog2/filter')
-                    ->isEntityVisible($entity, $customerGroupId);
-            $entity->setData(self::HIDE_GROUPS_ATTRIBUTE_STATE_CACHE, $visibility);
-            return $visibility;
-        }
-
-        /* @var $entityType string The entity type code for the specified entity */
-        $entityType = $this->getEntityTypeCodeFromEntity($entity);
-
         if (is_string($groupIds)) {
             if ('' === $groupIds) {
                 // This case will not happen in production:
                 // at least USE_DEFAULT or USE_NONE should be in the value array.
                 // Just your average paranoia...
-                $groupIds = array();
+                $groupIds = array(self::USE_NONE);
             } else {
                 $groupIds = explode(',', $groupIds);
             }
         }
+        // When the entity's attribute isn't set, fall back on [USE DEFAULT]
+        if ($groupIds === null) {
+            $groupIds = array(self::USE_DEFAULT);
+        } elseif (!in_array($groupIds[0], array(self::USE_NONE, self::USE_DEFAULT))) {
+            // Quick querying the db index table
+            $visibility = Mage::getResourceSingleton('netzarbeiter_groupscatalog2/filter')
+                ->isEntityVisible($entity, $customerGroupId);
+            if ($visibility) {
+                $entity->setData(self::HIDE_GROUPS_ATTRIBUTE_STATE_CACHE, $visibility);
+                return true;
+            }
+        }
+
+        /* @var $entityType string The entity type code for the specified entity */
+        $entityType = $this->getEntityTypeCodeFromEntity($entity);
 
         if (in_array(self::USE_NONE, $groupIds)) {
             $groupIds = array();
