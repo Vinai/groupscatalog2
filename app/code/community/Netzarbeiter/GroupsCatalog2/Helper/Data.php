@@ -179,10 +179,8 @@ class Netzarbeiter_GroupsCatalog2_Helper_Data extends Mage_Core_Helper_Abstract
             // Quick querying the db index table
             $visibility = Mage::getResourceSingleton('netzarbeiter_groupscatalog2/filter')
                 ->isEntityVisible($entity, $customerGroupId);
-            if ($visibility) {
-                $entity->setData(self::HIDE_GROUPS_ATTRIBUTE_STATE_CACHE, $visibility);
-                return true;
-            }
+            $entity->setData(self::HIDE_GROUPS_ATTRIBUTE_STATE_CACHE, $visibility);
+            return $visibility;
         }
 
         /* @var $entityType string The entity type code for the specified entity */
