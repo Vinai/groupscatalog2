@@ -1,3 +1,7 @@
+# This Magento 1 extension is orphaned, unsupported and no longer maintained.
+
+If you use it, you are effectively adopting the code for your own project.
+
 Groups Catalog 2
 ================
 This Magento extension enables you to hide categories and products from customers depending on their customer group.
