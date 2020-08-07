@@ -84,7 +84,6 @@ class Netzarbeiter_GroupsCatalog2_Model_Resource_Setup extends Mage_Catalog_Mode
         $attributeCode = Netzarbeiter_GroupsCatalog2_Helper_Data::HIDE_GROUPS_ATTRIBUTE;
         $this->addAttribute($entityType, $attributeCode, array(
             'label' => 'Hide/Show from Customer Groups',
-            'group' => 'General',
             'type' => 'text',
             'input' => 'multiselect',
             'source' => 'netzarbeiter_groupscatalog2/entity_attribute_source_customergroup_withdefault',
