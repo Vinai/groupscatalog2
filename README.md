@@ -54,7 +54,7 @@ There check the checkboxes beside the indexes "GroupsCatalog Products" and "Grou
 Compatibility
 -------------
 - Magento >= 1.6
-- Last confirmed compatible version: Magento 1.9.4 on 2020-08-12 ([mage-lts](https://github.com/OpenMage/magento-lts/) 19.4.5)
+- Last confirmed compatible version: Magento 1.9.4 (PHP 7.3.19) on 2020-08-12 ([mage-lts](https://github.com/OpenMage/magento-lts/) 19.4.5)
 
 Installation Instructions
 -------------------------
