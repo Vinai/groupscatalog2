@@ -24,10 +24,10 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 {
     /**
      * Change rewrite depending on Magento version
-     * 
-     * In Magento 1.8 the method signature changed for 
+     *
+     * In Magento 1.8 the method signature changed for
      * Mage_Catalog_Model_Resource_Category_Flat::_loadNodes()
-     * 
+     *
      * @param Varien_Event_Observer $observer
      */
     public function controllerFrontInitBefore(Varien_Event_Observer $observer)
@@ -39,7 +39,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
             );
         }
     }
-    
+
     /**
      * Add the groupscatalog filter sql to product collections
      *
@@ -104,7 +104,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
         $helper = $this->_getHelper();
         if ($helper->isModuleActive() && !$helper->isDisabledOnCurrentRoute()) {
             // Do not apply redirects and messages to customer module (order history and dashboard for example).
-            // Otherwise products that where previously purchased by the customer and now are hidden from him
+            // Otherwise products that where previously purchased by the customer and now are hidden from them
             // would make the customer account inaccessible.
             if (Mage::app()->getRequest()->getModuleName() !== 'customer') {
                 Mage::helper('netzarbeiter_groupscatalog2/hidden')->applyHiddenEntityHandling($entityTypeCode);
@@ -175,7 +175,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 
             $storeId = Mage::app()->getStore()->getId();
             $this->_getResource()
-                    ->addGroupsCatalogFilterToWishlistItemCollection($collection, $customerGroupId, $storeId);
+                 ->addGroupsCatalogFilterToWishlistItemCollection($collection, $customerGroupId, $storeId);
         }
     }
 
@@ -194,7 +194,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
         if ($helper->isModuleActive($collection->getStoreId()) && !$helper->isDisabledOnCurrentRoute()) {
             $customerGroupId = $helper->getCustomerGroupId();
             $this->_getResource()
-                    ->addGroupsCatalogFilterToProductCollectionCountSelect($collection, $customerGroupId);
+                 ->addGroupsCatalogFilterToProductCollectionCountSelect($collection, $customerGroupId);
         }
     }
 
@@ -223,12 +223,12 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
      * Switch groupscatalog attribute input to display only if configured to avoid loading
      * the customer group option list.
      * This makes sense for stores with a large number of customer groups who manage the
-     * assignment via an product import mechanism.
+     * assignment via a product import mechanism.
      * Prohibit loading of the customer groups using this hackish approach and not in the
      * attribute source model, because that is also used during importing and it needs to
      * always return the full list of options, regardless of the "show_multiselect_field"
      * setting.
-     * 
+     *
      * @param Varien_Event_Observer $observer
      */
     public function controllerActionPredispatchAdminhtmlCatalogProductEdit(Varien_Event_Observer $observer)
@@ -243,7 +243,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
 
     /**
      * Switch groupscatalog attribute input to display only if configured
-     * 
+     *
      * @see self::controllerActionPredispatchAdminhtmlCatalogProductEdit
      * @param Varien_Event_Observer $observer
      */
@@ -288,7 +288,7 @@ class Netzarbeiter_GroupsCatalog2_Model_Observer
             $customerGroupId = $helper->getCustomerGroupId();
 
             $this->_getResource()
-                    ->addGroupsCatalogFilterToCollection($collection, $customerGroupId);
+                 ->addGroupsCatalogFilterToCollection($collection, $customerGroupId);
         }
     }
 
