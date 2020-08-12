@@ -7,6 +7,8 @@ Groups Catalog 2
 This Magento extension enables you to hide categories and products from customers depending on their customer group.
 (It is a rewrite of the extension Netzarbeiter_GroupsCatalog for Magento 1.6 and newer.)
 
+I'm not aware of a rewrite of this extension for Magento 2.
+
 Facts
 -----
 - version: check the [config.xml](https://github.com/Vinai/groupscatalog2/blob/master/app/code/community/Netzarbeiter/GroupsCatalog2/etc/config.xml)
@@ -52,6 +54,7 @@ There check the checkboxes beside the indexes "GroupsCatalog Products" and "Grou
 Compatibility
 -------------
 - Magento >= 1.6
+- Last confirmed compatible version: Magento 1.9.4 on 2020-08-12 ([mage-lts](https://github.com/OpenMage/magento-lts/) 19.4.5)
 
 Installation Instructions
 -------------------------
@@ -127,4 +130,4 @@ Licence
 
 Copyright
 ---------
-(c) 2014 Vinai Kopp
+(c) 2014-2020 Vinai Kopp
